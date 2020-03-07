@@ -1,0 +1,28 @@
+#pragma once
+
+#include "core.hpp"
+#include "Point3.hpp"
+#include "Vector3.hpp"
+
+namespace idragnev::pbrt {
+    class Ray 
+    {
+    public:
+        Ray() = default;
+        Ray(const Point3f& o, const Vector3f& d, Float tMax = Infinity, Float time = 0.f);
+
+        Point3f operator()(Float t) const { 
+            return o + t * d;
+        }
+
+        bool hasNaNs() const { 
+            return (o.hasNaNs() || d.hasNaNs() || isNaN(tMax)); 
+        }
+
+        Point3f o;
+        Vector3f d;
+        mutable Float tMax = Infinity;
+        Float time = 0.0f;
+    };
+} //namespace idragnev::pbrt
+
