@@ -36,7 +36,7 @@ namespace idragnev::pbrt
 
         bool hasNaNs() const noexcept;
         Float lengthSquared() const noexcept;
-        Float length() const noexcept;
+        Float length() const;
 
         template <typename U>
         Vector2<T>& operator*=(U f);
@@ -86,17 +86,6 @@ namespace idragnev::pbrt
 
     template <typename T>
     bool operator!=(const Vector2<T>& u, const Vector2<T>& v) noexcept;
-
-    template <
-        typename T,
-        typename = std::enable_if_t<std::is_integral_v<T>>
-    >
-    std::ostream& operator<<(std::ostream& os, const Vector2<T>& v);
-    template <
-        typename T,
-        typename = std::enable_if_t<std::is_floating_point_v<T>>
-    >
-    std::ostream& operator<<(std::ostream& os, const Vector2<T>& v);
 } //namespace idragnev::pbrt
 
 #include "Vector2Impl.hpp"

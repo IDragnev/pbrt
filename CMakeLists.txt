@@ -18,9 +18,28 @@ endif()
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(RAY_TRACER_CORE_SOURCE
+  src/core/Ray.cpp
+  src/core/RayDifferential.cpp
 )
 
 set(RAY_TRACER_CORE_HEADERS
+  src/core/core.hpp
+  src/core/Vector2.hpp
+  src/core/Vector2Impl.hpp
+  src/core/Vector3.hpp
+  src/core/Vector3Impl.hpp
+  src/core/Point2.hpp
+  src/core/Point2Impl.hpp
+  src/core/Point3.hpp
+  src/core/Point3Impl.hpp
+  src/core/Normal3.hpp
+  src/core/Normal3Impl.hpp
+  src/core/BoundingSphere.hpp
+  src/core/Bounds2.hpp
+  src/core/Bounds2Impl.hpp
+  src/core/BoundsIterator.hpp
+  src/core/Ray.hpp
+  src/core/RayDifferential.hpp
 )
 
 # Visual Studio source folders
@@ -33,15 +52,15 @@ add_library(
   ${RAY_TRACER_CORE_SOURCE}
   ${RAY_TRACER_CORE_HEADERS}
 )
-target_include_directories(corelib src)
-target_include_directories(corelib src/core)
+target_include_directories(corelib PRIVATE src/)
+target_include_directories(corelib PRIVATE src/core/)
 target_compile_features(corelib PRIVATE cxx_std_17)
 
-# main program
 set(ALL_RAY_TRACER_LIBS
   corelib
 )
 
+# main program
 add_executable(raytracer_exe src/main.cpp)
 set_target_properties(raytracer_exe PROPERTIES OUTPUT_NAME raytracer)
 target_compile_features(raytracer_exe PRIVATE cxx_std_17)

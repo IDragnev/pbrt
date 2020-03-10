@@ -49,7 +49,7 @@ namespace idragnev::pbrt {
 
         bool hasNaNs() const noexcept;
         Float lengthSquared() const noexcept;
-        Float length() const noexcept;
+        Float length() const;
 
         template <typename U>
         Vector3<T>& operator*=(U f);
@@ -81,13 +81,13 @@ namespace idragnev::pbrt {
     Vector3<T> abs(const Vector3<T>& v);
 
     template <typename T>
-    Vector3<T> cross(const Vector3<T>& v1, const Vector3<T>& v2) noexcept;
+    Vector3<T> cross(const Vector3<T>& v1, const Vector3<T>& v2);
 
     template <typename T>
-    Vector3<T> cross(const Vector3<T>& v1, const Normal3<T>& v2) noexcept;
+    Vector3<T> cross(const Vector3<T>& v1, const Normal3<T>& v2);
 
     template <typename T>
-    Vector3<T> cross(const Normal3<T>& v1, const Vector3<T>& v2) noexcept;
+    Vector3<T> cross(const Normal3<T>& v1, const Vector3<T>& v2);
 
     template <typename T>
     T minComponent(const Vector3<T>& v) noexcept;

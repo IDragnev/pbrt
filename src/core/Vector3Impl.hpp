@@ -12,7 +12,7 @@ namespace idragnev::pbrt {
 
     template <typename T>
     inline bool Vector3<T>::hasNaNs() const noexcept {
-        return isNaN(x) || isNaN(y) || isNan(z);
+        return isNaN(x) || isNaN(y) || isNaN(z);
     }
 
     template <typename T>
@@ -200,7 +200,7 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Basis3<T> coordinateSystem(const Vector3<T>& u) {
+    Basis3<T> coordinateSystem(const Vector3<T>& u) {
         const auto v = [&u] {
             return std::abs(u.x) > std::abs(u.y)
                 ? (Vector3<T>{-u.z, 0, u.x} / std::sqrt(u.x * u.x + u.z * u.z))
@@ -212,7 +212,9 @@ namespace idragnev::pbrt {
 
     template <typename T>
     Vector3<T> cross(const Vector3<T>& u, const Vector3<T>& v) {
-        assert(!u.hasNaNs() && !v.hasNaNs());
+        assert(!u.hasNaNs());
+        assert(!v.hasNaNs());
+
         double ux = u.x, uy = u.y, uz = u.z;
         double vx = v.x, vy = v.y, vz = v.z;
         return {
@@ -224,7 +226,8 @@ namespace idragnev::pbrt {
 
     template <typename T>
     inline Vector3<T> cross(const Vector3<T>& u, const Normal3<T>& n) {
-        assert(!v1.hasNaNs() && !v2.hasNaNs());
+        assert(!u.hasNaNs());
+        assert(!n.hasNaNs());
         return cross(u, Vector3<T>{n});
     }
 

@@ -16,6 +16,8 @@ namespace idragnev::pbrt {
         static_assert(std::is_arithmetic_v<T>, "Cannot instantiate Point3 with non-arithmetic type");
 
     public:
+        using UnderlyingType = T;
+
         Point3() = default;
         Point3(T x, T y, T z);
 

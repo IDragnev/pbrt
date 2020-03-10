@@ -1,6 +1,6 @@
 #pragma once
 
-#include <numeric>
+#include <limits>
 #include <cmath>
 
 namespace idragnev::pbrt {

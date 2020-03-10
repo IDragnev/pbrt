@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 namespace idragnev::pbrt {
     template <typename T>
     inline Point3<T>::Point3(T x, T y, T z)
