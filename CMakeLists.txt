@@ -27,6 +27,3 @@ source_group(core_headers REGULAR_EXPRESSION include/core/.*)
 
 add_subdirectory(src/core)
 add_subdirectory(app)
-
-install(TARGETS raytracer_exe DESTINATION bin)
-install(TARGETS corelib DESTINATION lib)
