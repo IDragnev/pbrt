@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include "core.hpp"
 
 namespace idragnev::pbrt
