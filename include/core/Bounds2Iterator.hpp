@@ -2,26 +2,25 @@
 
 #include <iterator>
 
-namespace idragnev::pbrt {
-    template <typename BoundsT>
-    class BoundsIterator
-    {
-        using PointType = typename BoundsT::PointType;
+#include "Point2.hpp"
 
-        static_assert(std::is_integral_v<typename PointType::UnderlyingType>,
-            "Cannot iterate over this bounds type - its PointType has non-integral underlying type");
+namespace idragnev::pbrt {
+    template <typename T>
+    class Bounds2Iterator
+    {
+        static_assert(std::is_integral_v<T>, "Bounds2Iterator<T> requires T to be an integral type");
 
     public:
         using iterator_category = std::forward_iterator_tag;
-        using value_type = PointType;
+        using value_type = Point2<T>;
 
-        BoundsIterator(const BoundsT& b, const PointType& p)
+        Bounds2Iterator(const Bounds2<T>& b, const Point2<T>& p)
             : currentPoint(p)
             , bounds(&b) 
         {
         }
 
-        BoundsIterator& operator++() noexcept {
+        Bounds2Iterator& operator++() noexcept {
             ++currentPoint.x;
             if (currentPoint.x == bounds->max.x) {
                 currentPoint.x = bounds->min.x;
@@ -30,26 +29,26 @@ namespace idragnev::pbrt {
             return *this;
         }
 
-        BoundsIterator operator++(int) {
+        Bounds2Iterator operator++(int) {
             auto temp = *this;
             ++(*this);
             return temp;
         }
 
-        bool operator==(const BoundsIterator& rhs) const noexcept {
+        bool operator==(const Bounds2Iterator& rhs) const noexcept {
             return bounds == rhs.bounds && currentPoint == rhs.currentPoint;
         }
 
-        bool operator!=(const BoundsIterator& rhs) const noexcept {
+        bool operator!=(const Bounds2Iterator& rhs) const noexcept {
             return !(*this == rhs);
         }
 
-        PointType operator*() const { 
+        Point2<T> operator*() const { 
             return currentPoint;
         }
 
     private:
-        PointType currentPoint;
-        const BoundsT* bounds;
+        Point2<T> currentPoint;
+        const Bounds2<T>* bounds;
     };
 } //namespace idragnev::pbrt

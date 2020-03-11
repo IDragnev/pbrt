@@ -18,7 +18,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${PROJECT_SOURCE_DIR}/include/core/BoundingSphere.hpp
   ${PROJECT_SOURCE_DIR}/include/core/Bounds2.hpp
   ${PROJECT_SOURCE_DIR}/include/core/Bounds2Impl.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/BoundsIterator.hpp
+  ${PROJECT_SOURCE_DIR}/include/core/Bounds2Iterator.hpp
   ${PROJECT_SOURCE_DIR}/include/core/Bounds3.hpp
   ${PROJECT_SOURCE_DIR}/include/core/Bounds3Impl.hpp
   ${PROJECT_SOURCE_DIR}/include/core/Ray.hpp

@@ -153,4 +153,18 @@ namespace idragnev::pbrt {
     inline bool operator!=(const Bounds2<T>& a, const Bounds2<T>& b) {
         return !(a == b);
     }
+
+    template <typename T, typename> 
+    inline Bounds2Iterator<T> begin(const Bounds2<T>& bounds) {
+        return {bounds, bounds.min};
+    }
+
+    template <typename T, typename>
+    Bounds2Iterator<T> end(const Bounds2<T>& bounds) {
+        using Point = typename Bounds2<T>::PointType;
+        const auto isDegenerate = bounds.min.x >= bounds.max.x ||
+                                  bounds.min.y >= bounds.max.y;
+        const auto end = !isDegenerate ? Point{bounds.min.x, bounds.max.y} : bounds.min;
+        return {bounds, end};
+    }
 } //namespace idragnev::pbrt

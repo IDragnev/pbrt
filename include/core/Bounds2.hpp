@@ -3,7 +3,7 @@
 #include "Point2.hpp"
 #include "Vector2.hpp"
 #include "BoundingSphere.hpp"
-#include "BoundsIterator.hpp"
+#include "Bounds2Iterator.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
@@ -43,21 +43,13 @@ namespace idragnev::pbrt {
         typename T,
         typename = std::enable_if_t<std::is_integral_v<T>>
     >
-    inline auto begin(const Bounds2<T>& bounds) {
-        return BoundsIterator<Bounds2<T>>{bounds, bounds.min};
-    }
+    inline Bounds2Iterator<T> begin(const Bounds2<T>& bounds);
 
     template <
         typename T,
         typename = std::enable_if_t<std::is_integral_v<T>>
     >
-    auto end(const Bounds2<T>& bounds) {
-        const auto isDegenerate = bounds.min.x >= bounds.max.x ||
-                                  bounds.min.y >= bounds.max.y;
-        using Point = typename Bounds2<T>::PointType;
-        const auto end = !isDegenerate ? Point{bounds.min.x, bounds.max.y} : bounds.min;
-        return BoundsIterator<Bounds2<T>>(bounds, end);
-    }
+    Bounds2Iterator<T> end(const Bounds2<T>& bounds);
 
     template <typename T>
     Point2<T> lerp(const Bounds2<T>& bounds, const Point2f& t);
