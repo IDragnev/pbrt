@@ -130,17 +130,6 @@ namespace idragnev::pbrt {
 
     template <typename T>
     bool operator!=(const Vector3<T>& u, const Vector3<T>& v) noexcept;
-
-    template <
-        typename T,
-        typename = std::enable_if_t<std::is_integral_v<T>>
-    >
-    std::ostream& operator<<(std::ostream& os, const Vector3<T>& v);
-    template <
-        typename T,
-        typename = std::enable_if_t<std::is_floating_point_v<T>>
-    >
-    std::ostream& operator<<(std::ostream& os, const Vector3<T>& v);
 } //namespace idragnev::pbrt
 
 #include "Vector3Impl.hpp"

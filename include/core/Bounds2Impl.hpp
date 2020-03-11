@@ -76,6 +76,7 @@ namespace idragnev::pbrt {
         BoundingSphere2<T> result;
         result.center = center;
         result.radius = inside(center, *this) ? distance(center, max) : 0.0;
+        return result;
     }
 
     template <typename T>
