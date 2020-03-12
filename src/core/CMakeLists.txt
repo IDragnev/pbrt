@@ -1,6 +1,8 @@
 set(RAY_TRACER_CORE_SOURCE
   Ray.cpp
   RayDifferential.cpp
+  Matrix4x4.cpp
+  Transformation.cpp
 )
 
 set(RAY_TRACER_CORE_HEADERS
@@ -23,6 +25,8 @@ set(RAY_TRACER_CORE_HEADERS
   ${PROJECT_SOURCE_DIR}/include/core/Bounds3Impl.hpp
   ${PROJECT_SOURCE_DIR}/include/core/Ray.hpp
   ${PROJECT_SOURCE_DIR}/include/core/RayDifferential.hpp
+  ${PROJECT_SOURCE_DIR}/include/core/Matrix4x4.hpp
+  ${PROJECT_SOURCE_DIR}/include/core/Transformation.hpp
 )
 
 # core library

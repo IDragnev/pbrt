@@ -9,7 +9,7 @@ namespace idragnev::pbrt {
     {
     public:
         Ray() = default;
-        Ray(const Point3f& o, const Vector3f& d, Float tMax = Infinity, Float time = 0.f);
+        Ray(const Point3f& o, const Vector3f& d, Float tMax = constants::Infinity, Float time = 0.f);
 
         Point3f operator()(Float t) const { 
             return o + t * d;
@@ -21,7 +21,7 @@ namespace idragnev::pbrt {
 
         Point3f o;
         Vector3f d;
-        mutable Float tMax = Infinity;
+        mutable Float tMax = constants::Infinity;
         Float time = 0.0f;
     };
 } //namespace idragnev::pbrt
