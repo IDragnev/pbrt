@@ -27,9 +27,9 @@ set(RAY_TRACER_CORE_HEADERS
   ${PROJECT_SOURCE_DIR}/include/core/RayDifferential.hpp
   ${PROJECT_SOURCE_DIR}/include/core/Matrix4x4.hpp
   ${PROJECT_SOURCE_DIR}/include/core/Transformation.hpp
+  ${PROJECT_SOURCE_DIR}/include/core/TransformationImpl.hpp
 )
 
-# core library
 add_library(
   corelib 
   STATIC

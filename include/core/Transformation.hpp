@@ -76,3 +76,5 @@ namespace idragnev::pbrt {
     Transformation rotation(const Float theta, const Vector3f& axis) noexcept;
     Transformation lookAt(const Point3f& origin, const Point3f& look, const Vector3f& up) noexcept;
 } //namespace idragnev::pbrt
+
+#include "TransformationImpl.hpp"
