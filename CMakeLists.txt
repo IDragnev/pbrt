@@ -19,6 +19,12 @@ if(CMAKE_BUILD_TYPE MATCHES RELEASE)
   add_definitions(-DNDEBUG)
 endif()
 
+option(RT_FLOAT_AS_DOUBLE "Use 64-bit floats" OFF)
+
+if(RT_FLOAT_AS_DOUBLE)
+  add_definitions(-D RT_FLOAT_AS_DOUBLE)
+endif()
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Visual Studio source folders

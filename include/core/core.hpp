@@ -4,7 +4,12 @@
 #include <cmath>
 
 namespace idragnev::pbrt {
+
+#ifdef RT_FLOAT_AS_DOUBLE
+    using Float = double;
+#else 
     using Float = float;
+#endif
 
     namespace constants {
         inline constexpr auto Infinity = std::numeric_limits<Float>::infinity();
