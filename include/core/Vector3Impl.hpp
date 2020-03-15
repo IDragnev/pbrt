@@ -217,11 +217,11 @@ namespace idragnev::pbrt {
 
         double ux = u.x, uy = u.y, uz = u.z;
         double vx = v.x, vy = v.y, vz = v.z;
-        return {
+        return Vector3<T>(
             (uy * vz) - (uz * vy), 
             (uz * vx) - (ux * vz),
             (ux * vy) - (uy * vx)
-        };
+        );
     }
 
     template <typename T>

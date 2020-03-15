@@ -73,4 +73,5 @@ namespace idragnev::pbrt {
     Transformation xRotation(const Float theta) noexcept;
     Transformation yRotation(const Float theta) noexcept;
     Transformation zRotation(const Float theta) noexcept;
+    Transformation rotation(const Float theta, const Vector3f& axis) noexcept;
 } //namespace idragnev::pbrt
