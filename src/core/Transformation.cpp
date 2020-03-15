@@ -106,7 +106,7 @@ namespace idragnev::pbrt {
         return Transformation{matrix, transpose(matrix)};
     }
 
-    Transformation lookAt(const Point3f& origin, const Point3f& look, const Vector3f& up) {
+    Transformation lookAt(const Point3f& origin, const Point3f& look, const Vector3f& up) noexcept {
         const auto direction = normalize(look - origin);
         const auto normalizedUp = normalize(up);
         const auto upDirCross = cross(normalizedUp, direction);
