@@ -29,7 +29,7 @@ namespace idragnev::pbrt {
         bool hasNaNs() const noexcept;
         
         Float lengthSquared() const noexcept;
-        Float length() const noexcept;
+        Float length() const;
 
         template <typename U>
         Normal3<T>& operator*=(U f);
@@ -94,6 +94,6 @@ namespace idragnev::pbrt {
     
     template <typename T, typename F>
     T faceforward(const T& u, const F& v);
-}
+} //namespace idragnev::pbrt
 
 #include "Normal3Impl.hpp"

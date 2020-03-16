@@ -18,7 +18,7 @@ namespace idragnev::pbrt {
 
     template <typename T>
     inline bool Normal3<T>::hasNaNs() const noexcept {
-        return isNaN(x) || isNaN(y) || isNan(z);
+        return isNaN(x) || isNaN(y) || isNaN(z);
     }
 
     template <typename T>
@@ -148,7 +148,7 @@ namespace idragnev::pbrt {
 
     template <typename T>
     inline T dot(const Normal3<T>& n, const Vector3<T>& v) {
-        assert(!n1.hasNaNs());
+        assert(!n.hasNaNs());
         assert(!v.hasNaNs());
         return n.x * v.x + n.y * v.y + n.z * v.z;
     }

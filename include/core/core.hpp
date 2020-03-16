@@ -54,6 +54,7 @@ namespace idragnev::pbrt {
     using Normal3f = Normal3<Float>;
 
     using Bounds2f = Bounds2<Float>;
+    using Bounds2i = Bounds2<int>;
     using Bounds3f = Bounds3<Float>;
 
     class Ray;

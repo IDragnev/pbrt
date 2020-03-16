@@ -49,16 +49,16 @@ namespace idragnev::pbrt
     };
 
     template <typename T>
-    Float Dot(const Vector2<T>& u, const Vector2<T>& v);
+    Float dot(const Vector2<T>& u, const Vector2<T>& v);
 
     template <typename T>
-    Float AbsDot(const Vector2<T>& u, const Vector2<T>& v);
+    Float absDot(const Vector2<T>& u, const Vector2<T>& v);
     
     template <typename T>
-    Vector2<T> Normalize(const Vector2<T>& v) noexcept;
+    Vector2<T> normalize(const Vector2<T>& v) noexcept;
     
     template <typename T>
-    Vector2<T> Abs(const Vector2<T>& v);
+    Vector2<T> abs(const Vector2<T>& v);
 
     template <typename T>
     Vector2<T> operator+(const Vector2<T>& u, const Vector2<T>& v);

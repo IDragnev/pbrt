@@ -130,19 +130,19 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Float Dot(const Vector2<T>& u, const Vector2<T>& v) {
+    inline Float dot(const Vector2<T>& u, const Vector2<T>& v) {
         assert(!u.hasNaNs() && !v.hasNaNs());
         return u.x * v.x + u.y * v.y;
     }
 
     template <typename T>
-    inline Float AbsDot(const Vector2<T>& u, const Vector2<T>& v) {
+    inline Float absDot(const Vector2<T>& u, const Vector2<T>& v) {
         assert(!u.hasNaNs() && !v.hasNaNs());
         return std::abs(Dot(u, v));
     }
 
     template <typename T>
-    inline Vector2<T> Normalize(const Vector2<T>& v) noexcept {
+    inline Vector2<T> normalize(const Vector2<T>& v) noexcept {
         return v / v.length();
     }
 
