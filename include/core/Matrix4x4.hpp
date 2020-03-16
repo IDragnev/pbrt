@@ -16,7 +16,7 @@ namespace idragnev::pbrt {
         {
         }
         
-        Matrix4x4::Matrix4x4(
+        Matrix4x4(
             Float t00, Float t01, Float t02, Float t03,
             Float t10, Float t11, Float t12, Float t13,
             Float t20, Float t21, Float t22, Float t23,

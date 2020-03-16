@@ -5,7 +5,7 @@
 
 namespace pbrt = idragnev::pbrt;
 
-TEST_CASE("inside", "[core][Bounds3]")
+TEST_CASE("inside")
 {
 	const auto bounds = pbrt::Bounds3<int>{{0, 0, 0}, {3, 3, 3}};
 
@@ -28,7 +28,7 @@ TEST_CASE("inside", "[core][Bounds3]")
 	}
 }
 
-TEST_CASE("unionOf", "[core][Bounds3]")
+TEST_CASE("unionOf")
 {
 	SUBCASE("same bounds")
 	{
@@ -64,7 +64,7 @@ TEST_CASE("unionOf", "[core][Bounds3]")
 	}
 }
 
-TEST_CASE("intersectionOf", "[core][Bounds3]")
+TEST_CASE("intersectionOf")
 {
 	SUBCASE("same bounds")
 	{
@@ -84,7 +84,7 @@ TEST_CASE("intersectionOf", "[core][Bounds3]")
 	}
 }
 
-TEST_CASE("overlap", "[core][Bounds3]")
+TEST_CASE("overlap")
 {
 	SUBCASE("same bounds")
 	{

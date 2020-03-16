@@ -6,7 +6,7 @@
 
 namespace pbrt = idragnev::pbrt;
 
-TEST_CASE("coordinateSystem returns orthonormal basis when given normalized vector", "[core][Vector3]") 
+TEST_CASE("coordinateSystem returns orthonormal basis when given normalized vector")
 {
 	const auto [u, v, w] = pbrt::coordinateSystem(pbrt::Vector3f{1.f, 0.f, 0.f});
 
@@ -20,7 +20,7 @@ TEST_CASE("coordinateSystem returns orthonormal basis when given normalized vect
 }
 
 TEST_CASE("faceforward flips a normal so that it lies in the same hemisphere"
-	      "as a vector", "[core][Normal3]")
+	      "as a vector")
 {
 	const auto v = pbrt::Vector3f{1.f, 0.f, 0.f};
 

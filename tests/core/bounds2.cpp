@@ -5,7 +5,7 @@
 
 namespace pbrt = idragnev::pbrt;
 
-TEST_CASE("iterating through Bounds2i", "[core][Bounds2]")
+TEST_CASE("iterating through Bounds2i")
 {
 	const auto collect = [](const pbrt::Bounds2i& bounds) {
 		std::vector<pbrt::Point2i> result;
@@ -40,7 +40,7 @@ TEST_CASE("iterating through Bounds2i", "[core][Bounds2]")
 	}
 }
 
-TEST_CASE("inside", "[core][Bounds2]")
+TEST_CASE("inside")
 {
 	const auto bounds = pbrt::Bounds2i{{0, 0}, {3, 3}};
 
@@ -63,7 +63,7 @@ TEST_CASE("inside", "[core][Bounds2]")
 	}
 }
 
-TEST_CASE("unionOf", "[core][Bounds2]")
+TEST_CASE("unionOf")
 {
 	SUBCASE("same bounds")
 	{
@@ -99,7 +99,7 @@ TEST_CASE("unionOf", "[core][Bounds2]")
 	}
 }
 
-TEST_CASE("intersectionOf", "[core][Bounds2]")
+TEST_CASE("intersectionOf")
 {
 	SUBCASE("same bounds")
 	{
@@ -119,7 +119,7 @@ TEST_CASE("intersectionOf", "[core][Bounds2]")
 	}
 }
 
-TEST_CASE("overlap", "[core][Bounds2]")
+TEST_CASE("overlap")
 {
 	SUBCASE("same bounds")
 	{
