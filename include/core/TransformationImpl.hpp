@@ -17,10 +17,10 @@ namespace idragnev::pbrt {
 	template <typename T> 
     Vector3<T> Transformation::operator()(const Vector3<T>& v) const {
         const auto& matrix = m.m;
-        return Vector3<T>(
-            matrix[0][0] * v.x + matrix[0][1] * v.y + matrix[0][2] * v.z,
-		    matrix[1][0] * v.x + matrix[1][1] * v.y + matrix[1][2] * v.z,
-		    matrix[2][0] * v.x + matrix[2][1] * v.y + matrix[2][2] * v.z
+		return Vector3<T>(
+			matrix[0][0] * v.x + matrix[0][1] * v.y + matrix[0][2] * v.z,
+			matrix[1][0] * v.x + matrix[1][1] * v.y + matrix[1][2] * v.z,
+			matrix[2][0] * v.x + matrix[2][1] * v.y + matrix[2][2] * v.z
         );
     }
 } //namespace idragnev::pbrt

@@ -6,11 +6,6 @@
 
 namespace idragnev::pbrt {
     template <typename T>
-    class Point3;
-    template <typename T>
-    class Normal3;
-
-    template <typename T>
     struct Basis3
     {
         static_assert(std::is_arithmetic_v<T>, "Cannot instantiate Basis3 with non-arithmetic type");

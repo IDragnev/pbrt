@@ -7,9 +7,6 @@
 
 namespace idragnev::pbrt {
     template <typename T>
-    class Vector3;
-
-    template <typename T>
     class Point3 
     {
     private:
