@@ -33,3 +33,5 @@ source_group(core_headers REGULAR_EXPRESSION include/core/.*)
 
 add_subdirectory(src/core)
 add_subdirectory(app)
+add_subdirectory(external/doctest)
+add_subdirectory(tests)
