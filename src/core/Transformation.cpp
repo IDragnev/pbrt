@@ -1,6 +1,7 @@
 #include "Transformation.hpp"
 #include "Vector3.hpp"
 #include "Point3.hpp"
+#include "Bounds3.hpp"
 
 namespace idragnev::pbrt {
     bool Transformation::hasScale() const noexcept {
@@ -11,6 +12,38 @@ namespace idragnev::pbrt {
         return scales({ 1.f, 0.f, 0.f }) ||
                scales({ 0.f, 1.f, 0.f }) ||
                scales({ 0.f, 0.f, 1.f });
+    }
+
+    bool Transformation::swapsHandednes() const noexcept {
+        const auto det =
+            m.m[0][0] * (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1]) -
+            m.m[0][1] * (m.m[1][0] * m.m[2][2] - m.m[1][2] * m.m[2][0]) +
+            m.m[0][2] * (m.m[1][0] * m.m[2][1] - m.m[1][1] * m.m[2][0]);
+        return det < 0.f;
+    }
+
+    Bounds3f Transformation::operator()(const Bounds3f& bounds) const {
+        const auto scaleColumn = [&matrix = m.m](const std::size_t c, const auto s) {
+            return Point3f(
+                matrix[0][c] * s,
+                matrix[1][c] * s,
+                matrix[2][c] * s
+            );
+        };
+
+        const auto xMin = scaleColumn(0, bounds.min.x);
+        const auto xMax = scaleColumn(0, bounds.max.x);
+        const auto yMin = scaleColumn(1, bounds.min.y);
+        const auto yMax = scaleColumn(1, bounds.max.y);
+        const auto zMin = scaleColumn(2, bounds.min.z);
+        const auto zMax = scaleColumn(2, bounds.max.z);
+        const auto translation = Vector3f(m.m[0][3], m.m[1][3], m.m[2][3]);
+
+        Bounds3f result;
+        result.min = min(xMin, xMax) + min(yMin, yMax) + min(zMin, zMax) + translation;
+        result.max = max(xMin, xMax) + max(yMin, yMax) + max(zMin, zMax) + translation;
+
+        return result;
     }
 
     Transformation translation(const Vector3f& delta) noexcept {

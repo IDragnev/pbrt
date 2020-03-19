@@ -23,4 +23,14 @@ namespace idragnev::pbrt {
 		    matrix[2][0] * v.x + matrix[2][1] * v.y + matrix[2][2] * v.z
         );
     }
+
+    template <typename T> 
+    Normal3<T> Transformation::operator()(const Normal3<T>& n) const {
+        const auto& matrix = mInv.m;
+        return Normal3<T>(
+            matrix[0][0] * n.x + matrix[1][0] * n.y + matrix[2][0] * n.z,
+            matrix[0][1] * n.x + matrix[1][1] * n.y + matrix[2][1] * n.z,
+            matrix[0][2] * n.x + matrix[1][2] * n.y + matrix[2][2] * n.z
+        );
+    }
 } //namespace idragnev::pbrt

@@ -7,13 +7,13 @@ namespace idragnev::pbrt {
     public:
         Transformation() = default;
 
-        Transformation(const Float mat[4][4])
+        explicit Transformation(const Float mat[4][4])
             : m{mat}
             , mInverse{inverse(m)}
         {
         }
 
-        Transformation(const Matrix4x4& m) 
+        explicit Transformation(const Matrix4x4& m)
             : m{m}
             , mInverse{inverse(m)}
         {
@@ -33,6 +33,7 @@ namespace idragnev::pbrt {
         const Matrix4x4& inverseMatrix() const { return mInverse; }
 
         bool hasScale() const noexcept;
+        bool swapsHandednes() const noexcept;
 
         template <typename T>
         Point3<T> operator()(const Point3<T>& p) const;
@@ -54,7 +55,7 @@ namespace idragnev::pbrt {
         Matrix4x4 mInverse;
     };
 
-    inline Transformation inverse(const Transformation& t) {
+    inline Transformation inverse(const Transformation& t) noexcept {
         return Transformation{ 
             t.inverseMatrix(),
             t.matrix()
@@ -63,8 +64,15 @@ namespace idragnev::pbrt {
 
     inline Transformation transpose(const Transformation& t) noexcept {
         return Transformation{
-            pbrt::transpose(t.matrix()),
-            pbrt::transpose(t.inverseMatrix())
+            transpose(t.matrix()),
+            transpose(t.inverseMatrix())
+        };
+    }
+
+    inline Transformation operator*(const Transformation& lhs, const Transformation& rhs) noexcept {
+        return Transformation{
+            lhs.matrix() * rhs.matrix(),
+            rhs.inverseMatrix() * lhs.inverseMatrix()
         };
     }
 
