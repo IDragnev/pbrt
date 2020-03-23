@@ -3,31 +3,35 @@ set(RAY_TRACER_CORE_SOURCE
   RayDifferential.cpp
   Matrix4x4.cpp
   Transformation.cpp
+  Quaternion.cpp
 )
 
+set(CORE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/core)
+
 set(RAY_TRACER_CORE_HEADERS
-  ${PROJECT_SOURCE_DIR}/include/core/core.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Vector2.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Vector2Impl.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Vector3.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Vector3Impl.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Point2.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Point2Impl.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Point3.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Point3Impl.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Normal3.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Normal3Impl.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/BoundingSphere.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Bounds2.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Bounds2Impl.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Bounds2Iterator.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Bounds3.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Bounds3Impl.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Ray.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/RayDifferential.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Matrix4x4.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/Transformation.hpp
-  ${PROJECT_SOURCE_DIR}/include/core/TransformationImpl.hpp
+  ${CORE_INCLUDE_DIR}/core.hpp
+  ${CORE_INCLUDE_DIR}/Vector2.hpp
+  ${CORE_INCLUDE_DIR}/Vector2Impl.hpp
+  ${CORE_INCLUDE_DIR}/Vector3.hpp
+  ${CORE_INCLUDE_DIR}/Vector3Impl.hpp
+  ${CORE_INCLUDE_DIR}/Point2.hpp
+  ${CORE_INCLUDE_DIR}/Point2Impl.hpp
+  ${CORE_INCLUDE_DIR}/Point3.hpp
+  ${CORE_INCLUDE_DIR}/Point3Impl.hpp
+  ${CORE_INCLUDE_DIR}/Normal3.hpp
+  ${CORE_INCLUDE_DIR}/Normal3Impl.hpp
+  ${CORE_INCLUDE_DIR}/BoundingSphere.hpp
+  ${CORE_INCLUDE_DIR}/Bounds2.hpp
+  ${CORE_INCLUDE_DIR}/Bounds2Impl.hpp
+  ${CORE_INCLUDE_DIR}/Bounds2Iterator.hpp
+  ${CORE_INCLUDE_DIR}/Bounds3.hpp
+  ${CORE_INCLUDE_DIR}/Bounds3Impl.hpp
+  ${CORE_INCLUDE_DIR}/Ray.hpp
+  ${CORE_INCLUDE_DIR}/RayDifferential.hpp
+  ${CORE_INCLUDE_DIR}/Matrix4x4.hpp
+  ${CORE_INCLUDE_DIR}/Transformation.hpp
+  ${CORE_INCLUDE_DIR}/TransformationImpl.hpp
+  ${CORE_INCLUDE_DIR}/Quaternion.hpp
 )
 
 add_library(
@@ -36,5 +40,5 @@ add_library(
   ${RAY_TRACER_CORE_SOURCE}
   ${RAY_TRACER_CORE_HEADERS}
 )
-target_include_directories(corelib PUBLIC ${PROJECT_SOURCE_DIR}/include/core/)
+target_include_directories(corelib PUBLIC ${CORE_INCLUDE_DIR})
 target_compile_features(corelib PUBLIC cxx_std_17)

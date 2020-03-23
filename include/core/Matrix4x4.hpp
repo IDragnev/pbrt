@@ -3,7 +3,9 @@
 #include "core.hpp"
 
 namespace idragnev::pbrt {
-    struct Matrix4x4 {
+    class Matrix4x4 
+    {
+    public:
         Matrix4x4(const Float mat[4][4]);
         
         Matrix4x4() noexcept 
@@ -33,6 +35,7 @@ namespace idragnev::pbrt {
 
         static const Matrix4x4& identity() noexcept;
 
+    public:
         Float m[4][4];
     };
 

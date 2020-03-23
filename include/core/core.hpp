@@ -60,6 +60,11 @@ namespace idragnev::pbrt {
     class Ray;
     class RayDifferential;
 
+    class Matrix4x4;
+    class Transformation;
+
+    class Quaternion;
+
     template <
         typename T,
         typename = std::enable_if_t<std::is_floating_point_v<T>>
