@@ -109,3 +109,53 @@ TEST_CASE("overlap")
         CHECK(!pbrt::overlap(a, b));
     }
 }
+
+TEST_CASE("point distance")
+{
+    SUBCASE("with points inside the bounds or on faces")
+    {
+        const auto bounds = pbrt::Bounds3f{ {0.f, 0.f, 0.f}, {1.f, 1.f, 1.f} };
+
+        CHECK(distance(pbrt::Point3f{0.5f, 0.5f, 0.5f}, bounds) == 0.f);
+        CHECK(distance(pbrt::Point3f{0.f, 1.f, 1.f}, bounds) == 0.f);
+        CHECK(distance(pbrt::Point3f{0.25f, 0.8f, 1.f}, bounds) == 0.f);
+        CHECK(distance(pbrt::Point3f{0.f, 0.25f, 0.8f}, bounds) == 0.f);
+        CHECK(distance(pbrt::Point3f{0.7f, 0.f, 0.8f}, bounds) == 0.f);
+    }
+       
+    SUBCASE("with points aligned with the plane of one of the faces")
+    {
+        const auto bounds = pbrt::Bounds3f{ {0.f, 0.f, 0.f}, {1.f, 1.f, 1.f} };
+
+        CHECK(pbrt::distance(pbrt::Point3f{6.f, 1.f, 1.f}, bounds) == 5.f);
+        CHECK(pbrt::distance(pbrt::Point3f{0.f, -10.f, 1.f}, bounds) == 10.f);
+    }
+    
+    SUBCASE("with 2 of the point's the dimensions inside the bounds")
+    {
+        const auto bounds = pbrt::Bounds3f{ {0.f, 0.f, 0.f}, {1.f, 1.f, 1.f} };
+
+        CHECK(distance(pbrt::Point3f{0.5f, 0.5f, 3.f}, bounds) == 2.f);
+        CHECK(distance(pbrt::Point3f{0.5f, 0.5f, -3.f}, bounds) == 3.f);
+        CHECK(distance(pbrt::Point3f{0.5f, 3, 0.5f}, bounds) == 2.f);
+        CHECK(distance(pbrt::Point3f{0.5f, -3, 0.5f}, bounds) == 3.f);
+        CHECK(distance(pbrt::Point3f{3.f, 0.5f, 0.5f}, bounds) == 2.f);
+        CHECK(distance(pbrt::Point3f{-3.f, 0.5f, 0.5f}, bounds) == 3.f);
+    }
+
+    SUBCASE("with general points")
+    {
+        const auto bounds = pbrt::Bounds3f{ {0.f, 0.f, 0.f}, {1.f, 1.f, 1.f} };
+
+        CHECK(distanceSquared(pbrt::Point3f{4.f, 8.f, -10.f}, bounds) == 3 * 3 + 7 * 7 + 10 * 10);
+        CHECK(distanceSquared(pbrt::Point3f{-6.f, -10.f, 8.f}, bounds) == 6 * 6 + 10 * 10 + 7 * 7);
+    }
+
+    
+    SUBCASE("with a more irregular box")
+    {
+        const auto bounds = pbrt::Bounds3f{ {-1.f, -3.f, 5.f}, {2.f, -2.f, 18.f} };
+        CHECK(distance(pbrt::Point3f{-0.99f, -2.f, 5.f}, bounds) == 0.f);
+        CHECK(distanceSquared(pbrt::Point3f{-3.f, -9.f, 22.f}, bounds) == 2 * 2 + 6 * 6 + 4 * 4);
+    }
+}

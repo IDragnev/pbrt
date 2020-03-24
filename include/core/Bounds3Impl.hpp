@@ -179,7 +179,7 @@ namespace idragnev::pbrt {
 
     template <typename T, typename U>
     inline Float distance(const Point3<T>& p, const Bounds3<U>& b) {
-        return std::sqrt(DistanceSquared(p, b));
+        return std::sqrt(distanceSquared(p, b));
     }
 
     template <typename T, typename U>
