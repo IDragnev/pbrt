@@ -90,4 +90,20 @@ namespace idragnev::pbrt {
         using constants::Pi;
         return (180.f / Pi) * rad; 
     }
+
+    template <typename T, typename U, typename V>
+    inline T clamp(const T val, const U low, const V high) noexcept {
+        static_assert(std::is_arithmetic_v<T> && std::is_arithmetic_v<U> && std::is_arithmetic_v<V>,
+            "clamp can be used only with arithmetic types");
+
+        if (val < low) {
+            return low;
+        }
+        else if (val > high) {
+            return high;
+        }
+        else {
+            return val;
+        }
+    }
 }

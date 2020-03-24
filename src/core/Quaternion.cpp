@@ -20,14 +20,14 @@ namespace idragnev::pbrt {
         else {
             const std::size_t next[3] = { 1, 2, 0 };
             const auto i = [&matrix] {
-                auto i = 0;
+                std::size_t result = 0;
                 if (matrix[1][1] > matrix[0][0]) {
-                    i = 1;
+                    result = 1;
                 }
-                if (matrix[2][2] > matrix[i][i]) {
-                    i = 2;
+                if (matrix[2][2] > matrix[result][result]) {
+                    result = 2;
                 }
-                return i;
+                return result;
             }();
             const auto j = next[i];
             const auto k = next[j];
@@ -46,6 +46,23 @@ namespace idragnev::pbrt {
 
             w = (matrix[k][j] - matrix[j][k]) * s;            
             v = {q[0], q[1], q[2]};
+        }
+    }
+
+    //assumes that q1 and q2 are normalized
+    Quaternion slerp(const Float t, const Quaternion& q1, const Quaternion& q2) {
+        const auto cosTheta = dot(q1, q2);
+        const auto areNearlyParallel = cosTheta > .9995f;
+
+        if (!areNearlyParallel) {
+            const auto theta = std::acos(clamp(cosTheta, -1.f, 1.f));
+            const auto thetaPrim = theta * t;
+            const auto qPerpepndicular = normalize(q2 - cosTheta * q1);
+            
+            return q1 * std::cos(thetaPrim) + qPerpepndicular * std::sin(thetaPrim);
+        }
+        else {
+            return normalize((1.f - t) * q1 + t * q2);
         }
     }
 

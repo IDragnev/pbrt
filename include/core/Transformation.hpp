@@ -29,8 +29,8 @@ namespace idragnev::pbrt {
             return m == Matrix4x4::identity();
         }
 
-        const Matrix4x4& matrix() const { return m; }
-        const Matrix4x4& inverseMatrix() const { return mInverse; }
+        const Matrix4x4& matrix() const noexcept { return m; }
+        const Matrix4x4& inverseMatrix() const noexcept { return mInverse; }
 
         bool hasScale() const noexcept;
         bool swapsHandednes() const noexcept;

@@ -9,7 +9,7 @@ namespace idragnev::pbrt {
     public:
         Quaternion() = default;
         Quaternion(const Vector3f v, const Float w) : v{v}, w{w} { }
-        Quaternion(const Transformation& m);
+        explicit Quaternion(const Transformation& m);
 
         Quaternion& operator+=(const Quaternion& rhs);
         Quaternion& operator-=(const Quaternion& rhs);
