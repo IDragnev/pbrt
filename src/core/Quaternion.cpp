@@ -3,8 +3,7 @@
 #include "Matrix4x4.hpp"
 
 namespace idragnev::pbrt {
-    Quaternion::Quaternion(const Transformation& t)
-    {
+    Quaternion::Quaternion(const Transformation& t) {
         const auto& matrix = t.matrix().m;
 
         const auto trace = matrix[0][0] + matrix[1][1] + matrix[2][2];
@@ -49,6 +48,32 @@ namespace idragnev::pbrt {
         }
     }
 
+    Transformation Quaternion::toTransformation() const noexcept {
+        const auto xx = v.x * v.x;
+        const auto yy = v.y * v.y;
+        const auto zz = v.z * v.z;
+
+        const auto xy = v.x * v.y;
+        const auto xz = v.x * v.z;
+        const auto yz = v.y * v.z;
+
+        const auto wx = v.x * w;
+        const auto wy = v.y * w;
+        const auto wz = v.z * w;
+
+        const auto m = Matrix4x4{
+            1.f - 2.f * (yy + zz),   2.f * (xy + wz),          2.f * (xz - wy),         0.f,
+            2.f * (xy - wz),         1.f - 2.f * (xx + zz),    2.f * (yz + wx),         0.f,
+            2.f * (xz + wy),         2.f * (yz - wx),          1.f - 2.f * (xx + yy),   0.f,
+            0.f,                     0.f,                      0.f,                     1.f
+        };
+
+        return Transformation{
+            transpose(m), //transpose since we are left-handed
+            m
+        };
+    }
+
     //assumes that q1 and q2 are normalized
     Quaternion slerp(const Float t, const Quaternion& q1, const Quaternion& q2) {
         const auto cosTheta = dot(q1, q2);
@@ -57,9 +82,9 @@ namespace idragnev::pbrt {
         if (!areNearlyParallel) {
             const auto theta = std::acos(clamp(cosTheta, -1.f, 1.f));
             const auto thetaPrim = theta * t;
-            const auto qPerpepndicular = normalize(q2 - cosTheta * q1);
+            const auto qPerpendicular = normalize(q2 - cosTheta * q1);
             
-            return q1 * std::cos(thetaPrim) + qPerpepndicular * std::sin(thetaPrim);
+            return q1 * std::cos(thetaPrim) + qPerpendicular * std::sin(thetaPrim);
         }
         else {
             return normalize((1.f - t) * q1 + t * q2);
@@ -88,32 +113,6 @@ namespace idragnev::pbrt {
         v /= s;
         w /= s;
         return *this;
-    }
-
-    Transformation Quaternion::toTransformation() const noexcept {
-        const auto xx = v.x * v.x;
-        const auto yy = v.y * v.y;
-        const auto zz = v.z * v.z;
-        
-        const auto xy = v.x * v.y;
-        const auto xz = v.x * v.z;
-        const auto yz = v.y * v.z;
-        
-        const auto wx = v.x * w;
-        const auto wy = v.y * w; 
-        const auto wz = v.z * w;
-
-        const auto m = Matrix4x4{
-            1.f - 2.f * (yy + zz),   2.f * (xy + wz),          2.f * (xz - wy),         0.f,
-            2.f * (xy - wz),         1.f - 2.f * (xx + zz),    2.f * (yz + wx),         0.f,
-            2.f * (xz + wy),         2.f * (yz - wx),          1.f - 2.f * (xx + yy),   0.f,
-            0.f,                     0.f,                      0.f,                     1.f
-        };
-
-        return Transformation{ 
-            transpose(m), //transpose since we are left-handed
-            m
-        };
     }
 
     Quaternion operator+(const Quaternion& lhs, const Quaternion& rhs) {
