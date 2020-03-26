@@ -1,4 +1,5 @@
 #include "Matrix4x4.hpp"
+#include "Vector3.hpp"
 
 #include <assert.h>
 #include <utility>
@@ -12,6 +13,14 @@ namespace idragnev::pbrt {
     const Matrix4x4& Matrix4x4::identity() noexcept {
         static Matrix4x4 id;
         return id;
+    }
+
+    Vector3f translationVector(const Matrix4x4& matrix) noexcept {
+        return {
+            matrix.m[0][3],
+            matrix.m[1][3],
+            matrix.m[2][3]
+        };
     }
 
     bool operator==(const Matrix4x4& lhs, const Matrix4x4& rhs) noexcept {

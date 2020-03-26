@@ -184,9 +184,9 @@ namespace idragnev::pbrt {
 
     template <typename T, typename U>
     Float distanceSquared(const Point3<T>& p, const Bounds3<U>& b) {
-        const Float dx = std::max({ Float{0}, b.min.x - p.x, p.x - b.max.x });
-        const Float dy = std::max({ Float{0}, b.min.y - p.y, p.y - b.max.y });
-        const Float dz = std::max({ Float{0}, b.min.z - p.z, p.z - b.max.z });
+        const auto dx = std::max({ Float{0}, b.min.x - p.x, p.x - b.max.x });
+        const auto dy = std::max({ Float{0}, b.min.y - p.y, p.y - b.max.y });
+        const auto dz = std::max({ Float{0}, b.min.z - p.z, p.z - b.max.z });
         return dx * dx + dy * dy + dz * dz;
     }
 

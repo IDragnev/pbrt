@@ -64,6 +64,8 @@ namespace idragnev::pbrt {
     class Transformation;
 
     class Quaternion;
+    struct TRS;
+    class AnimatedTransformation;
 
     template <
         typename T,

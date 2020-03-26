@@ -4,6 +4,7 @@ set(RAY_TRACER_CORE_SOURCE
   Matrix4x4.cpp
   Transformation.cpp
   Quaternion.cpp
+  TRS.cpp
 )
 
 set(CORE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/core)
@@ -32,6 +33,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_INCLUDE_DIR}/Transformation.hpp
   ${CORE_INCLUDE_DIR}/TransformationImpl.hpp
   ${CORE_INCLUDE_DIR}/Quaternion.hpp
+  ${CORE_INCLUDE_DIR}/TRS.hpp
 )
 
 add_library(

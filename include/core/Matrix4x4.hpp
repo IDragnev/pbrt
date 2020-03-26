@@ -39,6 +39,8 @@ namespace idragnev::pbrt {
         Float m[4][4];
     };
 
+    Vector3f translationVector(const Matrix4x4& m) noexcept;
+
     Matrix4x4 inverse(const Matrix4x4& m);
     Matrix4x4 transpose(const Matrix4x4&) noexcept;
     

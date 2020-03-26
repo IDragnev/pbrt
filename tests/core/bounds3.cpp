@@ -155,6 +155,7 @@ TEST_CASE("point distance")
     SUBCASE("with a more irregular box")
     {
         const auto bounds = pbrt::Bounds3f{ {-1.f, -3.f, 5.f}, {2.f, -2.f, 18.f} };
+
         CHECK(distance(pbrt::Point3f{-0.99f, -2.f, 5.f}, bounds) == 0.f);
         CHECK(distanceSquared(pbrt::Point3f{-3.f, -9.f, 22.f}, bounds) == 2 * 2 + 6 * 6 + 4 * 4);
     }
