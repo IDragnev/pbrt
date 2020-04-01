@@ -78,6 +78,15 @@ namespace idragnev::pbrt {
         };
     }
 
+    inline bool operator==(const Transformation& lhs, const Transformation& rhs) noexcept {
+        return lhs.matrix() == rhs.matrix() && 
+               lhs.inverseMatrix() == rhs.inverseMatrix();
+    }
+
+    inline bool operator!=(const Transformation& lhs, const Transformation& rhs) noexcept {
+        return !(lhs == rhs);
+    }
+
     Transformation translation(const Vector3f& delta) noexcept;
     Transformation scaling(const Float x, const Float y, const Float z) noexcept;
     Transformation xRotation(const Float theta) noexcept;
