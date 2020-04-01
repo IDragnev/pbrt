@@ -19,6 +19,17 @@ namespace idragnev::pbrt {
     }
 
     namespace detail {
+        Matrix4x4 removeTranslation(const Matrix4x4& TRS) noexcept {
+            auto RS = TRS;
+
+            RS.m[0][3] = 0.f;
+            RS.m[1][3] = 0.f;
+            RS.m[2][3] = 0.f;
+            RS.m[3][3] = 1.f;
+
+            return RS;
+        }
+
         //assumes M has no translation
         Matrix4x4 extractRotation(const Matrix4x4& RS) {
             Float normDifference = 0.f;
@@ -34,17 +45,6 @@ namespace idragnev::pbrt {
             } while (count < 100 && normDifference > .0001);
             
             return R;
-        }
-
-        Matrix4x4 removeTranslation(const Matrix4x4& TRS) noexcept {
-            auto RS = TRS;
-
-            RS.m[0][3] = 0.f;
-            RS.m[1][3] = 0.f;
-            RS.m[2][3] = 0.f;
-            RS.m[3][3] = 1.f;
-
-            return RS;
         }
 
         Matrix4x4 computeRNext(const Matrix4x4& R) {
