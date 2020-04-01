@@ -8,7 +8,7 @@ namespace idragnev::pbrt {
     {
     public:
         Quaternion() = default;
-        Quaternion(const Vector3f v, const Float w) : v{v}, w{w} { }
+        Quaternion(const Vector3f& v, const Float w) : v{v}, w{w} { }
         explicit Quaternion(const Transformation& m);
 
         Quaternion& operator+=(const Quaternion& rhs);
@@ -23,6 +23,10 @@ namespace idragnev::pbrt {
         Vector3f v;
         Float w = 1.f;
     };
+
+    inline Quaternion operator-(const Quaternion& q) {
+        return Quaternion{-q.v, -q.w};
+    }
 
     Quaternion operator+(const Quaternion& lhs, const Quaternion& rhs);
     Quaternion operator-(const Quaternion& lhs, const Quaternion& rhs);

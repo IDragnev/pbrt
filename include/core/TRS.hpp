@@ -7,9 +7,9 @@
 namespace idragnev::pbrt {
     struct TRS
     {
-        Vector3f translation;
-        Quaternion rotation;
-        Matrix4x4 scaling;
+        Vector3f T;
+        Quaternion R;
+        Matrix4x4 S;
     };
 
     TRS decompose(const Matrix4x4& m);

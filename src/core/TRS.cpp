@@ -11,9 +11,9 @@ namespace idragnev::pbrt {
         const auto R = detail::extractRotation(RS);
 
         TRS result;
-        result.translation = T;
-        result.rotation = Quaternion{Transformation{R}};
-        result.scaling = inverse(R) * RS;
+        result.T = T;
+        result.R = Quaternion{Transformation{R}};
+        result.S = inverse(R) * RS;
 
         return result;
     }
