@@ -6,6 +6,7 @@ set(RAY_TRACER_CORE_SOURCE
   Quaternion.cpp
   TRS.cpp
   AnimatedTransformation.cpp
+  Interval.cpp
 )
 
 set(CORE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/core)
@@ -36,6 +37,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_INCLUDE_DIR}/Quaternion.hpp
   ${CORE_INCLUDE_DIR}/TRS.hpp
   ${CORE_INCLUDE_DIR}/AnimatedTransformation.hpp
+  ${CORE_INCLUDE_DIR}/Interval.hpp
 )
 
 add_library(
