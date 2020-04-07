@@ -11,20 +11,14 @@ namespace idragnev::pbrt {
     }
 
     Interval operator*(const Interval& lhs, const Interval& rhs) noexcept {
-        return Interval{
-            std::min({
-                lhs.low() * rhs.low(), 
-                lhs.low() * rhs.high(), 
-                lhs.high() * rhs.low(), 
-                lhs.high() * rhs.high()
-            }),
-            std::max({
-                lhs.low() * rhs.low(),
-                lhs.low() * rhs.high(),
+        const auto [min, max] = std::minmax({
+                lhs.low()  * rhs.low(),
+                lhs.low()  * rhs.high(),
                 lhs.high() * rhs.low(),
                 lhs.high() * rhs.high()
-            })
-        };
+        });
+
+        return Interval{ min, max };
     }
 
     Interval sin(const Interval& i) {

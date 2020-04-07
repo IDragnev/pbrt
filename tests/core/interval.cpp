@@ -7,10 +7,14 @@ namespace pbrt = idragnev::pbrt;
 TEST_CASE("construction from two values does not depend on"
           "arguments order")
 {
-    const auto i = pbrt::Interval{1.f, 0.f};
+    const auto i1 = pbrt::Interval{1.f, 0.f};
+    const auto i2 = pbrt::Interval{0.f, 1.f};
 
-    CHECK(i.low() == 0.f);
-    CHECK(i.high() == 1.f);
+    CHECK(i1.low() == 0.f);
+    CHECK(i1.high() == 1.f);
+    
+    CHECK(i2.low() == 0.f);
+    CHECK(i2.high() == 1.f);
 }
 
 TEST_CASE("multiplication")
