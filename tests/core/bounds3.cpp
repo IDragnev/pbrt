@@ -160,3 +160,17 @@ TEST_CASE("point distance")
         CHECK(distanceSquared(pbrt::Point3f{-3.f, -9.f, 22.f}, bounds) == 2 * 2 + 6 * 6 + 4 * 4);
     }
 }
+
+TEST_CASE("corner selection")
+{
+    const auto bounds = pbrt::Bounds3f{ {0.f, 0.f, 0.f}, {1.f, 1.f, 1.f} };
+
+    CHECK(bounds.corner(0) == bounds.min);
+    CHECK(bounds.corner(1) == pbrt::Point3f{1.f, 0.f, 0.f});
+    CHECK(bounds.corner(2) == pbrt::Point3f{0.f, 1.f, 0.f});
+    CHECK(bounds.corner(3) == pbrt::Point3f{1.f, 1.f, 0.f});
+    CHECK(bounds.corner(4) == pbrt::Point3f{0.f, 0.f, 1.f});
+    CHECK(bounds.corner(5) == pbrt::Point3f{1.f, 0.f, 1.f});
+    CHECK(bounds.corner(6) == pbrt::Point3f{0.f, 1.f, 1.f});
+    CHECK(bounds.corner(7) == bounds.max);
+}
