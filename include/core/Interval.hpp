@@ -12,6 +12,13 @@ namespace idragnev::pbrt {
         Float low() const noexcept { return _low; }
         Float high() const noexcept { return _high; }
 
+        Interval withLow(const Float low) const noexcept {
+            return Interval{low, _high};
+        }
+        Interval withHigh(const Float high) const noexcept {
+            return Interval{_low, high};
+        }
+
     private:
         Float _low;
         Float _high;

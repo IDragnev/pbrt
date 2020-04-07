@@ -49,3 +49,45 @@ TEST_CASE("subtraction")
     CHECK(c.low() == -10.f);
     CHECK(c.high() == 3.f);
 }
+
+TEST_CASE("withLow")
+{
+    const auto interval = pbrt::Interval{0.f, 3.f};
+
+    SUBCASE("with higher argument than high")
+    {
+        const auto i = interval.withLow(4.f);
+
+        CHECK(i.low() == 3.f);
+        CHECK(i.high() == 4.f);
+    }
+    
+    SUBCASE("with lower argument than high")
+    {
+        const auto i = interval.withLow(1.f);
+
+        CHECK(i.low() == 1.f);
+        CHECK(i.high() == 3.f);
+    }
+}
+
+TEST_CASE("withHigh")
+{
+    const auto interval = pbrt::Interval{0.f, 3.f};
+
+    SUBCASE("with higher argument than high")
+    {
+        const auto i = interval.withHigh(4.f);
+
+        CHECK(i.low() == 0.f);
+        CHECK(i.high() == 4.f);
+    }
+    
+    SUBCASE("with lower argument than high")
+    {
+        const auto i = interval.withHigh(1.f);
+
+        CHECK(i.low() == 0.f);
+        CHECK(i.high() == 1.f);
+    }
+}
