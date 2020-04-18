@@ -4,8 +4,6 @@ project(ray-tracer
 LANGUAGES CXX
 )
 
-enable_testing()
-
 set(default_build_type "Release")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to '${default_build_type}' as none was specified.")

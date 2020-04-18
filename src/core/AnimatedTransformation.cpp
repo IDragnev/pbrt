@@ -761,7 +761,7 @@ namespace idragnev::pbrt {
         if (!actuallyAnimated) {
             return (*startTransform)(b);
         }
-        else if (hasRotation == false) {
+        else if (!hasRotation) {
             return unionOf((*startTransform)(b), (*endTransform)(b));
         }
         else {

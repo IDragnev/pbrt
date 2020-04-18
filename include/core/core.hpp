@@ -68,6 +68,11 @@ namespace idragnev::pbrt {
     class AnimatedTransformation;
 
     class Interval;
+    
+    class Interaction;
+    class SurfaceInteraction;
+
+    class Shape;
 
     template <
         typename T,

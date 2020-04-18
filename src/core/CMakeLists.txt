@@ -7,6 +7,7 @@ set(RAY_TRACER_CORE_SOURCE
   TRS.cpp
   AnimatedTransformation.cpp
   Interval.cpp
+  SurfaceInteraction.cpp
 )
 
 set(CORE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/core)
@@ -38,6 +39,8 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_INCLUDE_DIR}/TRS.hpp
   ${CORE_INCLUDE_DIR}/AnimatedTransformation.hpp
   ${CORE_INCLUDE_DIR}/Interval.hpp
+  ${CORE_INCLUDE_DIR}/Interaction.hpp
+  ${CORE_INCLUDE_DIR}/SurfaceInteraction.hpp
 )
 
 add_library(
