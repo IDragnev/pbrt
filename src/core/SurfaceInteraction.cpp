@@ -1,4 +1,5 @@
 #include "SurfaceInteraction.hpp"
+#include "Shape.hpp"
 
 namespace idragnev::pbrt {
     SurfaceInteraction::SurfaceInteraction(const Point3f& p, const Vector3f& pError, 
@@ -22,7 +23,7 @@ namespace idragnev::pbrt {
         shading.dndu = dndu;
         shading.dndv = dndv;
 
-        if (shape) {// && (shape->reverseOrientation ^ shape->transformSwapsHandedness)) {
+        if (shape && (shape->reverseOrientation ^ shape->transformSwapsHandedness)) {
             n *= -1;
             shading.n *= -1;
         }
@@ -37,7 +38,9 @@ namespace idragnev::pbrt {
     {
         shading.n = [&] {
             const auto n = Normal3f{ normalize(cross(dpdus, dpdvs)) };
-            return (shape /*&& (shape->reverseOrientation ^ shape->transformSwapsHandedness)*/) ? -n : n;
+            return (shape && (shape->reverseOrientation ^ shape->transformSwapsHandedness)) 
+                    ? -n 
+                    : n;
         }();
 
         if (isOrientationAuthoritative) {

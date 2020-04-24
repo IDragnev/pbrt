@@ -3,6 +3,7 @@
 #include "Vector3.hpp"
 #include "Bounds3.hpp"
 #include "Interval.hpp"
+#include "Ray.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
@@ -60,8 +61,9 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    bool Bounds3<T>::intersectP(const Ray& ray, const Vector3f& invDir, const std::size_t dirIsNeg[3]) const noexcept 
-    {
+    bool Bounds3<T>::intersectP(const Ray& ray, const Vector3f& invDir, const std::size_t dirIsNeg[3]) const noexcept {
+        assert(std::all_of(dirIsNeg, dirIsNeg + 3, [](auto n) { return n == 0 || n == 1; }));
+
         const auto& bounds = *this;
         constexpr auto k = 1.f + 2.f * gamma(3);
         
