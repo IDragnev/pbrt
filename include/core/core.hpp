@@ -13,6 +13,7 @@ namespace idragnev::pbrt {
 
     namespace constants {
         inline constexpr auto Infinity = std::numeric_limits<Float>::infinity();
+        inline constexpr Float MachineEpsilon = std::numeric_limits<Float>::epsilon() * 0.5;
         inline constexpr Float ShadowEpsilon = 0.0001f;
         inline constexpr Float Pi = 3.14159265358979323846;
         inline constexpr Float InvPi = 0.31830988618379067154;
@@ -119,5 +120,10 @@ namespace idragnev::pbrt {
     template <typename T>
     inline auto lerp(const Float t, const T& a, const T& b) noexcept { 
         return (1.f - t) * a + t * b; 
+    }
+
+    inline constexpr Float gamma(int n) noexcept {
+        using constants::MachineEpsilon;
+        return (n * MachineEpsilon) / (1 - n * MachineEpsilon);
     }
 }

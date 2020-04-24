@@ -35,7 +35,7 @@ namespace idragnev::pbrt {
         const Matrix4x4& inverseMatrix() const noexcept { return mInverse; }
 
         bool hasScale() const noexcept;
-        bool swapsHandednes() const noexcept;
+        bool swapsHandedness() const noexcept;
 
         template <typename T>
         Point3<T> operator()(const Point3<T>& p) const;

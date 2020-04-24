@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Vector3.hpp"
+#include "Bounds3.hpp"
+#include "Interval.hpp"
+
 namespace idragnev::pbrt {
     template <typename T>
     Bounds3<T>::Bounds3() {
@@ -28,6 +32,62 @@ namespace idragnev::pbrt {
     inline Bounds3<T>::operator Bounds3<U>() const {
         static_assert(std::is_convertible_v<T, U>, "Cannot convert the underlying type");
         return Bounds3<U>{Point3<U>{min}, Point3<U>{max}};
+    }
+
+    template <typename T>
+    std::optional<Interval> Bounds3<T>::intersectP(const Ray& ray) const noexcept {
+        Float t0 = 0.f;
+        Float t1 = ray.tMax;
+
+        for (std::size_t i = 0; i < 3; ++i) {
+            const Float invRayDir = 1 / ray.d[i];
+            Float tNear = (min[i] - ray.o[i]) * invRayDir;
+            Float tFar  = (max[i] - ray.o[i]) * invRayDir;
+
+            if (tNear > tFar) std::swap(tNear, tFar);
+
+            tFar *= 1.f + 2.f * gamma(3);
+            
+            t0 = tNear > t0 ? tNear : t0;
+            t1 = tFar < t1 ? tFar : t1;
+            
+            if (t0 > t1) {
+                return std::nullopt;
+            }
+        }
+
+        return std::make_optional(Interval{ t0, t1 });
+    }
+
+    template <typename T>
+    bool Bounds3<T>::intersectP(const Ray& ray, const Vector3f& invDir, const std::size_t dirIsNeg[3]) const noexcept 
+    {
+        const auto& bounds = *this;
+        constexpr auto k = 1.f + 2.f * gamma(3);
+        
+        const Float txMin = (bounds[    dirIsNeg[0]].x - ray.o.x) * invDir.x;
+        const Float txMax = (bounds[1 - dirIsNeg[0]].x - ray.o.x) * invDir.x * k;
+        const Float tyMin = (bounds[    dirIsNeg[1]].y - ray.o.y) * invDir.y;
+        const Float tyMax = (bounds[1 - dirIsNeg[1]].y - ray.o.y) * invDir.y * k;
+
+        if (txMin > tyMax || tyMin > txMax) {
+            return false;
+        }
+
+        Float tMin = txMin > tyMin ? txMin : tyMin;
+        Float tMax = txMax < tyMax ? txMax : tyMax;
+
+        const Float tzMin = (bounds[    dirIsNeg[2]].z - ray.o.z) * invDir.z;
+        const Float tzMax = (bounds[1 - dirIsNeg[2]].z - ray.o.z) * invDir.z * k;
+
+        if (tMin > tzMax || tzMin > tMax) {
+            return false;
+        }
+
+        if (tzMin > tMin) tMin = tzMin;
+        if (tzMax < tMax) tMax = tzMax;
+
+        return (tMin < ray.tMax) && (tMax > 0.f);
     }
 
     template <typename T>

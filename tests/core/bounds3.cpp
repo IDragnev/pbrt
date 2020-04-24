@@ -1,6 +1,9 @@
 #include "doctest/doctest.h"
 
 #include "Bounds3.hpp"
+#include "Ray.hpp"
+#include "Vector3.hpp"
+
 #include <vector>
 
 namespace pbrt = idragnev::pbrt;
@@ -173,4 +176,97 @@ TEST_CASE("corner selection")
     CHECK(bounds.corner(5) == pbrt::Point3f{1.f, 0.f, 1.f});
     CHECK(bounds.corner(6) == pbrt::Point3f{0.f, 1.f, 1.f});
     CHECK(bounds.corner(7) == bounds.max);
+}
+
+
+TEST_CASE("ray outside the bounds does not intersect it")
+{
+    const auto bounds = pbrt::Bounds3f{
+        pbrt::Point3f{1.0, 1.0, 1.0},
+        pbrt::Point3f{5.0, 10.0, 30.0},
+    };
+    const auto ray = pbrt::Ray{
+        pbrt::Point3f{0.f, 0.f, 0.f},
+        pbrt::Vector3f{-1.f, 1.f, 1.f}
+    };
+        
+    CHECK(bounds.intersectP(ray) == std::nullopt);
+}
+
+TEST_CASE("ray parallel to the bounds does not intersect it")
+{
+    const auto bounds = pbrt::Bounds3f{
+        pbrt::Point3f{1.f, 1.f, 1.f},
+        pbrt::Point3f{5.f, 10.f, 30.f},
+    };
+    const auto ray = pbrt::Ray{
+        pbrt::Point3f{0.f, 0.f, 0.f},
+        pbrt::Vector3f{0.f, 1.f, 1.f},
+    };
+
+    CHECK(bounds.intersectP(ray) == std::nullopt);
+}
+
+TEST_CASE("ray through the bounds intersects it")
+{
+    const auto bounds = pbrt::Bounds3f{
+        pbrt::Point3f{1.f, 1.f, 1.f},
+        pbrt::Point3f{5.f, 10.f, 30.f},
+    };
+    const auto ray = pbrt::Ray{
+        pbrt::Point3f{0.f, 0.f, 0.f},
+        pbrt::Vector3f{1.f, 1.f, 1.f},
+    };
+
+    CHECK(bounds.intersectP(ray) != std::nullopt);
+}
+
+TEST_CASE("optimised intersection")
+{
+    const auto inverse = [](const auto vec) {
+        return pbrt::Vector3f{ 1 / vec[0], 1 / vec[1], 1 / vec[2] };
+    };
+    const std::size_t dirIsNegative[] = { 0, 0, 0 };
+
+    SUBCASE("ray outside the bounds does not intersect it")
+    {
+        const auto bounds = pbrt::Bounds3f{
+            pbrt::Point3f{1.f, 1.f, 1.f},
+            pbrt::Point3f{5.f, 10.f, 30.f},
+        };
+        const auto ray = pbrt::Ray{
+            pbrt::Point3f{0.f, 0.f, 0.f},
+            pbrt::Vector3f{-1.f, 1.f, 1.f}
+        };
+
+        CHECK(!bounds.intersectP(ray, inverse(ray.d), dirIsNegative));
+    }
+
+    SUBCASE("ray parallel to the bounds does not intersect it")
+    {
+        const auto bounds = pbrt::Bounds3f{
+            pbrt::Point3f{1.f, 1.f, 1.f},
+            pbrt::Point3f{5.f, 10.f, 30.f},
+        };
+        const auto ray = pbrt::Ray{
+            pbrt::Point3f{0.f, 0.f, 0.f},
+            pbrt::Vector3f{0.f, 1.f, 1.f},
+        };
+
+        CHECK(!bounds.intersectP(ray, inverse(ray.d), dirIsNegative));
+    }
+
+    SUBCASE("ray through the bounds intersects it")
+    {
+        const auto bounds = pbrt::Bounds3f{
+            pbrt::Point3f{1.f, 1.f, 1.f},
+            pbrt::Point3f{5.f, 10.f, 30.f},
+        };
+        const auto ray = pbrt::Ray{
+            pbrt::Point3f{0.f, 0.f, 0.f},
+            pbrt::Vector3f{1.f, 1.f, 1.f},
+        };
+
+        CHECK(bounds.intersectP(ray, inverse(ray.d), dirIsNegative));
+    }
 }

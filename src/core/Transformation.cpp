@@ -14,7 +14,7 @@ namespace idragnev::pbrt {
                scales({ 0.f, 0.f, 1.f });
     }
 
-    bool Transformation::swapsHandednes() const noexcept {
+    bool Transformation::swapsHandedness() const noexcept {
         const auto det =
             m.m[0][0] * (m.m[1][1] * m.m[2][2] - m.m[1][2] * m.m[2][1]) -
             m.m[0][1] * (m.m[1][0] * m.m[2][2] - m.m[1][2] * m.m[2][0]) +
