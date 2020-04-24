@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Vector3.hpp"
-#include "Bounds3.hpp"
 #include "Interval.hpp"
 #include "Ray.hpp"
 
