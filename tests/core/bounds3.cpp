@@ -221,6 +221,34 @@ TEST_CASE("ray through the bounds intersects it")
     CHECK(bounds.intersectP(ray) != std::nullopt);
 }
 
+TEST_CASE("ray with origin inside the bounds intersects it")
+{
+    const auto bounds = pbrt::Bounds3f{
+        pbrt::Point3f{1.f, 1.f, 1.f},
+        pbrt::Point3f{3.f, 3.f, 3.f},
+    };
+    const auto ray = pbrt::Ray{
+        pbrt::Point3f{2.f, 2.f, 2.f},
+        pbrt::Vector3f{0.f, 1.f, 0.f},
+    };
+
+    CHECK(bounds.intersectP(ray) != std::nullopt);
+}
+
+TEST_CASE("ray with origin on a bounds wall and passing through the bounds intersects it")
+{
+    const auto bounds = pbrt::Bounds3f{
+        pbrt::Point3f{1.f, 1.f, 1.f},
+        pbrt::Point3f{3.f, 3.f, 3.f},
+    };
+    const auto ray = pbrt::Ray{
+        pbrt::Point3f{1.f, 1.f, 2.f},
+        pbrt::Vector3f{0.f, 1.f, 0.f},
+    };
+
+    CHECK(bounds.intersectP(ray) != std::nullopt);
+}
+
 TEST_CASE("optimised intersection")
 {
     const auto inverse = [](const auto vec) {
@@ -265,6 +293,34 @@ TEST_CASE("optimised intersection")
         const auto ray = pbrt::Ray{
             pbrt::Point3f{0.f, 0.f, 0.f},
             pbrt::Vector3f{1.f, 1.f, 1.f},
+        };
+
+        CHECK(bounds.intersectP(ray, inverse(ray.d), dirIsNegative));
+    }
+
+    SUBCASE("ray with origin on a bounds wall and passing through the bounds intersects it")
+    {
+        const auto bounds = pbrt::Bounds3f{
+            pbrt::Point3f{1.f, 1.f, 1.f},
+            pbrt::Point3f{3.f, 3.f, 3.f},
+        };
+        const auto ray = pbrt::Ray{
+            pbrt::Point3f{1.f, 1.f, 2.f},
+            pbrt::Vector3f{0.f, 1.f, 0.f},
+        };
+
+        CHECK(bounds.intersectP(ray, inverse(ray.d), dirIsNegative));
+    }
+
+    SUBCASE("ray with origin inside the bounds intersects it")
+    {
+        const auto bounds = pbrt::Bounds3f{
+            pbrt::Point3f{1.f, 1.f, 1.f},
+            pbrt::Point3f{3.f, 3.f, 3.f},
+        };
+        const auto ray = pbrt::Ray{
+            pbrt::Point3f{2.f, 2.f, 2.f},
+            pbrt::Vector3f{0.f, 1.f, 0.f},
         };
 
         CHECK(bounds.intersectP(ray, inverse(ray.d), dirIsNegative));
