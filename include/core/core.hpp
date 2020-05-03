@@ -2,6 +2,8 @@
 
 #include <limits>
 #include <cmath>
+#include <cstring>
+#include <cstdint>
 
 namespace idragnev::pbrt {
 
@@ -122,8 +124,46 @@ namespace idragnev::pbrt {
         return (1.f - t) * a + t * b; 
     }
 
-    inline constexpr Float gamma(int n) noexcept {
+    inline constexpr Float gamma(const int n) noexcept {
         using constants::MachineEpsilon;
         return (n * MachineEpsilon) / (1 - n * MachineEpsilon);
     }
+
+    namespace detail {
+        template <typename R, typename T>
+        inline R floatToBits(const T f) noexcept {
+            R result;
+            std::memcpy(&result, &f, sizeof(T));
+            return result;
+        }
+
+        template <typename R, typename T>
+        inline R bitsToFloat(const T bits) noexcept {
+            R f;
+            std::memcpy(&f, &bits, sizeof(T));
+            return f;
+        }
+    } //namespace detail
+
+    inline std::uint32_t floatToBits(const float f) noexcept {
+        return detail::floatToBits<std::uint32_t>(f);
+    }
+
+    inline std::uint64_t floatToBits(const double f) noexcept {
+        return detail::floatToBits<std::uint64_t>(f);
+    }
+
+    inline float bitsToFloat(const std::uint32_t bits) noexcept {
+        return detail::bitsToFloat<float>(bits);
+    }
+
+    inline double bitsToFloat(const std::uint64_t bits) noexcept {
+        return detail::bitsToFloat<double>(bits);
+    }
+
+    float nextFloatUp(float v) noexcept;
+    float nextFloatDown(float v) noexcept;
+    
+    double nextFloatUp(double v, const int delta = 1) noexcept;
+    double nextFloatDown(double v, const int delta = 1) noexcept;
 }

@@ -26,7 +26,7 @@ namespace idragnev::pbrt {
         virtual std::optional<HitRecord> intersect(const Ray& ray, const bool testAlphaTexture = true) const = 0;
         virtual bool intersectP(const Ray& ray, const bool testAlphaTexture = true) const;
 
-        virtual Float Area() const = 0;
+        virtual Float area() const = 0;
 
     public:
         const Transformation* objectToWorldTransform = nullptr;
