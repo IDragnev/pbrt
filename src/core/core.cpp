@@ -31,7 +31,7 @@ namespace idragnev::pbrt {
         return bitsToFloat(bits);
     }
 
-    double nextFloatUp(double v, const int delta = 1) noexcept {
+    double nextFloatUp(double v, const int delta) noexcept {
         if (std::isinf(v) && v > 0.) {
             return v;
         }
@@ -51,7 +51,7 @@ namespace idragnev::pbrt {
         return bitsToFloat(bits);
     }
 
-    double nextFloatDown(double v, const int delta = 1) noexcept {
+    double nextFloatDown(double v, const int delta) noexcept {
         if (std::isinf(v) && v < 0.) {
             return v;
         }
