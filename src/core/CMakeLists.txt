@@ -1,4 +1,5 @@
 set(RAY_TRACER_CORE_SOURCE
+  core.cpp
   Ray.cpp
   RayDifferential.cpp
   Matrix4x4.cpp
