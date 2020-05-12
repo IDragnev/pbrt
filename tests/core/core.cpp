@@ -7,8 +7,6 @@
 
 namespace pbrt = idragnev::pbrt;
 
-bool AlmostEqualRelative(float A, float B, float maxRelDiff = FLT_EPSILON) noexcept;
-
 TEST_CASE("coordinateSystem returns orthonormal basis when given normalized vector")
 {
     const auto [u, v, w] = pbrt::coordinateSystem(pbrt::Vector3f{ 1.f, 0.f, 0.f });
