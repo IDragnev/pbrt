@@ -50,6 +50,16 @@ TEST_CASE("subtraction")
     CHECK(c.high() == 3.f);
 }
 
+TEST_CASE("negation")
+{
+    const auto a = pbrt::Interval{ 2.f, 10.f };
+
+    const auto b = -a;
+
+    CHECK(b.low() == -10.f);
+    CHECK(b.high() == -2.f);
+}
+
 TEST_CASE("withLow")
 {
     const auto interval = pbrt::Interval{0.f, 3.f};

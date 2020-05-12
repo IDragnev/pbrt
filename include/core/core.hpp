@@ -14,7 +14,8 @@ namespace idragnev::pbrt {
 #endif
 
     namespace constants {
-        inline constexpr auto Infinity = std::numeric_limits<Float>::infinity();
+        inline constexpr Float MaxFloat = std::numeric_limits<Float>::max();
+        inline constexpr Float Infinity = std::numeric_limits<Float>::infinity();
         inline constexpr Float MachineEpsilon = std::numeric_limits<Float>::epsilon() * 0.5;
         inline constexpr Float ShadowEpsilon = 0.0001f;
         inline constexpr Float Pi = 3.14159265358979323846;
@@ -76,7 +77,9 @@ namespace idragnev::pbrt {
     class SurfaceInteraction;
 
     class Shape;
-
+    
+    class EFloat;
+    
     template <
         typename T,
         typename = std::enable_if_t<std::is_floating_point_v<T>>

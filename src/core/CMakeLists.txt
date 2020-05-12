@@ -10,6 +10,7 @@ set(RAY_TRACER_CORE_SOURCE
   Interval.cpp
   SurfaceInteraction.cpp
   Shape.cpp
+  EFloat.cpp
 )
 
 set(CORE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/core)
@@ -44,6 +45,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_INCLUDE_DIR}/Interaction.hpp
   ${CORE_INCLUDE_DIR}/SurfaceInteraction.hpp
   ${CORE_INCLUDE_DIR}/Shape.hpp
+  ${CORE_INCLUDE_DIR}/EFloat.hpp
 )
 
 add_library(
