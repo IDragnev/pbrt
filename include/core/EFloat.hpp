@@ -6,21 +6,18 @@
 #include <optional>
 
 namespace idragnev::pbrt {
-    struct QuadraticRoots;
-
     class EFloat
     {
     private:
         friend EFloat abs(const EFloat& fe);
         friend EFloat sqrt(const EFloat& fe);
-        friend std::optional<QuadraticRoots> quadratic(const EFloat& a, const EFloat& b, const EFloat& c);
 
     public:
         EFloat() = default;
-        EFloat(const float v, const float err = 0.f);
+        EFloat(const float v, const float err = 0.f) noexcept;
 
     #ifndef NDEBUG
-        EFloat(const float v, const long double precise, const float err) 
+        EFloat(const float v, const long double precise, const float err) noexcept
             : EFloat(v, err)
         {
             vPrecise = precise;
@@ -43,10 +40,10 @@ namespace idragnev::pbrt {
         }
     #endif //!NDEBUG
 
-        EFloat operator-() const;
-        EFloat operator+(const EFloat& rhs) const;
-        EFloat operator-(const EFloat& rhs) const;
-        EFloat operator*(const EFloat& rhs) const;
+        EFloat operator-() const noexcept;
+        EFloat operator+(const EFloat& rhs) const noexcept;
+        EFloat operator-(const EFloat& rhs) const noexcept;
+        EFloat operator*(const EFloat& rhs) const noexcept;
         EFloat operator/(const EFloat& rhs) const;
 
         bool operator==(const EFloat& rhs) const noexcept { return v == rhs.v; }
@@ -61,19 +58,19 @@ namespace idragnev::pbrt {
 
     };
 
+    inline EFloat operator*(const float lhs, const EFloat& rhs) { return EFloat{lhs} * rhs; }
+    inline EFloat operator/(const float lhs, const EFloat& rhs) { return EFloat{lhs} / rhs; }
+    inline EFloat operator+(const float lhs, const EFloat& rhs) { return EFloat{lhs} + rhs; }
+    inline EFloat operator-(const float lhs, const EFloat& rhs) { return EFloat{lhs} - rhs; }
+
+    EFloat sqrt(const EFloat& fe);
+    EFloat abs(const EFloat& fe);
+
     struct QuadraticRoots 
     {
         EFloat t0;
         EFloat t1;
     };
 
-    EFloat operator*(const float lhs, const EFloat& rhs) { return EFloat{lhs} * rhs; }
-    EFloat operator/(const float lhs, const EFloat& rhs) { return EFloat{lhs} / rhs; }
-    EFloat operator+(const float lhs, const EFloat& rhs) { return EFloat{lhs} + rhs; }
-    EFloat operator-(const float lhs, const EFloat& rhs) { return EFloat{lhs} - rhs; }
-
-    EFloat sqrt(const EFloat& fe);
-    EFloat abs(const EFloat& fe);
-
-    std::optional<QuadraticRoots> quadratic(const EFloat& a, const EFloat& b, const EFloat& c);
+    std::optional<QuadraticRoots> solveQuadratic(const EFloat& a, const EFloat& b, const EFloat& c);
 } //namespace idragnev::pbrt
