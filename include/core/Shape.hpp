@@ -29,8 +29,8 @@ namespace idragnev::pbrt {
         virtual Float area() const = 0;
 
     public:
-        const Transformation* objectToWorldTransform = nullptr;
-        const Transformation* worldToObjectTransform = nullptr;
+        const Transformation* const objectToWorldTransform = nullptr;
+        const Transformation* const worldToObjectTransform = nullptr;
         const bool reverseOrientation = false;
         const bool transformSwapsHandedness = false;
     };

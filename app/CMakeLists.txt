@@ -1,5 +1,6 @@
 set(ALL_APP_LIBS
   corelib
+  shapeslib
 )
 
 add_executable(raytracer_exe main.cpp)

@@ -2,11 +2,19 @@
 
 #include "core.hpp"
 #include "Matrix4x4.hpp"
+#include "Ray.hpp"
 
 namespace idragnev::pbrt {
     class Transformation 
     {
     public:
+        struct TransformResult
+        {
+            Ray ray;
+            Vector3f oError;
+            Vector3f dError;
+        };
+
         Transformation() = default;
 
         explicit Transformation(const Float mat[4][4])
@@ -51,6 +59,11 @@ namespace idragnev::pbrt {
         RayDifferential operator()(const RayDifferential& r) const;
         
         Bounds3f operator()(const Bounds3f& b) const;
+
+        SurfaceInteraction operator()(const SurfaceInteraction& si) const;
+
+        TransformResult transformWithErrBound(const Ray& r) const;
+        TransformResult transformWithErrBound(const Ray& r, const Vector3f& oErrorIn, const Vector3f& dErrorIn) const;
 
     private:
         Matrix4x4 m;

@@ -2,6 +2,7 @@
 #include "Vector3.hpp"
 #include "Point3.hpp"
 #include "Bounds3.hpp"
+#include "SurfaceInteraction.hpp"
 
 namespace idragnev::pbrt {
     bool Transformation::hasScale() const noexcept {
@@ -44,6 +45,22 @@ namespace idragnev::pbrt {
         result.max = max(xMin, xMax) + max(yMin, yMax) + max(zMin, zMax) + translation;
 
         return result;
+    }
+
+    SurfaceInteraction Transformation::operator()(const SurfaceInteraction& si) const {
+        //TODO
+        const auto result = si;
+        return result;
+    }
+
+    auto Transformation::transformWithErrBound(const Ray& r) const -> TransformResult {
+        //TODO
+        return {};
+    }
+
+    auto Transformation::transformWithErrBound(const Ray& r, const Vector3f& oErrorIn, const Vector3f& dErrorIn) const -> TransformResult {
+        //TODO
+        return {};
     }
 
     Transformation translation(const Vector3f& delta) noexcept {

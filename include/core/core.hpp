@@ -79,7 +79,8 @@ namespace idragnev::pbrt {
     class Shape;
     
     class EFloat;
-    
+    struct QuadraticRoots;
+
     template <
         typename T,
         typename = std::enable_if_t<std::is_floating_point_v<T>>
