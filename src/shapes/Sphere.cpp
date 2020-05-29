@@ -182,7 +182,7 @@ namespace idragnev::pbrt {
 
         const auto liesInZClippedArea = [this](const Point3f& hitPoint) {
             return (zMin > -radius && hitPoint.z < zMin) ||
-                (zMax <  radius&& hitPoint.z > zMax);
+                   (zMax <  radius&& hitPoint.z > zMax);
         };
 
         auto hitPoint = computeHitPoint(ray, tShapeHit);
