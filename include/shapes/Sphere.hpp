@@ -24,6 +24,9 @@ namespace idragnev::pbrt {
         Float area() const override;
         
     private:
+        template <typename R, typename S, typename F>
+        R intersectImpl(const Ray& ray, F failure, S success) const;
+
         HitRecord makeHitRecord(const Ray& ray, const Point3f& hitPoint, const EFloat& t, const Float phi) const;
 
         std::optional<QuadraticRoots> findIntersectionParams(const Ray& ray, const Vector3f& oErr, const Vector3f& dErr) const;

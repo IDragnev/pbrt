@@ -37,23 +37,43 @@ namespace idragnev::pbrt {
     }
 
     std::optional<HitRecord> Sphere::intersect(const Ray& rayInWorldSpace, const bool) const {
+        return intersectImpl<std::optional<HitRecord>>(
+            rayInWorldSpace,
+            std::nullopt,
+            [this](const Ray& ray, const Point3f& hitPoint, const EFloat& tShapeHit, const Float phi) {
+                return std::make_optional(makeHitRecord(ray, hitPoint, tShapeHit, phi));
+            });
+    }
+
+    bool Sphere::intersectP(const Ray& rayInWorldSpace, const bool) const {
+        return intersectImpl<bool>(
+            rayInWorldSpace,
+            false,
+            [](const auto&...) {
+                return true;
+            });
+    }
+
+    //will be instantiated only in this translation unit so its ok to be defined here
+    template <typename R, typename S, typename F>
+    R Sphere::intersectImpl(const Ray& rayInWorldSpace, F failure, S success) const {
         const auto [ray, oErr, dErr] = worldToObjectTransform->transformWithErrBound(rayInWorldSpace);
 
         const auto intersectionParams = findIntersectionParams(ray, oErr, dErr);
         if (!intersectionParams.has_value()) {
-            return std::nullopt;
+            return failure;
         }
 
         const auto [t0, t1] = intersectionParams.value();
         if (t0.upperBound() > ray.tMax || t1.lowerBound() <= 0.f) {
-            return std::nullopt;
+            return failure;
         }
 
         auto tShapeHit = t0;
         if (tShapeHit.lowerBound() <= 0.f) {
             tShapeHit = t1;
             if (tShapeHit.upperBound() > ray.tMax) {
-                return std::nullopt;
+                return failure;
             }
         }
 
@@ -66,18 +86,18 @@ namespace idragnev::pbrt {
         auto phi = computePhi(hitPoint);
         if (liesInZClippedArea(hitPoint) || phi > phiMax) {
             if (tShapeHit == t1 || t1.upperBound() > ray.tMax) {
-                return std::nullopt;
+                return failure;
             }
 
             tShapeHit = t1;
             hitPoint = computeHitPoint(ray, tShapeHit);
             phi = computePhi(hitPoint);
             if (liesInZClippedArea(hitPoint) || phi > phiMax) {
-                return std::nullopt;
+                return failure;
             }
         }
 
-        return std::make_optional(makeHitRecord(ray, hitPoint, tShapeHit, phi));
+        return success(ray, hitPoint, tShapeHit, phi);
     }
 
     std::optional<QuadraticRoots> pbrt::Sphere::findIntersectionParams(const Ray& ray, const Vector3f& oErr, const Vector3f& dErr) const {
@@ -157,50 +177,6 @@ namespace idragnev::pbrt {
         result.t = static_cast<Float>(tShapeHit);
         result.interaction = (*objectToWorldTransform)(interaction);
         return result;
-    }
-
-    bool Sphere::intersectP(const Ray& rayInWorldSpace, const bool) const {
-        const auto [ray, oErr, dErr] = worldToObjectTransform->transformWithErrBound(rayInWorldSpace);
-
-        const auto intersectionParams = findIntersectionParams(ray, oErr, dErr);
-        if (!intersectionParams.has_value()) {
-            return false;
-        }
-
-        const auto [t0, t1] = intersectionParams.value();
-        if (t0.upperBound() > ray.tMax || t1.lowerBound() <= 0.f) {
-            return false;
-        }
-
-        EFloat tShapeHit = t0;
-        if (tShapeHit.lowerBound() <= 0.f) {
-            tShapeHit = t1;
-            if (tShapeHit.upperBound() > ray.tMax) {
-                return false;
-            }
-        }
-
-        const auto liesInZClippedArea = [this](const Point3f& hitPoint) {
-            return (zMin > -radius && hitPoint.z < zMin) ||
-                   (zMax <  radius&& hitPoint.z > zMax);
-        };
-
-        auto hitPoint = computeHitPoint(ray, tShapeHit);
-        auto phi = computePhi(hitPoint);
-        if (liesInZClippedArea(hitPoint) || phi > phiMax) {
-            if (tShapeHit == t1 || t1.upperBound() > ray.tMax) {
-                return false;
-            }
-
-            tShapeHit = t1;
-            hitPoint = computeHitPoint(ray, tShapeHit);
-            phi = computePhi(hitPoint);
-            if (liesInZClippedArea(hitPoint) || phi > phiMax) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     Float Sphere::area() const {
