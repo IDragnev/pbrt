@@ -49,13 +49,18 @@ namespace idragnev::pbrt {
             return std::nullopt;
         }
 
-        EFloat tShapeHit = t0;
+        auto tShapeHit = t0;
         if (tShapeHit.lowerBound() <= 0.f) {
             tShapeHit = t1;
             if (tShapeHit.upperBound() > ray.tMax) {
                 return std::nullopt;
             }
         }
+
+        const auto liesInZClippedArea = [this](const Point3f& hitPoint) {
+            return (zMin > -radius && hitPoint.z < zMin) ||
+                   (zMax <  radius && hitPoint.z > zMax);
+        };
 
         auto hitPoint = computeHitPoint(ray, tShapeHit);
         auto phi = computePhi(hitPoint);
@@ -90,12 +95,12 @@ namespace idragnev::pbrt {
         return solveQuadratic(a, b, c);
     }
 
-    Float pbrt::Sphere::computePhi(const Point3f& hitPoint) {
+    Float Sphere::computePhi(const Point3f& hitPoint) {
         const Float phi = std::atan2(hitPoint.y, hitPoint.x);
         return phi < 0.f ? (phi + 2 * constants::Pi) : phi;
     }
 
-    Point3f pbrt::Sphere::computeHitPoint(const Ray& ray, const EFloat& t) const {
+    Point3f Sphere::computeHitPoint(const Ray& ray, const EFloat& t) const {
         auto p = ray(static_cast<Float>(t));
         p *= radius / distance(p, Point3f(0.f, 0.f, 0.f));
         if (p.x == 0.f && p.y == 0.f) {
@@ -103,11 +108,6 @@ namespace idragnev::pbrt {
         }
 
         return p;
-    }
-
-    bool Sphere::liesInZClippedArea(const Point3f& hitPoint) const noexcept {
-        return (zMin > -radius && hitPoint.z < zMin) ||
-               (zMax <  radius&& hitPoint.z > zMax);
     }
 
     HitRecord Sphere::makeHitRecord(const Ray& ray, const Point3f& hitPoint, const EFloat& tShapeHit, const Float phi) const {
@@ -179,6 +179,11 @@ namespace idragnev::pbrt {
                 return false;
             }
         }
+
+        const auto liesInZClippedArea = [this](const Point3f& hitPoint) {
+            return (zMin > -radius && hitPoint.z < zMin) ||
+                (zMax <  radius&& hitPoint.z > zMax);
+        };
 
         auto hitPoint = computeHitPoint(ray, tShapeHit);
         auto phi = computePhi(hitPoint);

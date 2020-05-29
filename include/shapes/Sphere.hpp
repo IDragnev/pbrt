@@ -30,8 +30,6 @@ namespace idragnev::pbrt {
         
         Point3f computeHitPoint(const Ray& ray, const EFloat& t) const;
         
-        bool liesInZClippedArea(const Point3f& hitPoint) const noexcept;
-
         static Float computePhi(const Point3f& hitPoint);
 
     private:
