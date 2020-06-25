@@ -17,8 +17,8 @@ namespace idragnev::pbrt {
 
         virtual Bounds3f objectBound() const override;
 
-        virtual std::optional<HitRecord> intersect(const Ray& ray, const bool testAlphaTexture = true) const override;
-        virtual bool intersectP(const Ray& ray, const bool testAlphaTexture = true) const override;
+        virtual std::optional<HitRecord> intersect(const Ray& ray, const bool testAlphaTexture) const override;
+        virtual bool intersectP(const Ray& ray, const bool testAlphaTexture) const override;
 
         virtual Float area() const override;
 
