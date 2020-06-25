@@ -40,8 +40,8 @@ namespace idragnev::pbrt {
         return intersectImpl<std::optional<HitRecord>>(
             rayInWorldSpace,
             std::nullopt,
-            [this](const Ray& ray, const Point3f& hitPoint, const EFloat& tShapeHit, const Float phi) {
-                return std::make_optional(makeHitRecord(ray, hitPoint, tShapeHit, phi));
+            [this](const auto&... args) {
+                return std::make_optional(makeHitRecord(args...));
             });
     }
 
@@ -100,7 +100,7 @@ namespace idragnev::pbrt {
         return success(ray, hitPoint, tShapeHit, phi);
     }
 
-    std::optional<QuadraticRoots> pbrt::Sphere::findIntersectionParams(const Ray& ray, const Vector3f& oErr, const Vector3f& dErr) const {
+    std::optional<QuadraticRoots> Sphere::findIntersectionParams(const Ray& ray, const Vector3f& oErr, const Vector3f& dErr) const {
         const auto ox = EFloat(ray.o.x, oErr.x);
         const auto oy = EFloat(ray.o.y, oErr.y);
         const auto oz = EFloat(ray.o.z, oErr.z);

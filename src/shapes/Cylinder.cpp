@@ -30,8 +30,8 @@ namespace idragnev::pbrt {
         return intersectImpl<std::optional<HitRecord>>(
             rayInWorldSpace, 
             std::nullopt,
-            [this](const Ray& ray, const Point3f& hitPoint, const EFloat& tShapeHit, const Float phi) {
-                return std::make_optional(makeHitRecord(ray, hitPoint, tShapeHit, phi));
+            [this](const auto&... args) {
+                return std::make_optional(makeHitRecord(args...));
             });
     }
     

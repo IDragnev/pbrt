@@ -1,6 +1,7 @@
 set(RAY_TRACER_SHAPES_SOURCE
   Sphere.cpp
   Cylinder.cpp
+  Disk.cpp
 )
 
 set(SHAPES_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/shapes)
@@ -8,6 +9,7 @@ set(SHAPES_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/shapes)
 set(RAY_TRACER_SHAPES_HEADERS
   ${SHAPES_INCLUDE_DIR}/Sphere.hpp
   ${SHAPES_INCLUDE_DIR}/Cylinder.hpp
+  ${SHAPES_INCLUDE_DIR}/Disk.hpp
 )
 
 add_library(
