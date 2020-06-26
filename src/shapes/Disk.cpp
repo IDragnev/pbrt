@@ -44,7 +44,7 @@ namespace idragnev::pbrt {
             });
     }
 
-    //will be instantiated only in this translation unit so its ok to be defined here
+    //will be instantiated only in this translation unit so it's ok to be defined here
     template <typename R, typename S, typename F>
     R Disk::intersectImpl(const Ray& rayInWorldSpace, F failure, S success) const {
         const auto [ray, oErr, dErr] = worldToObjectTransform->transformWithErrBound(rayInWorldSpace);

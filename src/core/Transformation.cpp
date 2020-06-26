@@ -53,12 +53,12 @@ namespace idragnev::pbrt {
         return result;
     }
 
-    auto Transformation::transformWithErrBound(const Ray& r) const -> TransformResult {
+    RayWithErrorBound Transformation::transformWithErrBound(const Ray& r) const {
         //TODO
         return {};
     }
 
-    auto Transformation::transformWithErrBound(const Ray& r, const Vector3f& oErrorIn, const Vector3f& dErrorIn) const -> TransformResult {
+    RayWithErrorBound Transformation::transformWithErrBound(const Ray& r, const Vector3f& oErrorIn, const Vector3f& dErrorIn) const {
         //TODO
         return {};
     }

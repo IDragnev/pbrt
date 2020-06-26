@@ -65,6 +65,7 @@ namespace idragnev::pbrt {
     class RayDifferential;
 
     class Matrix4x4;
+    struct RayWithErrorBound;
     class Transformation;
 
     class Quaternion;

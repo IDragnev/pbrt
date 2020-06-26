@@ -5,16 +5,16 @@
 #include "Ray.hpp"
 
 namespace idragnev::pbrt {
+    struct RayWithErrorBound
+    {
+        Ray ray;
+        Vector3f oError;
+        Vector3f dError;
+    };
+
     class Transformation 
     {
     public:
-        struct TransformResult
-        {
-            Ray ray;
-            Vector3f oError;
-            Vector3f dError;
-        };
-
         Transformation() = default;
 
         explicit Transformation(const Float mat[4][4])
@@ -62,8 +62,8 @@ namespace idragnev::pbrt {
 
         SurfaceInteraction operator()(const SurfaceInteraction& si) const;
 
-        TransformResult transformWithErrBound(const Ray& r) const;
-        TransformResult transformWithErrBound(const Ray& r, const Vector3f& oErrorIn, const Vector3f& dErrorIn) const;
+        RayWithErrorBound transformWithErrBound(const Ray& r) const;
+        RayWithErrorBound transformWithErrBound(const Ray& r, const Vector3f& oErrorIn, const Vector3f& dErrorIn) const;
 
     private:
         Matrix4x4 m;
