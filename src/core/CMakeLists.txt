@@ -13,39 +13,39 @@ set(RAY_TRACER_CORE_SOURCE
   EFloat.cpp
 )
 
-set(CORE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/core)
+set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/core)
 
 set(RAY_TRACER_CORE_HEADERS
-  ${CORE_INCLUDE_DIR}/core.hpp
-  ${CORE_INCLUDE_DIR}/Vector2.hpp
-  ${CORE_INCLUDE_DIR}/Vector2Impl.hpp
-  ${CORE_INCLUDE_DIR}/Vector3.hpp
-  ${CORE_INCLUDE_DIR}/Vector3Impl.hpp
-  ${CORE_INCLUDE_DIR}/Point2.hpp
-  ${CORE_INCLUDE_DIR}/Point2Impl.hpp
-  ${CORE_INCLUDE_DIR}/Point3.hpp
-  ${CORE_INCLUDE_DIR}/Point3Impl.hpp
-  ${CORE_INCLUDE_DIR}/Normal3.hpp
-  ${CORE_INCLUDE_DIR}/Normal3Impl.hpp
-  ${CORE_INCLUDE_DIR}/BoundingSphere.hpp
-  ${CORE_INCLUDE_DIR}/Bounds2.hpp
-  ${CORE_INCLUDE_DIR}/Bounds2Impl.hpp
-  ${CORE_INCLUDE_DIR}/Bounds2Iterator.hpp
-  ${CORE_INCLUDE_DIR}/Bounds3.hpp
-  ${CORE_INCLUDE_DIR}/Bounds3Impl.hpp
-  ${CORE_INCLUDE_DIR}/Ray.hpp
-  ${CORE_INCLUDE_DIR}/RayDifferential.hpp
-  ${CORE_INCLUDE_DIR}/Matrix4x4.hpp
-  ${CORE_INCLUDE_DIR}/Transformation.hpp
-  ${CORE_INCLUDE_DIR}/TransformationImpl.hpp
-  ${CORE_INCLUDE_DIR}/Quaternion.hpp
-  ${CORE_INCLUDE_DIR}/TRS.hpp
-  ${CORE_INCLUDE_DIR}/AnimatedTransformation.hpp
-  ${CORE_INCLUDE_DIR}/Interval.hpp
-  ${CORE_INCLUDE_DIR}/Interaction.hpp
-  ${CORE_INCLUDE_DIR}/SurfaceInteraction.hpp
-  ${CORE_INCLUDE_DIR}/Shape.hpp
-  ${CORE_INCLUDE_DIR}/EFloat.hpp
+  ${CORE_HEADERS_DIR}/core.hpp
+  ${CORE_HEADERS_DIR}/Vector2.hpp
+  ${CORE_HEADERS_DIR}/Vector2Impl.hpp
+  ${CORE_HEADERS_DIR}/Vector3.hpp
+  ${CORE_HEADERS_DIR}/Vector3Impl.hpp
+  ${CORE_HEADERS_DIR}/Point2.hpp
+  ${CORE_HEADERS_DIR}/Point2Impl.hpp
+  ${CORE_HEADERS_DIR}/Point3.hpp
+  ${CORE_HEADERS_DIR}/Point3Impl.hpp
+  ${CORE_HEADERS_DIR}/Normal3.hpp
+  ${CORE_HEADERS_DIR}/Normal3Impl.hpp
+  ${CORE_HEADERS_DIR}/BoundingSphere.hpp
+  ${CORE_HEADERS_DIR}/Bounds2.hpp
+  ${CORE_HEADERS_DIR}/Bounds2Impl.hpp
+  ${CORE_HEADERS_DIR}/Bounds2Iterator.hpp
+  ${CORE_HEADERS_DIR}/Bounds3.hpp
+  ${CORE_HEADERS_DIR}/Bounds3Impl.hpp
+  ${CORE_HEADERS_DIR}/Ray.hpp
+  ${CORE_HEADERS_DIR}/RayDifferential.hpp
+  ${CORE_HEADERS_DIR}/Matrix4x4.hpp
+  ${CORE_HEADERS_DIR}/Transformation.hpp
+  ${CORE_HEADERS_DIR}/TransformationImpl.hpp
+  ${CORE_HEADERS_DIR}/Quaternion.hpp
+  ${CORE_HEADERS_DIR}/TRS.hpp
+  ${CORE_HEADERS_DIR}/AnimatedTransformation.hpp
+  ${CORE_HEADERS_DIR}/Interval.hpp
+  ${CORE_HEADERS_DIR}/Interaction.hpp
+  ${CORE_HEADERS_DIR}/SurfaceInteraction.hpp
+  ${CORE_HEADERS_DIR}/Shape.hpp
+  ${CORE_HEADERS_DIR}/EFloat.hpp
 )
 
 add_library(
@@ -54,5 +54,5 @@ add_library(
   ${RAY_TRACER_CORE_SOURCE}
   ${RAY_TRACER_CORE_HEADERS}
 )
-target_include_directories(corelib PUBLIC ${CORE_INCLUDE_DIR})
+target_include_directories(corelib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_compile_features(corelib PUBLIC cxx_std_17)

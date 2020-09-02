@@ -1,4 +1,4 @@
-#include "core.hpp"
+#include "core/core.hpp"
 
 namespace idragnev::pbrt {
     float nextFloatUp(float f) noexcept {

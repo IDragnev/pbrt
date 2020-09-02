@@ -1,8 +1,8 @@
 #include "doctest/doctest.h"
 
-#include "Bounds3.hpp"
-#include "Ray.hpp"
-#include "Vector3.hpp"
+#include "core/Bounds3.hpp"
+#include "core/Ray.hpp"
+#include "core/Vector3.hpp"
 
 #include <vector>
 

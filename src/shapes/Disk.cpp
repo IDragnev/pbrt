@@ -1,7 +1,7 @@
 #include "Disk.hpp"
-#include "Transformation.hpp"
-#include "EFloat.hpp"
-#include "Bounds3.hpp"
+#include "core/Transformation.hpp"
+#include "core/EFloat.hpp"
+#include "core/Bounds3.hpp"
 
 namespace idragnev::pbrt {
     Disk::Disk(const Transformation& objectToWorld,

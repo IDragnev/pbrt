@@ -1,7 +1,7 @@
 #include "Sphere.hpp"
-#include "Bounds3.hpp"
-#include "Transformation.hpp"
-#include "EFloat.hpp"
+#include "core/Bounds3.hpp"
+#include "core/Transformation.hpp"
+#include "core/EFloat.hpp"
 
 namespace idragnev::pbrt {
     Sphere::Sphere(const Transformation& objectToWorld, 

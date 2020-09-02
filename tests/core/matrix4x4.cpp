@@ -1,7 +1,7 @@
 #include "doctest/doctest.h"
 
-#include "Matrix4x4.hpp"
-#include "Vector3.hpp"
+#include "core/Matrix4x4.hpp"
+#include "core/Vector3.hpp"
 
 namespace pbrt = idragnev::pbrt;
 

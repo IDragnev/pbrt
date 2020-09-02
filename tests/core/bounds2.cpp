@@ -1,6 +1,7 @@
 #include "doctest/doctest.h"
 
-#include "Bounds2.hpp"
+#include "core/Bounds2.hpp"
+
 #include <vector>
 
 namespace pbrt = idragnev::pbrt;

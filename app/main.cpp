@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "Ray.hpp"
-#include "Bounds2.hpp"
-#include "Matrix4x4.hpp"
-#include "Quaternion.hpp"
+#include "core/Ray.hpp"
+#include "core/Bounds2.hpp"
+#include "core/Matrix4x4.hpp"
+#include "core/Quaternion.hpp"
 
 namespace pbrt = idragnev::pbrt;
 

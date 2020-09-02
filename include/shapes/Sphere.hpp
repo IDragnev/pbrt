@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core.hpp"
-#include "Shape.hpp"
+#include "core/core.hpp"
+#include "core/Shape.hpp"
 
 #include <optional>
 

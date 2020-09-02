@@ -1,9 +1,9 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
 
-#include "Vector3.hpp"
-#include "Normal3.hpp"
-#include "EFloat.hpp"
+#include "core/Vector3.hpp"
+#include "core/Normal3.hpp"
+#include "core/EFloat.hpp"
 
 namespace pbrt = idragnev::pbrt;
 

@@ -1,6 +1,6 @@
-#include "TRS.hpp"
-#include "Matrix4x4.hpp"
-#include "Transformation.hpp"
+#include "core/TRS.hpp"
+#include "core/Matrix4x4.hpp"
+#include "core/Transformation.hpp"
 
 #include <algorithm>
 

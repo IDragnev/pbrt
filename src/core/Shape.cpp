@@ -1,6 +1,6 @@
-#include "Shape.hpp"
-#include "Transformation.hpp"
-#include "Bounds3.hpp"
+#include "core/Shape.hpp"
+#include "core/Transformation.hpp"
+#include "core/Bounds3.hpp"
 
 namespace idragnev::pbrt {
     Shape::Shape(const Transformation& objectToWorld, 
