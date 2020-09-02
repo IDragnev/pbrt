@@ -1,4 +1,4 @@
-#include "Sphere.hpp"
+#include "shapes/Sphere.hpp"
 #include "core/Bounds3.hpp"
 #include "core/Transformation.hpp"
 #include "core/EFloat.hpp"

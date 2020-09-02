@@ -1,4 +1,4 @@
-#include "Paraboloid.hpp"
+#include "shapes/Paraboloid.hpp"
 #include "core/Bounds3.hpp"
 #include "core/EFloat.hpp"
 #include "core/Transformation.hpp"

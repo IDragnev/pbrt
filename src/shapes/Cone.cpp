@@ -1,4 +1,4 @@
-#include "Cone.hpp"
+#include "shapes/Cone.hpp"
 #include "core/Bounds3.hpp"
 #include "core/Transformation.hpp"
 #include "core/EFloat.hpp"

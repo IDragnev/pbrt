@@ -1,4 +1,4 @@
-#include "Cylinder.hpp"
+#include "shapes/Cylinder.hpp"
 #include "core/Bounds3.hpp"
 #include "core/Transformation.hpp"
 #include "core/EFloat.hpp"
