@@ -9,14 +9,16 @@ namespace idragnev::pbrt {
 
 #ifdef RT_FLOAT_AS_DOUBLE
     using Float = double;
-#else 
+#else
     using Float = float;
 #endif
 
     namespace constants {
         inline constexpr Float MaxFloat = std::numeric_limits<Float>::max();
-        inline constexpr Float Infinity = std::numeric_limits<Float>::infinity();
-        inline constexpr Float MachineEpsilon = std::numeric_limits<Float>::epsilon() * 0.5;
+        inline constexpr Float Infinity =
+            std::numeric_limits<Float>::infinity();
+        inline constexpr Float MachineEpsilon =
+            std::numeric_limits<Float>::epsilon() * 0.5;
         inline constexpr Float ShadowEpsilon = 0.0001f;
         inline constexpr Float Pi = 3.14159265358979323846;
         inline constexpr Float InvPi = 0.31830988618379067154;
@@ -25,10 +27,10 @@ namespace idragnev::pbrt {
         inline constexpr Float PiOver2 = 1.57079632679489661923;
         inline constexpr Float PiOver4 = 0.78539816339744830961;
         inline constexpr Float Sqrt2 = 1.41421356237309504880;
-    } //namespace constants
+    } // namespace constants
 
     template <typename T>
-    class Vector2;  
+    class Vector2;
     template <typename T>
     class Vector3;
 
@@ -73,45 +75,41 @@ namespace idragnev::pbrt {
     class AnimatedTransformation;
 
     class Interval;
-    
+
     class Interaction;
     class SurfaceInteraction;
 
     class Shape;
-    
+
     class EFloat;
     struct QuadraticRoots;
 
-    template <
-        typename T,
-        typename = std::enable_if_t<std::is_floating_point_v<T>>
-    >
+    template <typename T,
+              typename = std::enable_if_t<std::is_floating_point_v<T>>>
     inline bool isNaN(const T x) {
         return std::isnan(x);
     }
 
-    template <
-        typename T,
-        typename = std::enable_if_t<std::is_integral_v<T>>
-    >
+    template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
     inline bool isNaN(const T&) {
         return false;
     }
 
-    inline Float toRadians(const Float deg) noexcept { 
+    inline Float toRadians(const Float deg) noexcept {
         using constants::Pi;
-        return (Pi / 180.f) * deg; 
+        return (Pi / 180.f) * deg;
     }
 
     inline Float toDegrees(const Float rad) noexcept {
         using constants::Pi;
-        return (180.f / Pi) * rad; 
+        return (180.f / Pi) * rad;
     }
 
     template <typename T, typename U, typename V>
     inline T clamp(const T val, const U low, const V high) noexcept {
-        static_assert(std::is_arithmetic_v<T> && std::is_arithmetic_v<U> && std::is_arithmetic_v<V>,
-            "clamp can be used only with arithmetic types");
+        static_assert(std::is_arithmetic_v<T> && std::is_arithmetic_v<U> &&
+                          std::is_arithmetic_v<V>,
+                      "clamp can be used only with arithmetic types");
 
         if (val < low) {
             return low;
@@ -125,8 +123,8 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline auto lerp(const Float t, const T& a, const T& b) noexcept { 
-        return (1.f - t) * a + t * b; 
+    inline auto lerp(const Float t, const T& a, const T& b) noexcept {
+        return (1.f - t) * a + t * b;
     }
 
     inline constexpr Float gamma(const int n) noexcept {
@@ -148,7 +146,7 @@ namespace idragnev::pbrt {
             std::memcpy(&f, &bits, sizeof(T));
             return f;
         }
-    } //namespace detail
+    } // namespace detail
 
     inline std::uint32_t floatToBits(const float f) noexcept {
         return detail::floatToBits<std::uint32_t>(f);
@@ -168,7 +166,7 @@ namespace idragnev::pbrt {
 
     float nextFloatUp(float v) noexcept;
     float nextFloatDown(float v) noexcept;
-    
+
     double nextFloatUp(double v, const int delta = 1) noexcept;
     double nextFloatDown(double v, const int delta = 1) noexcept;
-}
+} // namespace idragnev::pbrt

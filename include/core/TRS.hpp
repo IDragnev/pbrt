@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Vector3.hpp"
-#include "Quaternion.hpp"
-#include "Matrix4x4.hpp"
+#include "core/Vector3.hpp"
+#include "core/Quaternion.hpp"
+#include "core/Matrix4x4.hpp"
 
 namespace idragnev::pbrt {
     struct TRS
@@ -19,5 +19,5 @@ namespace idragnev::pbrt {
         Matrix4x4 extractRotation(const Matrix4x4& SR);
         Matrix4x4 computeRNext(const Matrix4x4& R);
         Float computeNormDifference(const Matrix4x4& R, const Matrix4x4& RNext);
-    }
-} //namespace idragnev::pbrt
+    } // namespace detail
+} // namespace idragnev::pbrt

@@ -4,10 +4,8 @@
 
 namespace idragnev::pbrt {
     template <typename T>
-    inline Point2<T>::Point2(T x, T y)
-        : x{x}
-        , y{y}
-    {
+    inline Point2<T>::Point2(T x, T y) : x{x}
+                                       , y{y} {
         assert(!hasNaNs());
     }
 
@@ -15,35 +13,33 @@ namespace idragnev::pbrt {
     inline bool Point2<T>::hasNaNs() const noexcept {
         return isNaN(x) || isNaN(y);
     }
-    
+
     template <typename T>
     template <typename U>
     inline Point2<T>::operator Vector2<U>() const {
-        static_assert(std::is_convertible_v<T, U>, "Cannot convert the underlying type");
+        static_assert(std::is_convertible_v<T, U>,
+                      "Cannot convert the underlying type");
         return Vector2<U>{x, y};
     }
 
     template <typename T>
     template <typename U>
     inline Point2<T>::Point2(const Point2<U>& p)
-        : Point2{static_cast<T>(p.x), static_cast<T>(p.y)}
-    {
-        static_assert(std::is_convertible_v<U, T>, "Cannot convert the underlying type");
+        : Point2{static_cast<T>(p.x), static_cast<T>(p.y)} {
+        static_assert(std::is_convertible_v<U, T>,
+                      "Cannot convert the underlying type");
     }
 
     template <typename T>
     template <typename U>
     inline Point2<T>::Point2(const Vector2<U>& v)
-        : Point2{static_cast<T>(v.x), static_cast<T>(v.y)}
-    {
-        static_assert(std::is_convertible_v<U, T>, "Cannot convert the underlying type");
+        : Point2{static_cast<T>(v.x), static_cast<T>(v.y)} {
+        static_assert(std::is_convertible_v<U, T>,
+                      "Cannot convert the underlying type");
     }
 
     template <typename T>
-    inline Point2<T>::Point2(const Point3<T>& p)
-        : Point2{p.x, p.y}
-    {
-    }
+    inline Point2<T>::Point2(const Point3<T>& p) : Point2{p.x, p.y} {}
 
     template <typename T>
     inline T Point2<T>::operator[](std::size_t i) const {
@@ -72,7 +68,7 @@ namespace idragnev::pbrt {
         y += p.y;
         return *this;
     }
-    
+
     template <typename T>
     Point2<T>& Point2<T>::operator-=(const Vector2<T>& v) {
         assert(!v.hasNaNs());
@@ -92,7 +88,8 @@ namespace idragnev::pbrt {
     template <typename T>
     template <typename U>
     Point2<T>& Point2<T>::operator*=(U f) {
-        static_assert(std::is_arithmetic_v<U>, "Cannot scale a point with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<U>,
+                      "Cannot scale a point with non-arithmetic type");
         assert(!isNaN(f));
 
         x *= f;
@@ -103,7 +100,8 @@ namespace idragnev::pbrt {
     template <typename T>
     template <typename U>
     Point2<T>& Point2<T>::operator/=(U f) {
-        static_assert(std::is_arithmetic_v<U>, "Cannot divide a point with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<U>,
+                      "Cannot divide a point with non-arithmetic type");
         assert(f != 0);
 
         Float inv = Float{1} / f;
@@ -192,8 +190,9 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Point2<T> lerp(Float t, const Point2<T>& p0, const Point2<T>& p1) noexcept {
-        return (1 - t)*p0 + t*p1;
+    inline Point2<T>
+    lerp(Float t, const Point2<T>& p0, const Point2<T>& p1) noexcept {
+        return (1 - t) * p0 + t * p1;
     }
 
     template <typename T>
@@ -210,4 +209,4 @@ namespace idragnev::pbrt {
     inline Point2<T> permute(const Point2<T>& p, std::size_t x, std::size_t y) {
         return {p[x], p[y]};
     }
-} //namespace idragnev::pbrt 
+} // namespace idragnev::pbrt

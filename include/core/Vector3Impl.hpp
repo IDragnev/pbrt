@@ -2,11 +2,9 @@
 
 namespace idragnev::pbrt {
     template <typename T>
-    inline Vector3<T>::Vector3(T x, T y, T z)
-        : x{x}
-        , y{y}
-        , z{z}
-    {
+    inline Vector3<T>::Vector3(T x, T y, T z) : x{x}
+                                              , y{y}
+                                              , z{z} {
         assert(!hasNaNs());
     }
 
@@ -16,20 +14,14 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Vector3<T>::Vector3(const Point3<T>& p)
-        : Vector3{p.x, p.y, p.z}
-    {
-    }
-    
+    inline Vector3<T>::Vector3(const Point3<T>& p) : Vector3{p.x, p.y, p.z} {}
+
     template <typename T>
-    inline Vector3<T>::Vector3(const Normal3<T>& n)
-        : Vector3{n.x, n.y, n.z}
-    {
-    }
+    inline Vector3<T>::Vector3(const Normal3<T>& n) : Vector3{n.x, n.y, n.z} {}
 
     template <typename T>
     inline Float Vector3<T>::lengthSquared() const noexcept {
-        return x*x + y*y + z*z;
+        return x * x + y * y + z * z;
     }
 
     template <typename T>
@@ -41,10 +33,15 @@ namespace idragnev::pbrt {
     inline T Vector3<T>::operator[](std::size_t i) const {
         assert(i < 3);
         switch (i) {
-            case 0: return x;
-            case 1: return y;
-            case 2: return z;
-            default: assert(false);
+            case 0: {
+                return x;
+            }
+            case 1: {
+                return y;
+            }
+            case 2: {
+                return z;
+            }
         }
     }
 
@@ -52,10 +49,15 @@ namespace idragnev::pbrt {
     inline T& Vector3<T>::operator[](std::size_t i) {
         assert(i < 3);
         switch (i) {
-            case 0: return x;
-            case 1: return y;
-            case 2: return z;
-            default: assert(false);
+            case 0: {
+                return x;
+            }
+            case 1: {
+                return y;
+            }
+            case 2: {
+                return z;
+            }
         }
     }
 
@@ -80,7 +82,8 @@ namespace idragnev::pbrt {
     template <typename T>
     template <typename U>
     Vector3<T>& Vector3<T>::operator*=(U f) {
-        static_assert(std::is_arithmetic_v<U>, "Cannot scale a vector with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<U>,
+                      "Cannot scale a vector with non-arithmetic type");
         assert(!isNaN(f));
 
         x *= f;
@@ -92,7 +95,8 @@ namespace idragnev::pbrt {
     template <typename T>
     template <typename U>
     Vector3<T>& Vector3<T>::operator/=(U f) {
-        static_assert(std::is_arithmetic_v<U>, "Cannot divide a vector with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<U>,
+                      "Cannot divide a vector with non-arithmetic type");
         assert(f != 0);
 
         Float inv = Float{1} / f;
@@ -146,7 +150,7 @@ namespace idragnev::pbrt {
     template <typename T>
     inline Float dot(const Vector3<T>& u, const Vector3<T>& v) {
         assert(!u.hasNaNs() && !v.hasNaNs());
-        return u.x*v.x + u.y*v.y + u.z*v.z;
+        return u.x * v.x + u.y * v.y + u.z * v.z;
     }
 
     template <typename T>
@@ -195,7 +199,8 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    Vector3<T> permute(const Vector3<T>& v, std::size_t x, std::size_t y, std::size_t z) {
+    Vector3<T>
+    permute(const Vector3<T>& v, std::size_t x, std::size_t y, std::size_t z) {
         return {v[x], v[y], v[z]};
     }
 
@@ -203,9 +208,11 @@ namespace idragnev::pbrt {
     Basis3<T> coordinateSystem(const Vector3<T>& u) {
         const auto v = [&u] {
             return std::abs(u.x) > std::abs(u.y)
-                ? (Vector3<T>{-u.z, 0, u.x} / std::sqrt(u.x * u.x + u.z * u.z))
-                : (Vector3<T>{0, u.z, -u.y} / std::sqrt(u.y * u.y + u.z * u.z));
-        } ();
+                       ? (Vector3<T>{-u.z, 0, u.x} /
+                          std::sqrt(u.x * u.x + u.z * u.z))
+                       : (Vector3<T>{0, u.z, -u.y} /
+                          std::sqrt(u.y * u.y + u.z * u.z));
+        }();
         const auto w = cross(u, v);
         return {u, v, w};
     }
@@ -217,11 +224,9 @@ namespace idragnev::pbrt {
 
         double ux = u.x, uy = u.y, uz = u.z;
         double vx = v.x, vy = v.y, vz = v.z;
-        return Vector3<T>(
-            (uy * vz) - (uz * vy), 
-            (uz * vx) - (ux * vz),
-            (ux * vy) - (uy * vx)
-        );
+        return Vector3<T>((uy * vz) - (uz * vy),
+                          (uz * vx) - (ux * vz),
+                          (ux * vy) - (uy * vx));
     }
 
     template <typename T>
@@ -235,4 +240,4 @@ namespace idragnev::pbrt {
     inline Vector3<T> cross(const Normal3<T>& n, const Vector3<T>& v) {
         return cross(Vector3<T>{n}, v);
     }
-} //namespace idragnev::pbrt 
+} // namespace idragnev::pbrt

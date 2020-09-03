@@ -2,38 +2,30 @@
 
 namespace idragnev::pbrt {
     template <typename T>
-    inline Vector2<T>::Vector2(T x, T y) 
-        : x{x}
-        , y{y} 
-    { 
-        assert(!hasNaNs()); 
+    inline Vector2<T>::Vector2(T x, T y) : x{x}
+                                         , y{y} {
+        assert(!hasNaNs());
     }
 
     template <typename T>
-    inline bool Vector2<T>::hasNaNs() const noexcept { 
-        return isNaN(x) || isNaN(y); 
+    inline bool Vector2<T>::hasNaNs() const noexcept {
+        return isNaN(x) || isNaN(y);
     }
 
     template <typename T>
-    inline Vector2<T>::Vector2(const Point2<T>& p)
-        : Vector2{p.x, p.y} 
-    {
+    inline Vector2<T>::Vector2(const Point2<T>& p) : Vector2{p.x, p.y} {}
+
+    template <typename T>
+    inline Vector2<T>::Vector2(const Point3<T>& p) : Vector2{p.x, p.y} {}
+
+    template <typename T>
+    inline Float Vector2<T>::lengthSquared() const noexcept {
+        return x * x + y * y;
     }
 
     template <typename T>
-    inline Vector2<T>::Vector2(const Point3<T>& p)
-        : Vector2{p.x, p.y} 
-    {
-    }
-
-    template <typename T>
-    inline Float Vector2<T>::lengthSquared() const noexcept { 
-        return x * x + y * y; 
-    }
-
-    template <typename T>
-    inline Float Vector2<T>::length() const { 
-        return std::sqrt(lengthSquared()); 
+    inline Float Vector2<T>::length() const {
+        return std::sqrt(lengthSquared());
     }
 
     template <typename T>
@@ -67,7 +59,8 @@ namespace idragnev::pbrt {
     template <typename T>
     template <typename U>
     Vector2<T>& Vector2<T>::operator*=(U f) {
-        static_assert(std::is_arithmetic_v<U>, "Cannot scale a vector with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<U>,
+                      "Cannot scale a vector with non-arithmetic type");
         assert(!isNaN(f));
 
         x *= f;
@@ -78,7 +71,8 @@ namespace idragnev::pbrt {
     template <typename T>
     template <typename U>
     Vector2<T>& Vector2<T>::operator/=(U f) {
-        static_assert(std::is_arithmetic_v<U>, "Cannot divide a vector with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<U>,
+                      "Cannot divide a vector with non-arithmetic type");
         assert(f != 0);
 
         Float inv = Float{1} / f;
@@ -86,22 +80,22 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    Vector2<T> operator+(const Vector2<T>&  u, const Vector2<T>& v) {
+    Vector2<T> operator+(const Vector2<T>& u, const Vector2<T>& v) {
         auto temp = u;
         temp += v;
         return temp;
     }
-    
+
     template <typename T>
     Vector2<T> operator-(const Vector2<T>& u, const Vector2<T>& v) {
         auto temp = u;
         temp -= v;
         return temp;
     }
-    
+
     template <typename T>
-    inline bool operator==(const Vector2<T>& u, const Vector2<T>& v) noexcept { 
-        return u.x == v.x && u.y == v.y; 
+    inline bool operator==(const Vector2<T>& u, const Vector2<T>& v) noexcept {
+        return u.x == v.x && u.y == v.y;
     }
 
     template <typename T>
@@ -125,7 +119,7 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Vector2<T> operator-(const Vector2<T>& v) { 
+    inline Vector2<T> operator-(const Vector2<T>& v) {
         return Vector2<T>(-v.x, -v.y);
     }
 
@@ -150,5 +144,4 @@ namespace idragnev::pbrt {
     inline Vector2<T> Abs(const Vector2<T>& v) {
         return Vector2<T>(std::abs(v.x), std::abs(v.y));
     }
-
-} //namespace idragnev::pbrt 
+} // namespace idragnev::pbrt

@@ -2,13 +2,14 @@
 
 #include <assert.h>
 
-#include "core.hpp"
+#include "core/core.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
     struct Basis3
     {
-        static_assert(std::is_arithmetic_v<T>, "Cannot instantiate Basis3 with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<T>,
+                      "Cannot instantiate Basis3 with non-arithmetic type");
 
         Vector3<T> u;
         Vector3<T> v;
@@ -19,7 +20,8 @@ namespace idragnev::pbrt {
     class Vector3
     {
     private:
-        static_assert(std::is_arithmetic_v<T>, "Cannot instantiate Vector3 with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<T>,
+                      "Cannot instantiate Vector3 with non-arithmetic type");
 
     public:
         Vector3() = default;
@@ -29,7 +31,7 @@ namespace idragnev::pbrt {
         explicit Vector3(const Normal3<T>& n);
 
 #ifndef NDEBUG
-        Vector3(const Vector3& v) : Vector3{v.x, v.y, v.z} { }
+        Vector3(const Vector3& v) : Vector3{v.x, v.y, v.z} {}
         Vector3& operator=(const Vector3& v) {
             assert(!v.hasNaNs());
             if (&v != this) {
@@ -39,7 +41,7 @@ namespace idragnev::pbrt {
             }
             return *this;
         }
-#endif  // !NDEBUG
+#endif // !NDEBUG
 
         bool hasNaNs() const noexcept;
         Float lengthSquared() const noexcept;
@@ -99,7 +101,8 @@ namespace idragnev::pbrt {
     Vector3<T> max(const Vector3<T>& p1, const Vector3<T>& p2);
 
     template <typename T>
-    Vector3<T> permute(const Vector3<T>& v, std::size_t x, std::size_t y, std::size_t z);
+    Vector3<T>
+    permute(const Vector3<T>& v, std::size_t x, std::size_t y, std::size_t z);
 
     template <typename T>
     Basis3<T> coordinateSystem(const Vector3<T>& v);
@@ -124,6 +127,6 @@ namespace idragnev::pbrt {
 
     template <typename T>
     bool operator!=(const Vector3<T>& u, const Vector3<T>& v) noexcept;
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt
 
-#include "Vector3Impl.hpp"
+#include "core/Vector3Impl.hpp"

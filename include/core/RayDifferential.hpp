@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Ray.hpp"
+#include "core/Ray.hpp"
 
 namespace idragnev::pbrt {
     class RayDifferential : public Ray
@@ -8,7 +8,7 @@ namespace idragnev::pbrt {
     public:
         using Ray::Ray;
         RayDifferential() = default;
-        RayDifferential(const Ray& ray) : Ray(ray) { }
+        RayDifferential(const Ray& ray) : Ray(ray) {}
 
         bool hasNaNs() const;
 
@@ -21,4 +21,4 @@ namespace idragnev::pbrt {
         Vector3f rxDirection;
         Vector3f ryDirection;
     };
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt

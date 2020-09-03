@@ -5,13 +5,18 @@ namespace idragnev::pbrt {
         if (std::isinf(f) && f > 0.f) {
             return f;
         }
-        
+
         if (f == -0.f) {
             f = 0.f;
         }
 
         auto bits = floatToBits(f);
-        if (f >= 0.f) { ++bits; } else { --bits; }
+        if (f >= 0.f) {
+            ++bits;
+        }
+        else {
+            --bits;
+        }
 
         return bitsToFloat(bits);
     }
@@ -20,13 +25,18 @@ namespace idragnev::pbrt {
         if (std::isinf(v) && v < 0.) {
             return v;
         }
-        
+
         if (v == 0.f) {
             v = -0.f;
         }
 
         auto bits = floatToBits(v);
-        if (v > 0.f) { --bits; } else { ++bits; }
+        if (v > 0.f) {
+            --bits;
+        }
+        else {
+            ++bits;
+        }
 
         return bitsToFloat(bits);
     }
@@ -35,7 +45,7 @@ namespace idragnev::pbrt {
         if (std::isinf(v) && v > 0.) {
             return v;
         }
-        
+
         if (v == -0.) {
             v = 0.;
         }
@@ -70,4 +80,4 @@ namespace idragnev::pbrt {
 
         return bitsToFloat(bits);
     }
-}//namespace idragnev::pbrt
+} // namespace idragnev::pbrt

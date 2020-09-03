@@ -3,14 +3,15 @@
 #include <type_traits>
 #include <assert.h>
 
-#include "core.hpp"
+#include "core/core.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
-    class Point2 
+    class Point2
     {
     private:
-        static_assert(std::is_arithmetic_v<T>, "Cannot instantiate Point2 with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<T>,
+                      "Cannot instantiate Point2 with non-arithmetic type");
 
     public:
         using UnderlyingType = T;
@@ -22,7 +23,7 @@ namespace idragnev::pbrt {
 
         template <typename U>
         explicit Point2(const Point2<U>& p);
-        
+
         template <typename U>
         explicit Point2(const Vector2<U>& v);
 
@@ -30,8 +31,8 @@ namespace idragnev::pbrt {
         explicit operator Vector2<U>() const;
 
 #ifndef NDEBUG
-        //Added only for debug builds so asserts can be used
-        Point2(const Point2& p) : Point2{p.x, p.y} { }
+        // Added only for debug builds so asserts can be used
+        Point2(const Point2& p) : Point2{p.x, p.y} {}
         Point2& operator=(const Point2& p) {
             assert(!p.hasNaNs());
             if (&p != this) {
@@ -40,7 +41,7 @@ namespace idragnev::pbrt {
             }
             return *this;
         }
-#endif  // !NDEBUG
+#endif // !NDEBUG
 
         bool hasNaNs() const noexcept;
 
@@ -49,10 +50,10 @@ namespace idragnev::pbrt {
         template <typename U>
         Point2& operator/=(U f);
 
-        //for easier use
+        // for easier use
         Point2& operator+=(const Point2& p);
         Point2& operator-=(const Point2& p);
-        
+
         Point2& operator+=(const Vector2<T>& v);
         Point2& operator-=(const Vector2<T>& v);
 
@@ -67,7 +68,7 @@ namespace idragnev::pbrt {
     template <typename T>
     Point2<T> operator+(const Point2<T>& p, const Vector2<T>& v);
 
-    //for easier use
+    // for easier use
     template <typename T>
     Point2<T> operator+(const Point2<T>& p1, const Point2<T>& p2);
 
@@ -118,6 +119,6 @@ namespace idragnev::pbrt {
 
     template <typename T>
     Point2<T> permute(const Point2<T>& p, std::size_t x, std::size_t y);
-}
+} // namespace idragnev::pbrt
 
-#include "Point2Impl.hpp"
+#include "core/Point2Impl.hpp"

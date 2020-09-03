@@ -30,20 +30,20 @@ namespace idragnev::pbrt {
             return RS;
         }
 
-        //assumes M has no translation
+        // assumes M has no translation
         Matrix4x4 extractRotation(const Matrix4x4& RS) {
             Float normDifference = 0.f;
             auto count = 0;
             auto R = RS;
-            
+
             do {
                 const auto Rnext = computeRNext(R);
                 normDifference = computeNormDifference(R, Rnext);
-                
+
                 R = Rnext;
                 ++count;
             } while (count < 100 && normDifference > .0001);
-            
+
             return R;
         }
 
@@ -60,18 +60,17 @@ namespace idragnev::pbrt {
             return RNext;
         }
 
-        Float computeNormDifference(const Matrix4x4& R, const Matrix4x4& Rnext) {
+        Float computeNormDifference(const Matrix4x4& R,
+                                    const Matrix4x4& Rnext) {
             Float norm = 0.f;
             for (auto i = 0; i < 3; ++i) {
-                const Float n = 
-                    std::abs(R.m[i][0] - Rnext.m[i][0]) +
-                    std::abs(R.m[i][1] - Rnext.m[i][1]) +
-                    std::abs(R.m[i][2] - Rnext.m[i][2]);
+                const Float n = std::abs(R.m[i][0] - Rnext.m[i][0]) +
+                                std::abs(R.m[i][1] - Rnext.m[i][1]) +
+                                std::abs(R.m[i][2] - Rnext.m[i][2]);
                 norm = std::max(norm, n);
             }
 
             return norm;
         }
-    } //namespace detail
-} //namespace idragnev::pbrt
-
+    } // namespace detail
+} // namespace idragnev::pbrt

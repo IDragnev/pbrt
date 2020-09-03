@@ -1,13 +1,13 @@
 #pragma once
 
-#include "core.hpp"
-#include "TRS.hpp"
+#include "core/core.hpp"
+#include "core/TRS.hpp"
 
 namespace idragnev::pbrt {
     class AnimatedTransformation
     {
     private:
-        struct DerivativeTerm 
+        struct DerivativeTerm
         {
             Float operator()(const Point3f& p) const noexcept;
 
@@ -16,7 +16,7 @@ namespace idragnev::pbrt {
             Float ky = 0.f;
             Float kz = 0.f;
         };
-        
+
         struct Coefficients
         {
             Float c1 = 0.f;
@@ -27,9 +27,10 @@ namespace idragnev::pbrt {
         };
 
     public:
-        AnimatedTransformation(
-            const Transformation& startTransform, const Float startTime,
-            const Transformation& endTransform, const Float endTime);
+        AnimatedTransformation(const Transformation& startTransform,
+                               const Float startTime,
+                               const Transformation& endTransform,
+                               const Float endTime);
 
         Transformation interpolate(const Float time) const;
 
@@ -47,8 +48,11 @@ namespace idragnev::pbrt {
         Bounds3f pointMotionBounds(const Point3f& p) const;
 
         static void intervalFindZeros(const Coefficients& cs,
-            const Float theta, const Interval& tInterval, 
-            Float zeros[8], int& zeroCount, int depth = 8);
+                                      const Float theta,
+                                      const Interval& tInterval,
+                                      Float zeros[8],
+                                      int& zeroCount,
+                                      int depth = 8);
 
     private:
         const Transformation* startTransform = nullptr;
@@ -79,4 +83,4 @@ namespace idragnev::pbrt {
             return transformation(x);
         }
     }
-} //namespace idragnev::pbrt 
+} // namespace idragnev::pbrt

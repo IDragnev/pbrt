@@ -2,13 +2,14 @@
 
 #include <iterator>
 
-#include "Point2.hpp"
+#include "core/Point2.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
     class Bounds2Iterator
     {
-        static_assert(std::is_integral_v<T>, "Bounds2Iterator<T> requires T to be an integral type");
+        static_assert(std::is_integral_v<T>,
+                      "Bounds2Iterator<T> requires T to be an integral type");
 
     public:
         using iterator_category = std::forward_iterator_tag;
@@ -16,9 +17,7 @@ namespace idragnev::pbrt {
 
         Bounds2Iterator(const Bounds2<T>& b, const Point2<T>& p)
             : currentPoint(p)
-            , bounds(&b) 
-        {
-        }
+            , bounds(&b) {}
 
         Bounds2Iterator& operator++() noexcept {
             ++currentPoint.x;
@@ -43,12 +42,10 @@ namespace idragnev::pbrt {
             return !(*this == rhs);
         }
 
-        Point2<T> operator*() const { 
-            return currentPoint;
-        }
+        Point2<T> operator*() const { return currentPoint; }
 
     private:
         Point2<T> currentPoint;
         const Bounds2<T>* bounds;
     };
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt

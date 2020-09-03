@@ -8,14 +8,15 @@
 
 namespace idragnev::pbrt {
     AnimatedTransformation::AnimatedTransformation(
-        const Transformation& startTransform, const Float startTime,
-        const Transformation& endTransform, const Float endTime)
+        const Transformation& startTransform,
+        const Float startTime,
+        const Transformation& endTransform,
+        const Float endTime)
         : startTransform{&startTransform}
         , endTransform{&endTransform}
         , startTime{startTime}
         , endTime{endTime}
-        , actuallyAnimated{startTransform != endTransform}
-    {
+        , actuallyAnimated{startTransform != endTransform} {
         if (!actuallyAnimated) {
             return;
         }
@@ -24,8 +25,7 @@ namespace idragnev::pbrt {
         endTRS = decompose(endTransform.matrix());
 
         const auto rotationsDot = dot(startTRS.R, endTRS.R);
-        if (const auto isAngleObtuse = rotationsDot < 0.f;
-            isAngleObtuse) {
+        if (const auto isAngleObtuse = rotationsDot < 0.f; isAngleObtuse) {
             endTRS.R = -endTRS.R;
         }
         hasRotation = rotationsDot < 0.9995f;
@@ -68,6 +68,7 @@ namespace idragnev::pbrt {
             const auto s121 = endTRS.S.m[2][1];
             const auto s122 = endTRS.S.m[2][2];
 
+            // clang-format off
             c1[0] = DerivativeTerm{
                 -t0x + t1x,
                 (-1 + q0y * q0y + q0z * q0z + qperpy * qperpy + qperpz * qperpz) *
@@ -732,6 +733,7 @@ namespace idragnev::pbrt {
                     q0x * q0x * (-s022 + s122)) *
                 theta
             };
+            // clang-format on
         }
     }
 
@@ -776,21 +778,22 @@ namespace idragnev::pbrt {
 
     Bounds3f AnimatedTransformation::pointMotionBounds(const Point3f& p) const {
         if (!actuallyAnimated) {
-            return Bounds3f{ (*startTransform)(p) };
+            return Bounds3f{(*startTransform)(p)};
         }
 
         const auto cosTheta = dot(startTRS.R, endTRS.R);
         const auto theta = std::acos(clamp(cosTheta, -1.f, 1.f));
         const auto tInterval = Interval{0.f, 1.f};
 
-        auto bounds = Bounds3f{ (*startTransform)(p), (*endTransform)(p) };
+        auto bounds = Bounds3f{(*startTransform)(p), (*endTransform)(p)};
         for (std::size_t c = 0; c < 3; ++c) {
-            const auto cs = Coefficients{c1[c](p), c2[c](p), c3[c](p), c4[c](p), c5[c](p)};
-            
+            const auto cs =
+                Coefficients{c1[c](p), c2[c](p), c3[c](p), c4[c](p), c5[c](p)};
+
             Float zeros[8];
             auto zerosCount = 0;
             intervalFindZeros(cs, theta, tInterval, zeros, zerosCount);
-            
+
             assert(zerosCount <= std::extent_v<decltype(zeros)>);
 
             for (const auto tZero : zeros) {
@@ -802,33 +805,50 @@ namespace idragnev::pbrt {
         return bounds;
     }
 
-    void AnimatedTransformation::intervalFindZeros(const Coefficients& cs, 
-        const Float theta, const Interval& tInterval, Float zeros[8], int& zeroCount, int depth) 
-    {
+    void AnimatedTransformation::intervalFindZeros(const Coefficients& cs,
+                                                   const Float theta,
+                                                   const Interval& tInterval,
+                                                   Float zeros[8],
+                                                   int& zeroCount,
+                                                   int depth) {
         const auto range = Interval{cs.c1} +
-            (Interval{cs.c2} + Interval{cs.c3} * tInterval) *
-            cos(Interval{2.f * theta} * tInterval) +
-            (Interval{cs.c4} + Interval{cs.c5} * tInterval) *
-            sin(Interval{2.f * theta} * tInterval);
-        if (range.low() > 0.f || range.high() < 0.f || range.low() == range.high()) {
+                           (Interval{cs.c2} + Interval{cs.c3} * tInterval) *
+                               cos(Interval{2.f * theta} * tInterval) +
+                           (Interval{cs.c4} + Interval{cs.c5} * tInterval) *
+                               sin(Interval{2.f * theta} * tInterval);
+        if (range.low() > 0.f || range.high() < 0.f ||
+            range.low() == range.high()) {
             return;
         }
 
         if (depth > 0) {
             const auto mid = (tInterval.low() + tInterval.high()) * 0.5f;
-            intervalFindZeros(cs, theta, tInterval.withHigh(mid), zeros, zeroCount, depth - 1);
-            intervalFindZeros(cs, theta, tInterval.withLow(mid),  zeros, zeroCount, depth - 1);
+            intervalFindZeros(cs,
+                              theta,
+                              tInterval.withHigh(mid),
+                              zeros,
+                              zeroCount,
+                              depth - 1);
+            intervalFindZeros(cs,
+                              theta,
+                              tInterval.withLow(mid),
+                              zeros,
+                              zeroCount,
+                              depth - 1);
         }
         else {
             auto tNewton = (tInterval.low() + tInterval.high()) * 0.5f;
             for (auto i = 0; i < 4; ++i) {
                 const auto fNewton =
-                    cs.c1 + (cs.c2 + cs.c3 * tNewton) * std::cos(2.f * theta * tNewton) +
+                    cs.c1 +
+                    (cs.c2 + cs.c3 * tNewton) *
+                        std::cos(2.f * theta * tNewton) +
                     (cs.c4 + cs.c5 * tNewton) * std::sin(2.f * theta * tNewton);
-                const auto fPrimeNewton = (cs.c3 + 2.f * (cs.c4 + cs.c5 * tNewton) * theta) *
-                    std::cos(2.f * tNewton * theta) +
+                const auto fPrimeNewton =
+                    (cs.c3 + 2.f * (cs.c4 + cs.c5 * tNewton) * theta) *
+                        std::cos(2.f * tNewton * theta) +
                     (cs.c5 - 2.f * (cs.c2 + cs.c3 * tNewton) * theta) *
-                    std::sin(2.f * tNewton * theta);
+                        std::sin(2.f * tNewton * theta);
 
                 if (fNewton == 0.f || fPrimeNewton == 0.f) {
                     break;
@@ -836,7 +856,7 @@ namespace idragnev::pbrt {
 
                 tNewton = tNewton - fNewton / fPrimeNewton;
             }
-            
+
             if (tNewton >= tInterval.low() - 1e-3f &&
                 tNewton < tInterval.high() + 1e-3f) {
                 zeros[zeroCount++] = tNewton;
@@ -844,7 +864,8 @@ namespace idragnev::pbrt {
         }
     }
 
-    Float AnimatedTransformation::DerivativeTerm::operator()(const Point3f& p) const noexcept {
+    Float AnimatedTransformation::DerivativeTerm::operator()(
+        const Point3f& p) const noexcept {
         return kc + kx * p.x + ky * p.y + kz * p.z;
     }
 
@@ -852,15 +873,18 @@ namespace idragnev::pbrt {
         return transform(ray.time, ray);
     }
 
-    RayDifferential AnimatedTransformation::operator()(const RayDifferential& ray) const {
+    RayDifferential
+    AnimatedTransformation::operator()(const RayDifferential& ray) const {
         return transform(ray.time, ray);
     }
 
-    Point3f AnimatedTransformation::operator()(const Float time, const Point3f& p) const {
+    Point3f AnimatedTransformation::operator()(const Float time,
+                                               const Point3f& p) const {
         return transform(time, p);
     }
 
-    Vector3f AnimatedTransformation::operator()(const Float time, const Vector3f& v) const {
+    Vector3f AnimatedTransformation::operator()(const Float time,
+                                                const Vector3f& v) const {
         return transform(time, v);
     }
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt

@@ -6,29 +6,21 @@
 namespace idragnev::pbrt {
     EFloat::EFloat(const float v, const float err) noexcept
         : v(v)
-        , bounds{
-            [err, v] {
-                return err == 0.f ? Interval{v}
-                                  : Interval{
-                                      nextFloatDown(v - err), 
-                                      nextFloatUp(v + err),
-                                      Interval::NoOrderCheck{}
-                                    };
-            }()
-        }
+        , bounds([err, v] {
+            return err == 0.f ? Interval{v}
+                              : Interval{nextFloatDown(v - err),
+                                         nextFloatUp(v + err),
+                                         Interval::NoOrderCheck{}};
+        }())
 #ifndef NDEBUG
         , vPrecise(v)
-#endif //!NDEBUG
+#endif //! NDEBUG
     {
     }
 
-    float EFloat::absoluteError() const { 
+    float EFloat::absoluteError() const {
         return nextFloatUp(
-            std::max(
-                std::abs(bounds.high() - v), 
-                std::abs(v - bounds.low())
-            )
-        ); 
+            std::max(std::abs(bounds.high() - v), std::abs(v - bounds.low())));
     }
 
     EFloat EFloat::operator-() const noexcept {
@@ -39,7 +31,7 @@ namespace idragnev::pbrt {
 
 #ifndef NDEBUG
         result.vPrecise = -vPrecise;
-#endif //!NDEBUG
+#endif //! NDEBUG
 
         return result;
     }
@@ -50,15 +42,13 @@ namespace idragnev::pbrt {
         result.v = v + rhs.v;
 
         const auto b = bounds + rhs.bounds;
-        result.bounds = Interval{
-            nextFloatDown(b.low()),
-            nextFloatUp(b.high()),
-            Interval::NoOrderCheck{}
-        };
+        result.bounds = Interval{nextFloatDown(b.low()),
+                                 nextFloatUp(b.high()),
+                                 Interval::NoOrderCheck{}};
 
 #ifndef NDEBUG
         result.vPrecise = vPrecise + rhs.vPrecise;
-#endif //!NDEBUG
+#endif //! NDEBUG
 
         return result;
     }
@@ -71,26 +61,22 @@ namespace idragnev::pbrt {
 
 #ifndef NDEBUG
         result.vPrecise = vPrecise / rhs.vPrecise;
-#endif //!NDEBUG
+#endif //! NDEBUG
 
         if (rhs.lowerBound() < 0.f && rhs.upperBound() > 0.f) {
-            result.bounds = Interval{
-                -constants::Infinity,
-                 constants::Infinity,
-                Interval::NoOrderCheck{}
-            };
-        } else {
-            const auto [min, max] = std::minmax({
-                lowerBound() / rhs.lowerBound(),
-                lowerBound() / rhs.upperBound(),
-                upperBound() / rhs.lowerBound(),
-                upperBound() / rhs.upperBound()
-            });
-            result.bounds = Interval{
-                nextFloatDown(min),
-                nextFloatUp(max),
-                Interval::NoOrderCheck{}
-            };
+            result.bounds = Interval{-constants::Infinity,
+                                     constants::Infinity,
+                                     Interval::NoOrderCheck{}};
+        }
+        else {
+            const auto [min, max] =
+                std::minmax({lowerBound() / rhs.lowerBound(),
+                             lowerBound() / rhs.upperBound(),
+                             upperBound() / rhs.lowerBound(),
+                             upperBound() / rhs.upperBound()});
+            result.bounds = Interval{nextFloatDown(min),
+                                     nextFloatUp(max),
+                                     Interval::NoOrderCheck{}};
         }
 
         return result;
@@ -102,11 +88,9 @@ namespace idragnev::pbrt {
         result.v = v * rhs.v;
 
         const auto b = bounds * rhs.bounds;
-        result.bounds = Interval{
-            nextFloatDown(b.low()),
-            nextFloatUp(b.high()),
-            Interval::NoOrderCheck{}
-        };
+        result.bounds = Interval{nextFloatDown(b.low()),
+                                 nextFloatUp(b.high()),
+                                 Interval::NoOrderCheck{}};
 
 #ifndef NDEBUG
         result.vPrecise = vPrecise * rhs.vPrecise;
@@ -121,11 +105,9 @@ namespace idragnev::pbrt {
         result.v = v - rhs.v;
 
         const auto b = bounds - rhs.bounds;
-        result.bounds = Interval{
-            nextFloatDown(b.low()),
-            nextFloatUp(b.high()),
-            Interval::NoOrderCheck{}
-        };
+        result.bounds = Interval{nextFloatDown(b.low()),
+                                 nextFloatUp(b.high()),
+                                 Interval::NoOrderCheck{}};
 
 #ifndef NDEBUG
         result.vPrecise = vPrecise - rhs.vPrecise;
@@ -147,16 +129,14 @@ namespace idragnev::pbrt {
 
         assert(ef.lowerBound() >= 0.f);
         assert(ef.upperBound() >= 0.f);
-        result.bounds = Interval{
-            nextFloatDown(std::sqrt(ef.lowerBound())),
-            nextFloatUp(std::sqrt(ef.upperBound())),
-            Interval::NoOrderCheck{}
-        };
+        result.bounds = Interval{nextFloatDown(std::sqrt(ef.lowerBound())),
+                                 nextFloatUp(std::sqrt(ef.upperBound())),
+                                 Interval::NoOrderCheck{}};
 
         return result;
     }
 
-    EFloat abs(const EFloat &ef) {
+    EFloat abs(const EFloat& ef) {
         if (ef.lowerBound() >= 0.f) {
             return ef;
         }
@@ -167,11 +147,10 @@ namespace idragnev::pbrt {
             EFloat result;
 
             result.v = std::abs(ef.v);
-            result.bounds = Interval{
-                0.f,
-                std::max(-ef.lowerBound(), ef.upperBound()),
-                Interval::NoOrderCheck{}
-            };
+            result.bounds =
+                Interval{0.f,
+                         std::max(-ef.lowerBound(), ef.upperBound()),
+                         Interval::NoOrderCheck{}};
 
 #ifndef NDEBUG
             result.vPrecise = std::abs(ef.vPrecise);
@@ -181,7 +160,8 @@ namespace idragnev::pbrt {
         }
     }
 
-    std::optional<QuadraticRoots> solveQuadratic(const EFloat& a, const EFloat& b, const EFloat& c) {
+    std::optional<QuadraticRoots>
+    solveQuadratic(const EFloat& a, const EFloat& b, const EFloat& c) {
         const auto D = static_cast<double>(b) * static_cast<double>(b) -
                        4. * static_cast<double>(a) * static_cast<double>(c);
         if (D < 0.) {
@@ -193,14 +173,15 @@ namespace idragnev::pbrt {
             return EFloat(d, constants::MachineEpsilon * d);
         }();
 
-        const auto q = (static_cast<float>(b) < 0.f)  ? EFloat{-0.5 * (b - sqrtD)}
-                                                      : EFloat{-0.5 * (b + sqrtD)};
+        const auto q = (static_cast<float>(b) < 0.f)
+                           ? EFloat{-0.5 * (b - sqrtD)}
+                           : EFloat{-0.5 * (b + sqrtD)};
         const auto t0 = q / a;
         const auto t1 = c / q;
 
-        return std::make_optional(
-            static_cast<float>(t0) > static_cast<float>(t1) ? QuadraticRoots{ t1, t0 }
-                                                            : QuadraticRoots{ t0, t1 }
-        );
+        return std::make_optional(static_cast<float>(t0) >
+                                          static_cast<float>(t1)
+                                      ? QuadraticRoots{t1, t0}
+                                      : QuadraticRoots{t0, t1});
     }
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt

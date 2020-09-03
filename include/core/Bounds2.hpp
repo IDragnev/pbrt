@@ -1,15 +1,16 @@
 #pragma once
 
-#include "Point2.hpp"
-#include "Vector2.hpp"
-#include "BoundingSphere.hpp"
-#include "Bounds2Iterator.hpp"
+#include "core/Point2.hpp"
+#include "core/Vector2.hpp"
+#include "core/BoundingSphere.hpp"
+#include "core/Bounds2Iterator.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
     class Bounds2
     {
-        static_assert(std::is_arithmetic_v<T>, "Cannot instantiate Bounds2 with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<T>,
+                      "Cannot instantiate Bounds2 with non-arithmetic type");
 
     public:
         using PointType = Point2<T>;
@@ -22,14 +23,14 @@ namespace idragnev::pbrt {
         explicit operator Bounds2<U>() const;
 
         Vector2<T> diagonal() const;
-        
+
         T area() const;
-    
+
         std::size_t maximumExtent() const;
 
         Point2<T>& operator[](std::size_t i);
         const Point2<T>& operator[](std::size_t i) const;
-        
+
         Vector2<T> offset(const Point2<T>& p) const;
 
         BoundingSphere2<T> boundingSphere() const;
@@ -39,16 +40,10 @@ namespace idragnev::pbrt {
         Point2<T> max;
     };
 
-    template <
-        typename T,
-        typename = std::enable_if_t<std::is_integral_v<T>>
-    >
+    template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
     inline Bounds2Iterator<T> begin(const Bounds2<T>& bounds);
 
-    template <
-        typename T,
-        typename = std::enable_if_t<std::is_integral_v<T>>
-    >
+    template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
     Bounds2Iterator<T> end(const Bounds2<T>& bounds);
 
     template <typename T>
@@ -56,7 +51,7 @@ namespace idragnev::pbrt {
 
     template <typename T>
     bool operator==(const Bounds2<T>& a, const Bounds2<T>& b);
-    
+
     template <typename T>
     bool operator!=(const Bounds2<T>& a, const Bounds2<T>& b);
 
@@ -80,6 +75,6 @@ namespace idragnev::pbrt {
 
     template <typename T, typename U>
     Bounds2<T> expand(const Bounds2<T>& bounds, U delta);
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt
 
-#include "Bounds2Impl.hpp"
+#include "core/Bounds2Impl.hpp"

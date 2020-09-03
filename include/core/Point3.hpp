@@ -3,14 +3,15 @@
 #include <type_traits>
 #include <assert.h>
 
-#include "core.hpp"
+#include "core/core.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
-    class Point3 
+    class Point3
     {
     private:
-        static_assert(std::is_arithmetic_v<T>, "Cannot instantiate Point3 with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<T>,
+                      "Cannot instantiate Point3 with non-arithmetic type");
 
     public:
         using UnderlyingType = T;
@@ -28,8 +29,8 @@ namespace idragnev::pbrt {
         explicit operator Vector3<U>() const;
 
 #ifndef NDEBUG
-        //Added only for debug builds so asserts can be used
-        Point3(const Point3& p) : Point3{p.x, p.y, p.z} { }
+        // Added only for debug builds so asserts can be used
+        Point3(const Point3& p) : Point3{p.x, p.y, p.z} {}
         Point3& operator=(const Point3& p) {
             assert(!p.hasNaNs());
             if (&p != this) {
@@ -39,7 +40,7 @@ namespace idragnev::pbrt {
             }
             return *this;
         }
-#endif  // !NDEBUG
+#endif // !NDEBUG
 
         bool hasNaNs() const noexcept;
 
@@ -48,7 +49,7 @@ namespace idragnev::pbrt {
         template <typename U>
         Point3& operator/=(U f);
 
-        //for easier use
+        // for easier use
         Point3& operator+=(const Point3& p);
         Point3& operator-=(const Point3& p);
 
@@ -67,7 +68,7 @@ namespace idragnev::pbrt {
     template <typename T>
     Point3<T> operator+(const Point3<T>& p, const Vector3<T>& v);
 
-    //for easier use
+    // for easier use
     template <typename T>
     Point3<T> operator+(const Point3<T>& p1, const Point3<T>& p2);
 
@@ -117,7 +118,8 @@ namespace idragnev::pbrt {
     Point3<T> max(const Point3<T>& p1, const Point3<T>& p2);
 
     template <typename T>
-    Point3<T> permute(const Point3<T>& p, std::size_t x, std::size_t y, std::size_t z);
-}
+    Point3<T>
+    permute(const Point3<T>& p, std::size_t x, std::size_t y, std::size_t z);
+} // namespace idragnev::pbrt
 
-#include "Point3Impl.hpp"
+#include "core/Point3Impl.hpp"

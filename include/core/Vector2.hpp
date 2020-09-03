@@ -1,32 +1,32 @@
 #pragma once
 
-#include "core.hpp"
+#include "core/core.hpp"
 
-namespace idragnev::pbrt
-{
+namespace idragnev::pbrt {
     template <typename T>
     class Vector2
     {
     private:
-        static_assert(std::is_arithmetic_v<T>, "Cannot instantiate Vector2 with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<T>,
+                      "Cannot instantiate Vector2 with non-arithmetic type");
 
     public:
         Vector2() = default;
         Vector2(T x, T y);
-       
+
         explicit Vector2(const Point2<T>& p);
         explicit Vector2(const Point3<T>& p);
 
 #ifndef NDEBUG
-        //Added only for debug builds so asserts can be used
-        Vector2(const Vector2& v) : Vector2{v.x, v.y} { }
+        // Added only for debug builds so asserts can be used
+        Vector2(const Vector2& v) : Vector2{v.x, v.y} {}
         Vector2& operator=(const Vector2& v) {
             assert(!v.hasNaNs());
             x = v.x;
             y = v.y;
             return *this;
         }
-#endif  // !NDEBUG
+#endif // !NDEBUG
 
         bool hasNaNs() const noexcept;
         Float lengthSquared() const noexcept;
@@ -53,10 +53,10 @@ namespace idragnev::pbrt
 
     template <typename T>
     Float absDot(const Vector2<T>& u, const Vector2<T>& v);
-    
+
     template <typename T>
     Vector2<T> normalize(const Vector2<T>& v) noexcept;
-    
+
     template <typename T>
     Vector2<T> abs(const Vector2<T>& v);
 
@@ -65,7 +65,7 @@ namespace idragnev::pbrt
 
     template <typename T>
     Vector2<T> operator-(const Vector2<T>& u, const Vector2<T>& v);
-    
+
     template <typename T, typename U>
     Vector2<T> operator*(const U f, const Vector2<T>& u);
 
@@ -80,6 +80,6 @@ namespace idragnev::pbrt
 
     template <typename T>
     bool operator!=(const Vector2<T>& u, const Vector2<T>& v) noexcept;
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt
 
-#include "Vector2Impl.hpp"
+#include "core/Vector2Impl.hpp"

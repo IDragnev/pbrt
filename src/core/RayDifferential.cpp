@@ -2,10 +2,12 @@
 
 namespace idragnev::pbrt {
     bool RayDifferential::hasNaNs() const {
+        // clang-format off
         return Ray::hasNaNs() ||
             (hasDifferentials &&
              (rxOrigin.hasNaNs() || ryOrigin.hasNaNs() || rxDirection.hasNaNs() || ryDirection.hasNaNs())
             );
+        // clang-format on
     }
 
     void RayDifferential::scaleDifferentials(Float s) {
@@ -14,4 +16,4 @@ namespace idragnev::pbrt {
         rxDirection = d + s * (rxDirection - d);
         ryDirection = d + s * (ryDirection - d);
     }
-} //namespace idragnev::pbrt 
+} // namespace idragnev::pbrt

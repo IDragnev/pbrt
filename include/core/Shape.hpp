@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core.hpp"
-#include "SurfaceInteraction.hpp"
+#include "core/core.hpp"
+#include "core/SurfaceInteraction.hpp"
 
 #include <optional>
 
@@ -15,16 +15,19 @@ namespace idragnev::pbrt {
     class Shape
     {
     public:
-        Shape(const Transformation& objectToWorld, 
-            const Transformation& worldToObject,
-            const bool reverseOrientation) noexcept;
+        Shape(const Transformation& objectToWorld,
+              const Transformation& worldToObject,
+              const bool reverseOrientation) noexcept;
         virtual ~Shape() = default;
 
         virtual Bounds3f objectBound() const = 0;
         virtual Bounds3f worldBound() const;
 
-        virtual std::optional<HitRecord> intersect(const Ray& ray, const bool testAlphaTexture = true) const = 0;
-        virtual bool intersectP(const Ray& ray, const bool testAlphaTexture = true) const;
+        virtual std::optional<HitRecord>
+        intersect(const Ray& ray, const bool testAlphaTexture = true) const = 0;
+
+        virtual bool intersectP(const Ray& ray,
+                                const bool testAlphaTexture = true) const;
 
         virtual Float area() const = 0;
 
@@ -34,4 +37,4 @@ namespace idragnev::pbrt {
         const bool reverseOrientation = false;
         const bool transformSwapsHandedness = false;
     };
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt

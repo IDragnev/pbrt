@@ -2,11 +2,11 @@
 
 #include <assert.h>
 
-#include "core.hpp"
+#include "core/core.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
-    class Normal3 
+    class Normal3
     {
     public:
         Normal3() = default;
@@ -14,7 +14,7 @@ namespace idragnev::pbrt {
         explicit Normal3(const Vector3<T>& v);
 
 #ifndef NDEBUG
-        Normal3(const Normal3<T>& n) : Normal3{n.x, n.y, n.z} { }
+        Normal3(const Normal3<T>& n) : Normal3{n.x, n.y, n.z} {}
         Normal3<T>& operator=(const Normal3<T>& n) {
             assert(!n.hasNaNs());
             if (&n != this) {
@@ -24,10 +24,10 @@ namespace idragnev::pbrt {
             }
             return *this;
         }
-#endif  // !NDEBUG
+#endif // !NDEBUG
 
         bool hasNaNs() const noexcept;
-        
+
         Float lengthSquared() const noexcept;
         Float length() const;
 
@@ -35,10 +35,10 @@ namespace idragnev::pbrt {
         Normal3<T>& operator*=(U f);
         template <typename U>
         Normal3<T>& operator/=(U f);
-        
+
         Normal3<T>& operator+=(const Normal3<T>& n);
         Normal3<T>& operator-=(const Normal3<T>& n);
-       
+
         T& operator[](std::size_t i);
         T operator[](std::size_t i) const;
 
@@ -91,9 +91,9 @@ namespace idragnev::pbrt {
 
     template <typename T>
     T absDot(const Normal3<T>& n1, const Normal3<T>& n2);
-    
+
     template <typename T, typename F>
     T faceforward(const T& u, const F& v);
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt
 
-#include "Normal3Impl.hpp"
+#include "core/Normal3Impl.hpp"

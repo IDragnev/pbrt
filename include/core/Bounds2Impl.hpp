@@ -10,24 +10,20 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Bounds2<T>::Bounds2(const Point2<T>& p) 
-        : min(p)
-        , max(p) 
-    { 
-    }
+    inline Bounds2<T>::Bounds2(const Point2<T>& p) : min(p)
+                                                   , max(p) {}
 
     template <typename T>
     Bounds2<T>::Bounds2(const Point2<T>& p1, const Point2<T>& p2)
         : min{pbrt::min(p1, p2)}
-        , max{pbrt::max(p1, p2)}
-    {
-    }
+        , max{pbrt::max(p1, p2)} {}
 
     template <typename T>
     template <typename U>
     inline Bounds2<T>::operator Bounds2<U>() const {
-        static_assert(std::is_convertible_v<T, U>, "Cannot convert the underlying type");
-        return Bounds2<U>{ Point2<U>{min}, Point2<U>{max} };
+        static_assert(std::is_convertible_v<T, U>,
+                      "Cannot convert the underlying type");
+        return Bounds2<U>{Point2<U>{min}, Point2<U>{max}};
     }
 
     template <typename T>
@@ -38,7 +34,7 @@ namespace idragnev::pbrt {
     template <typename T>
     inline T Bounds2<T>::area() const {
         const auto d = diagonal();
-        return d.x*d.y;
+        return d.x * d.y;
     }
 
     template <typename T>
@@ -81,10 +77,8 @@ namespace idragnev::pbrt {
 
     template <typename T>
     Point2<T> lerp(const Bounds2<T>& bounds, const Point2f& t) {
-        return {
-            pbrt::lerp(t.x, bounds.min.x, bounds.max.x),
-            pbrt::lerp(t.y, bounds.min.y, bounds.max.y)
-        };
+        return {pbrt::lerp(t.x, bounds.min.x, bounds.max.x),
+                pbrt::lerp(t.y, bounds.min.y, bounds.max.y)};
     }
 
     template <typename T>
@@ -117,8 +111,10 @@ namespace idragnev::pbrt {
 
     template <typename T>
     bool overlap(const Bounds2<T>& left, const Bounds2<T>& right) noexcept {
-        const auto overlapX = (left.max.x >= right.min.x) && (left.min.x <= right.max.x);
-        const auto overlapY = (left.max.y >= right.min.y) && (left.min.y <= right.max.y);
+        const auto overlapX =
+            (left.max.x >= right.min.x) && (left.min.x <= right.max.x);
+        const auto overlapY =
+            (left.max.y >= right.min.y) && (left.min.y <= right.max.y);
         return overlapX && overlapY;
     }
 
@@ -129,19 +125,18 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    bool insideExclusive(const Point2<T>& p, const Bounds2<T>& bounds) noexcept {
+    bool insideExclusive(const Point2<T>& p,
+                         const Bounds2<T>& bounds) noexcept {
         return p.x >= bounds.min.x && p.x < bounds.max.x &&
                p.y >= bounds.min.y && p.y < bounds.max.y;
     }
 
     template <typename T, typename U>
     Bounds2<T> expand(const Bounds2<T>& bounds, U delta) {
-        static_assert(std::is_arithmetic_v<U>, "Cannot expand with non-arithmetic type");
-        const auto v = Vector2<T>{ delta, delta };
-        return Bounds2<T>{
-            bounds.min - v,
-            bounds.max + v
-        };
+        static_assert(std::is_arithmetic_v<U>,
+                      "Cannot expand with non-arithmetic type");
+        const auto v = Vector2<T>{delta, delta};
+        return Bounds2<T>{bounds.min - v, bounds.max + v};
     }
 
     template <typename T>
@@ -154,7 +149,7 @@ namespace idragnev::pbrt {
         return !(a == b);
     }
 
-    template <typename T, typename> 
+    template <typename T, typename>
     inline Bounds2Iterator<T> begin(const Bounds2<T>& bounds) {
         return {bounds, bounds.min};
     }
@@ -162,9 +157,10 @@ namespace idragnev::pbrt {
     template <typename T, typename>
     Bounds2Iterator<T> end(const Bounds2<T>& bounds) {
         using Point = typename Bounds2<T>::PointType;
-        const auto isDegenerate = bounds.min.x >= bounds.max.x ||
-                                  bounds.min.y >= bounds.max.y;
-        const auto end = !isDegenerate ? Point{bounds.min.x, bounds.max.y} : bounds.min;
+        const auto isDegenerate =
+            bounds.min.x >= bounds.max.x || bounds.min.y >= bounds.max.y;
+        const auto end =
+            !isDegenerate ? Point{bounds.min.x, bounds.max.y} : bounds.min;
         return {bounds, end};
     }
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt

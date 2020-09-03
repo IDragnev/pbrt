@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core.hpp"
-#include "Point3.hpp"
-#include "BoundingSphere.hpp"
+#include "core/core.hpp"
+#include "core/Point3.hpp"
+#include "core/BoundingSphere.hpp"
 
 #include <optional>
 
@@ -10,7 +10,8 @@ namespace idragnev::pbrt {
     template <typename T>
     class Bounds3
     {
-        static_assert(std::is_arithmetic_v<T>, "Cannot instantiate Bounds3 with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<T>,
+                      "Cannot instantiate Bounds3 with non-arithmetic type");
 
     public:
         using PointType = Point3<T>;
@@ -23,7 +24,9 @@ namespace idragnev::pbrt {
         explicit operator Bounds3<U>() const;
 
         std::optional<Interval> intersectP(const Ray& ray) const noexcept;
-        bool intersectP(const Ray& ray, const Vector3f& invDir, const std::size_t dirIsNeg[3]) const noexcept;
+        bool intersectP(const Ray& ray,
+                        const Vector3f& invDir,
+                        const std::size_t dirIsNeg[3]) const noexcept;
 
         Vector3<T> diagonal() const;
 
@@ -81,6 +84,6 @@ namespace idragnev::pbrt {
 
     template <typename T, typename U>
     Float distance(const Point3<T>& p, const Bounds3<U>& b);
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt
 
-#include "Bounds3Impl.hpp"
+#include "core/Bounds3Impl.hpp"

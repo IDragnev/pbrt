@@ -16,11 +16,7 @@ namespace idragnev::pbrt {
     }
 
     Vector3f translationVector(const Matrix4x4& matrix) noexcept {
-        return {
-            matrix.m[0][3],
-            matrix.m[1][3],
-            matrix.m[2][3]
-        };
+        return {matrix.m[0][3], matrix.m[1][3], matrix.m[2][3]};
     }
 
     bool operator==(const Matrix4x4& lhs, const Matrix4x4& rhs) noexcept {
@@ -38,29 +34,33 @@ namespace idragnev::pbrt {
         Matrix4x4 result;
         for (auto i = 0u; i < 4u; ++i) {
             for (auto j = 0u; j < 4u; ++j) {
+                // clang-format off
                 result.m[i][j] =
                     m1.m[i][0] * m2.m[0][j] + 
                     m1.m[i][1] * m2.m[1][j] +
                     m1.m[i][2] * m2.m[2][j] + 
                     m1.m[i][3] * m2.m[3][j];
+                // clang-format on
             }
         }
         return result;
     }
 
     Matrix4x4 transpose(const Matrix4x4& matrix) noexcept {
+        // clang-format off
         return Matrix4x4{
             matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0], 
             matrix.m[0][1], matrix.m[1][1], matrix.m[2][1], matrix.m[3][1], 
             matrix.m[0][2], matrix.m[1][2], matrix.m[2][2], matrix.m[3][2], 
             matrix.m[0][3], matrix.m[1][3], matrix.m[2][3], matrix.m[3][3]
         };
+        // clang-format on
     }
 
     Matrix4x4 inverse(const Matrix4x4& matrix) {
         std::size_t indxc[4];
         std::size_t indxr[4];
-        std::size_t ipiv[4] = { 0, 0, 0, 0 };
+        std::size_t ipiv[4] = {0, 0, 0, 0};
         Float mInverse[4][4];
         memcpy(mInverse, matrix.m, 16 * sizeof(Float));
 
@@ -128,4 +128,4 @@ namespace idragnev::pbrt {
 
         return Matrix4x4{mInverse};
     }
-} //namespace idragnev::pbrt 
+} // namespace idragnev::pbrt

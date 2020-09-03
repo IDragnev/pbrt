@@ -1,14 +1,14 @@
 #pragma once
 
-#include "core.hpp"
-#include "Vector3.hpp"
+#include "core/core.hpp"
+#include "core/Vector3.hpp"
 
 namespace idragnev::pbrt {
     class Quaternion
     {
     public:
         Quaternion() = default;
-        Quaternion(const Vector3f& v, const Float w) : v{v}, w{w} { }
+        Quaternion(const Vector3f& v, const Float w) : v{v}, w{w} {}
         explicit Quaternion(const Transformation& m);
 
         Quaternion& operator+=(const Quaternion& rhs);
@@ -30,14 +30,14 @@ namespace idragnev::pbrt {
 
     Quaternion operator+(const Quaternion& lhs, const Quaternion& rhs);
     Quaternion operator-(const Quaternion& lhs, const Quaternion& rhs);
-    
+
     Quaternion operator/(const Quaternion& q, const Float s);
 
-    Quaternion operator*(const Float s, const Quaternion& q); 
+    Quaternion operator*(const Float s, const Quaternion& q);
     inline Quaternion operator*(const Quaternion& q, const Float s) {
-        return s * q; 
+        return s * q;
     }
-    
+
     Quaternion slerp(Float t, const Quaternion& a, const Quaternion& b);
 
     inline Float dot(const Quaternion& q1, const Quaternion& q2) {
@@ -47,4 +47,4 @@ namespace idragnev::pbrt {
     inline Quaternion normalize(const Quaternion& q) {
         return q / std::sqrt(dot(q, q));
     }
-} //namespace idragnev::pbrt 
+} // namespace idragnev::pbrt

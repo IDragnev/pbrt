@@ -2,17 +2,12 @@
 
 namespace idragnev::pbrt {
     template <typename T>
-    inline Normal3<T>::Normal3(const Vector3<T>& v) 
-        : Normal3{v.x, v.y, v.z}
-    {
-    }
+    inline Normal3<T>::Normal3(const Vector3<T>& v) : Normal3{v.x, v.y, v.z} {}
 
     template <typename T>
-    inline Normal3<T>::Normal3(T x, T y, T z)
-        : x{x}
-        , y{y}
-        , z{z}
-    {
+    inline Normal3<T>::Normal3(T x, T y, T z) : x{x}
+                                              , y{y}
+                                              , z{z} {
         assert(!hasNaNs());
     }
 
@@ -23,7 +18,7 @@ namespace idragnev::pbrt {
 
     template <typename T>
     inline Float Normal3<T>::lengthSquared() const noexcept {
-        return x*x + y*y + z*z;
+        return x * x + y * y + z * z;
     }
 
     template <typename T>
@@ -35,10 +30,15 @@ namespace idragnev::pbrt {
     inline T Normal3<T>::operator[](std::size_t i) const {
         assert(i < 3);
         switch (i) {
-            case 0: return x;
-            case 1: return y;
-            case 2: return z;
-            default: assert(false);
+            case 0: {
+                return x;
+            }
+            case 1: {
+                return y;
+            }
+            case 2: {
+                return z;
+            }
         }
     }
 
@@ -46,10 +46,15 @@ namespace idragnev::pbrt {
     inline T& Normal3<T>::operator[](std::size_t i) {
         assert(i < 3);
         switch (i) {
-            case 0: return x;
-            case 1: return y;
-            case 2: return z;
-            default: assert(false);
+            case 0: {
+                return x;
+            }
+            case 1: {
+                return y;
+            }
+            case 2: {
+                return z;
+            }
         }
     }
 
@@ -74,7 +79,8 @@ namespace idragnev::pbrt {
     template <typename T>
     template <typename U>
     Normal3<T>& Normal3<T>::operator*=(U f) {
-        static_assert(std::is_arithmetic_v<U>, "Cannot scale a normal with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<U>,
+                      "Cannot scale a normal with non-arithmetic type");
         assert(!isNaN(f));
 
         x *= f;
@@ -86,7 +92,8 @@ namespace idragnev::pbrt {
     template <typename T>
     template <typename U>
     Normal3<T>& Normal3<T>::operator/=(U f) {
-        static_assert(std::is_arithmetic_v<U>, "Cannot divide a normal with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<U>,
+                      "Cannot divide a normal with non-arithmetic type");
         assert(f != 0);
 
         Float inv = Float{1} / f;
@@ -94,12 +101,14 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline bool operator==(const Normal3<T>& n1, const Normal3<T>& n2) noexcept {
+    inline bool operator==(const Normal3<T>& n1,
+                           const Normal3<T>& n2) noexcept {
         return n1.x == n2.x && n1.y == n2.y && n1.z == n2.z;
     }
 
     template <typename T>
-    inline bool operator!=(const Normal3<T>& n1, const Normal3<T>& n2) noexcept {
+    inline bool operator!=(const Normal3<T>& n1,
+                           const Normal3<T>& n2) noexcept {
         return !(n1 == n2);
     }
 
@@ -184,4 +193,4 @@ namespace idragnev::pbrt {
     inline T faceforward(const T& u, const F& v) {
         return (dot(u, v) < 0.f) ? -u : u;
     }
-} //namespace idragnev::pbrt 
+} // namespace idragnev::pbrt

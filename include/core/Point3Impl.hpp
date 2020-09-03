@@ -4,11 +4,9 @@
 
 namespace idragnev::pbrt {
     template <typename T>
-    inline Point3<T>::Point3(T x, T y, T z)
-        : x{x}
-        , y{y}
-        , z{z}
-    {
+    inline Point3<T>::Point3(T x, T y, T z) : x{x}
+                                            , y{y}
+                                            , z{z} {
         assert(!hasNaNs());
     }
 
@@ -20,34 +18,44 @@ namespace idragnev::pbrt {
     template <typename T>
     template <typename U>
     inline Point3<T>::operator Vector3<U>() const {
-        static_assert(std::is_convertible_v<T, U>, "Cannot convert the underlying type");
+        static_assert(std::is_convertible_v<T, U>,
+                      "Cannot convert the underlying type");
         return Vector3<U>{x, y, z};
     }
 
     template <typename T>
     template <typename U>
     inline Point3<T>::Point3(const Point3<U>& p)
-        : Point3{static_cast<T>(p.x), static_cast<T>(p.y), static_cast<T>(p.z)}
-    {
-        static_assert(std::is_convertible_v<U, T>, "Cannot convert the underlying type");
+        : Point3{static_cast<T>(p.x),
+                 static_cast<T>(p.y),
+                 static_cast<T>(p.z)} {
+        static_assert(std::is_convertible_v<U, T>,
+                      "Cannot convert the underlying type");
     }
 
     template <typename T>
     template <typename U>
     inline Point3<T>::Point3(const Vector3<U>& v)
-        : Point3{static_cast<T>(v.x), static_cast<T>(v.y), static_cast<T>(v.z)}
-    {
-        static_assert(std::is_convertible_v<U, T>, "Cannot convert the underlying type");
+        : Point3{static_cast<T>(v.x),
+                 static_cast<T>(v.y),
+                 static_cast<T>(v.z)} {
+        static_assert(std::is_convertible_v<U, T>,
+                      "Cannot convert the underlying type");
     }
 
     template <typename T>
     T Point3<T>::operator[](std::size_t i) const {
         assert(i < 3);
         switch (i) {
-            case 0: return x;
-            case 1: return y;
-            case 2: return z;
-            default: assert(false);
+            case 0: {
+                return x;
+            }
+            case 1: {
+                return y;
+            }
+            case 2: {
+                return z;
+            }
         }
     }
 
@@ -55,10 +63,15 @@ namespace idragnev::pbrt {
     T& Point3<T>::operator[](std::size_t i) {
         assert(i < 3);
         switch (i) {
-            case 0: return x;
-            case 1: return y;
-            case 2: return z;
-            default: assert(false);
+            case 0: {
+                return x;
+            }
+            case 1: {
+                return y;
+            }
+            case 2: {
+                return z;
+            }
         }
     }
 
@@ -101,7 +114,8 @@ namespace idragnev::pbrt {
     template <typename T>
     template <typename U>
     Point3<T>& Point3<T>::operator*=(U f) {
-        static_assert(std::is_arithmetic_v<U>, "Cannot scale a point with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<U>,
+                      "Cannot scale a point with non-arithmetic type");
         assert(!isNaN(f));
 
         x *= f;
@@ -113,7 +127,8 @@ namespace idragnev::pbrt {
     template <typename T>
     template <typename U>
     Point3<T>& Point3<T>::operator/=(U f) {
-        static_assert(std::is_arithmetic_v<U>, "Cannot divide a point with non-arithmetic type");
+        static_assert(std::is_arithmetic_v<U>,
+                      "Cannot divide a point with non-arithmetic type");
         assert(f != 0);
 
         Float inv = Float{1} / f;
@@ -202,22 +217,28 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Point3<T> lerp(Float t, const Point3<T>& p0, const Point3<T>& p1) noexcept {
-        return (1 - t)*p0 + t*p1;
+    inline Point3<T>
+    lerp(Float t, const Point3<T>& p0, const Point3<T>& p1) noexcept {
+        return (1 - t) * p0 + t * p1;
     }
 
     template <typename T>
     inline Point3<T> min(const Point3<T>& pa, const Point3<T>& pb) {
-        return {std::min(pa.x, pb.x), std::min(pa.y, pb.y), std::min(pa.z, pb.z)};
+        return {std::min(pa.x, pb.x),
+                std::min(pa.y, pb.y),
+                std::min(pa.z, pb.z)};
     }
 
     template <typename T>
     inline Point3<T> max(const Point3<T>& pa, const Point3<T>& pb) {
-        return {std::max(pa.x, pb.x), std::max(pa.y, pb.y), std::max(pa.z, pb.z) };
+        return {std::max(pa.x, pb.x),
+                std::max(pa.y, pb.y),
+                std::max(pa.z, pb.z)};
     }
 
     template <typename T>
-    inline Point3<T> permute(const Point3<T>& p, std::size_t x, std::size_t y, std::size_t z) {
+    inline Point3<T>
+    permute(const Point3<T>& p, std::size_t x, std::size_t y, std::size_t z) {
         return {p[x], p[y], p[z]};
     }
-} //namespace idragnev::pbrt 
+} // namespace idragnev::pbrt

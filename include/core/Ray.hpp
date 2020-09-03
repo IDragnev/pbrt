@@ -1,25 +1,23 @@
 #pragma once
 
-#include "core.hpp"
-#include "Point3.hpp"
-#include "Vector3.hpp"
+#include "core/core.hpp"
+#include "core/Point3.hpp"
+#include "core/Vector3.hpp"
 
 namespace idragnev::pbrt {
-    class Ray 
+    class Ray
     {
     public:
         Ray() = default;
-        Ray(const Point3f& o, 
-            const Vector3f& d, 
-            const Float tMax = constants::Infinity, 
+        Ray(const Point3f& o,
+            const Vector3f& d,
+            const Float tMax = constants::Infinity,
             const Float time = 0.f);
 
-        Point3f operator()(Float t) const { 
-            return o + t * d;
-        }
+        Point3f operator()(Float t) const { return o + t * d; }
 
-        bool hasNaNs() const { 
-            return (o.hasNaNs() || d.hasNaNs() || isNaN(tMax)); 
+        bool hasNaNs() const {
+            return (o.hasNaNs() || d.hasNaNs() || isNaN(tMax));
         }
 
         Point3f o;
@@ -27,5 +25,4 @@ namespace idragnev::pbrt {
         mutable Float tMax = constants::Infinity;
         Float time = 0.0f;
     };
-} //namespace idragnev::pbrt
-
+} // namespace idragnev::pbrt
