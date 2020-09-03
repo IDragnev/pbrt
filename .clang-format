@@ -84,7 +84,6 @@ IndentCaseLabels: true
 IndentGotoLabels: false
 IndentPPDirectives: BeforeHash
 IndentWrappedFunctionNames: false
-IndentCaseLabels: false
 
 KeepEmptyLinesAtTheStartOfBlocks: false
 MaxEmptyLinesToKeep: 1
