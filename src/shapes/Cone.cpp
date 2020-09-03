@@ -5,23 +5,19 @@
 
 namespace idragnev::pbrt {
     Cone::Cone(const Transformation& objectToWorld,
-        const Transformation& worldToObject,
-        const bool reverseOrientation,
-        const Float height,
-        const Float radius,
-        const Float phiMax)
-        : Shape{ objectToWorld, worldToObject, reverseOrientation }
+               const Transformation& worldToObject,
+               const bool reverseOrientation,
+               const Float height,
+               const Float radius,
+               const Float phiMax) noexcept
+        : Shape{objectToWorld, worldToObject, reverseOrientation}
         , radius(radius)
         , height(height)
-        , phiMax{ toRadians(clamp(phiMax, 0.f, 360.f)) }
-    {
-    }
+        , phiMax{toRadians(clamp(phiMax, 0.f, 360.f))} {}
 
     Bounds3f Cone::objectBound() const {
-        return Bounds3f{
-            Point3f{-radius, -radius,   0.f},
-            Point3f{ radius,  radius, height}
-        };
+        return Bounds3f{Point3f{-radius, -radius, 0.f},
+                        Point3f{radius, radius, height}};
     }
 
     std::optional<HitRecord> Cone::intersect(const Ray& ray, const bool) const {
@@ -34,18 +30,19 @@ namespace idragnev::pbrt {
     }
 
     bool Cone::intersectP(const Ray& ray, const bool) const {
-        return intersectImpl<bool>(
-            ray,
-            false,
-            [](const auto&...) {
-                return true;
-            });
+        return intersectImpl<bool>(ray, false, [](const auto&...) {
+            return true;
+        });
     }
 
-    //will be instantiated only in this translation unit so it's ok to be defined here
-    template<typename R, typename S, typename F>
-    R Cone::intersectImpl(const Ray& rayInWorldSpace, F failure, S success) const {
-        const auto rayWithErrBound = worldToObjectTransform->transformWithErrBound(rayInWorldSpace);
+    // will be instantiated only in this translation unit so it's ok to be
+    // defined here
+    template <typename R, typename S, typename F>
+    R Cone::intersectImpl(const Ray& rayInWorldSpace,
+                          F failure,
+                          S success) const {
+        const auto rayWithErrBound =
+            worldToObjectTransform->transformWithErrBound(rayInWorldSpace);
         const auto& [ray, oErr, dErr] = rayWithErrBound;
 
         const auto intersectionParams = findIntersectionParams(ray, oErr, dErr);
@@ -84,7 +81,10 @@ namespace idragnev::pbrt {
         return success(rayWithErrBound, hitPoint, tHit, phi);
     }
 
-    std::optional<QuadraticRoots> Cone::findIntersectionParams(const Ray& ray, const Vector3f& oErr, const Vector3f& dErr) const {
+    std::optional<QuadraticRoots>
+    Cone::findIntersectionParams(const Ray& ray,
+                                 const Vector3f& oErr,
+                                 const Vector3f& dErr) const {
         const auto ox = EFloat{ray.o.x, oErr.x};
         const auto oy = EFloat{ray.o.y, oErr.y};
         const auto oz = EFloat{ray.o.z, oErr.z};
@@ -92,7 +92,7 @@ namespace idragnev::pbrt {
         const auto dy = EFloat{ray.d.y, dErr.y};
         const auto dz = EFloat{ray.d.z, dErr.z};
 
-        const auto k  = [this] {
+        const auto k = [this] {
             const auto x = EFloat{radius} / EFloat{height};
             return x * x;
         }();
@@ -109,15 +109,22 @@ namespace idragnev::pbrt {
         return phi < 0.f ? (phi + 2 * constants::Pi) : phi;
     }
 
-    HitRecord Cone::makeHitRecord(const RayWithErrorBound& rayWithErrBound, const Point3f& hitPoint, const EFloat& t, const Float phi) const {
+    HitRecord Cone::makeHitRecord(const RayWithErrorBound& rayWithErrBound,
+                                  const Point3f& hitPoint,
+                                  const EFloat& t,
+                                  const Float phi) const {
         const Float u = phi / phiMax;
         const Float v = hitPoint.z / height;
 
-        const auto dpdu = Vector3f(-phiMax * hitPoint.y, phiMax * hitPoint.x, 0.f);
-        const auto dpdv = Vector3f(-hitPoint.x / (1.f - v), -hitPoint.y / (1.f - v), height);
+        const auto dpdu =
+            Vector3f(-phiMax * hitPoint.y, phiMax * hitPoint.x, 0.f);
+        const auto dpdv =
+            Vector3f(-hitPoint.x / (1.f - v), -hitPoint.y / (1.f - v), height);
 
-        const auto d2Pduu = -phiMax * phiMax * Vector3f(hitPoint.x, hitPoint.y, 0.f);
-        const auto d2Pduv = phiMax / (1.f - v) * Vector3f(hitPoint.y, -hitPoint.x, 0.f);
+        const auto d2Pduu =
+            -phiMax * phiMax * Vector3f(hitPoint.x, hitPoint.y, 0.f);
+        const auto d2Pduv =
+            phiMax / (1.f - v) * Vector3f(hitPoint.y, -hitPoint.x, 0.f);
         const auto d2Pdvv = Vector3f{0.f, 0.f, 0.f};
 
         const auto E = dot(dpdu, dpdu);
@@ -129,14 +136,10 @@ namespace idragnev::pbrt {
         const auto g = dot(N, d2Pdvv);
 
         const Float invEGF2 = 1 / (E * G - F * F);
-        const auto dndu = Normal3f{
-            (f * F - e * G) * invEGF2 * dpdu +
-            (e * F - f * E) * invEGF2 * dpdv
-        };
-        const auto dndv = Normal3f{
-            (g * F - f * G) * invEGF2 * dpdu +
-            (f * F - g * E) * invEGF2 * dpdv
-        };
+        const auto dndu = Normal3f{(f * F - e * G) * invEGF2 * dpdu +
+                                   (e * F - f * E) * invEGF2 * dpdv};
+        const auto dndv = Normal3f{(g * F - f * G) * invEGF2 * dpdu +
+                                   (f * F - g * E) * invEGF2 * dpdv};
 
         const auto& [ray, oErr, dErr] = rayWithErrBound;
         const auto ox = EFloat{ray.o.x, oErr.x};
@@ -148,32 +151,31 @@ namespace idragnev::pbrt {
         const auto px = ox + t * dx;
         const auto py = oy + t * dy;
         const auto pz = oz + t * dz;
-        const auto pError = Vector3f{
-            px.absoluteError(),
-            py.absoluteError(),
-            pz.absoluteError()
-        };
+        const auto pError = Vector3f{px.absoluteError(),
+                                     py.absoluteError(),
+                                     pz.absoluteError()};
         const auto wo = -ray.d;
 
-        const auto interaction = SurfaceInteraction{
-            hitPoint, 
-            pError,
-            Point2f{u, v},
-            wo, 
-            dpdu, dpdv,
-            dndu, dndv,
-            ray.time,
-            this
-        };
+        const auto interaction = SurfaceInteraction{hitPoint,
+                                                    pError,
+                                                    Point2f{u, v},
+                                                    wo,
+                                                    dpdu,
+                                                    dpdv,
+                                                    dndu,
+                                                    dndv,
+                                                    ray.time,
+                                                    this};
 
         HitRecord result;
         result.interaction = (*objectToWorldTransform)(interaction);
         result.t = static_cast<Float>(t);
-        
+
         return result;
     }
 
     Float Cone::area() const {
-        return radius * std::sqrt((height * height) + (radius * radius)) * phiMax / 2;
+        return radius * std::sqrt((height * height) + (radius * radius)) *
+               phiMax / 2;
     }
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt

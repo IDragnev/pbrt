@@ -4,23 +4,26 @@
 #include "core/Shape.hpp"
 
 namespace idragnev::pbrt {
-    class Disk : public Shape 
+    class Disk : public Shape
     {
     public:
         Disk(const Transformation& objectToWorld,
-            const Transformation& worldToObject,
-            const bool reverseOrientation,
-            const Float height,
-            const Float radius,
-            const Float innerRadius,
-            const Float phiMax);
+             const Transformation& worldToObject,
+             const bool reverseOrientation,
+             const Float height,
+             const Float radius,
+             const Float innerRadius,
+             const Float phiMax) noexcept;
 
-        virtual Bounds3f objectBound() const override;
+        Bounds3f objectBound() const override;
 
-        virtual std::optional<HitRecord> intersect(const Ray& ray, const bool testAlphaTexture) const override;
-        virtual bool intersectP(const Ray& ray, const bool testAlphaTexture) const override;
+        std::optional<HitRecord>
+        intersect(const Ray& ray, const bool testAlphaTexture) const override;
 
-        virtual Float area() const override;
+        bool intersectP(const Ray& ray,
+                        const bool testAlphaTexture) const override;
+
+        Float area() const override;
 
     private:
         template <typename R, typename S, typename F>
@@ -29,10 +32,10 @@ namespace idragnev::pbrt {
         static Float computePhi(const Point3f& hitPoint);
 
         HitRecord makeHitRecord(const Ray& ray,
-            const Point3f& hitPoint,
-            const EFloat& t,
-            const Float phi,
-            const Float distToCenterSquared) const;
+                                const Point3f& hitPoint,
+                                const EFloat& t,
+                                const Float phi,
+                                const Float distToCenterSquared) const;
 
     private:
         Float height;
@@ -40,4 +43,4 @@ namespace idragnev::pbrt {
         Float innerRadius;
         Float phiMax;
     };
-} //namespace idragnev::pbrt
+} // namespace idragnev::pbrt
