@@ -5,18 +5,16 @@
 
 namespace pbrt = idragnev::pbrt;
 
-TEST_CASE("inverse")
-{
-    SUBCASE("of identity is identity")
-    {
+TEST_CASE("inverse") {
+    SUBCASE("of identity is identity") {
         const auto id = pbrt::Matrix4x4::identity();
 
         REQUIRE(pbrt::inverse(id) == id);
     }
 
-    SUBCASE("of a nontrivial matrix")
-    {
+    SUBCASE("of a nontrivial matrix") {
         const auto v = pbrt::Vector3f{2.f, 3.f, 4.f};
+        // clang-format off
         const auto m = pbrt::Matrix4x4{ 
             1.f, 0.f, 0.f, v.x,
             0.f, 1.f, 0.f, v.y,
@@ -29,13 +27,14 @@ TEST_CASE("inverse")
             0.f, 0.f, 1.f, -v.z,
             0.f, 0.f, 0.f, 1.f
         };
+        // clang-format on
 
         CHECK(pbrt::inverse(m) == expected);
     }
 }
 
-TEST_CASE("transpose")
-{
+TEST_CASE("transpose") {
+    // clang-format off
     const auto m = pbrt::Matrix4x4{
         1.f,  2.f,  3.f,  4.f,
         5.f,  6.f,  7.f,  8.f,
@@ -48,6 +47,7 @@ TEST_CASE("transpose")
         3.f, 7.f, 11.f, 15.f,
         4.f, 8.f, 12.f, 16.f
     };
+    // clang-format on
 
     CHECK(pbrt::transpose(m) == expected);
 }
