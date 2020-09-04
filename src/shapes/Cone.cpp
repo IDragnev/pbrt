@@ -85,15 +85,15 @@ namespace idragnev::pbrt {
     Cone::findIntersectionParams(const Ray& ray,
                                  const Vector3f& oErr,
                                  const Vector3f& dErr) const {
-        const auto ox = EFloat{ray.o.x, oErr.x};
-        const auto oy = EFloat{ray.o.y, oErr.y};
-        const auto oz = EFloat{ray.o.z, oErr.z};
-        const auto dx = EFloat{ray.d.x, dErr.x};
-        const auto dy = EFloat{ray.d.y, dErr.y};
-        const auto dz = EFloat{ray.d.z, dErr.z};
+        const auto ox = EFloat(ray.o.x, oErr.x);
+        const auto oy = EFloat(ray.o.y, oErr.y);
+        const auto oz = EFloat(ray.o.z, oErr.z);
+        const auto dx = EFloat(ray.d.x, dErr.x);
+        const auto dy = EFloat(ray.d.y, dErr.y);
+        const auto dz = EFloat(ray.d.z, dErr.z);
 
         const auto k = [this] {
-            const auto x = EFloat{radius} / EFloat{height};
+            const auto x = EFloat(radius) / EFloat(height);
             return x * x;
         }();
 
@@ -142,12 +142,12 @@ namespace idragnev::pbrt {
                                    (f * F - g * E) * invEGF2 * dpdv};
 
         const auto& [ray, oErr, dErr] = rayWithErrBound;
-        const auto ox = EFloat{ray.o.x, oErr.x};
-        const auto oy = EFloat{ray.o.y, oErr.y};
-        const auto oz = EFloat{ray.o.z, oErr.z};
-        const auto dx = EFloat{ray.d.x, dErr.x};
-        const auto dy = EFloat{ray.d.y, dErr.y};
-        const auto dz = EFloat{ray.d.z, dErr.z};
+        const auto ox = EFloat(ray.o.x, oErr.x);
+        const auto oy = EFloat(ray.o.y, oErr.y);
+        const auto oz = EFloat(ray.o.z, oErr.z);
+        const auto dx = EFloat(ray.d.x, dErr.x);
+        const auto dy = EFloat(ray.d.y, dErr.y);
+        const auto dz = EFloat(ray.d.z, dErr.z);
         const auto px = ox + t * dx;
         const auto py = oy + t * dy;
         const auto pz = oz + t * dz;

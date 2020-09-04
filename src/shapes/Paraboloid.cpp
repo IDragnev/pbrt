@@ -86,14 +86,14 @@ namespace idragnev::pbrt {
     Paraboloid::findIntersectionParams(const Ray& ray,
                                        const Vector3f& oErr,
                                        const Vector3f& dErr) const {
-        const auto ox = EFloat{ray.o.x, oErr.x};
-        const auto oy = EFloat{ray.o.y, oErr.y};
-        const auto oz = EFloat{ray.o.z, oErr.z};
-        const auto dx = EFloat{ray.d.x, dErr.x};
-        const auto dy = EFloat{ray.d.y, dErr.y};
-        const auto dz = EFloat{ray.d.z, dErr.z};
+        const auto ox = EFloat(ray.o.x, oErr.x);
+        const auto oy = EFloat(ray.o.y, oErr.y);
+        const auto oz = EFloat(ray.o.z, oErr.z);
+        const auto dx = EFloat(ray.d.x, dErr.x);
+        const auto dy = EFloat(ray.d.y, dErr.y);
+        const auto dz = EFloat(ray.d.z, dErr.z);
 
-        const auto k = EFloat{zMax} / (EFloat{radius} * EFloat{radius});
+        const auto k = EFloat(zMax) / (EFloat(radius) * EFloat(radius));
         const auto a = k * (dx * dx + dy * dy);
         const auto b = 2 * k * (dx * ox + dy * oy) - dz;
         const auto c = k * (ox * ox + oy * oy) - oz;
@@ -172,12 +172,12 @@ namespace idragnev::pbrt {
                                      const EFloat& t) const {
         const auto& [ray, oErr, dErr] = rayWithErrBound;
 
-        const auto ox = EFloat{ray.o.x, oErr.x};
-        const auto oy = EFloat{ray.o.y, oErr.y};
-        const auto oz = EFloat{ray.o.z, oErr.z};
-        const auto dx = EFloat{ray.d.x, dErr.x};
-        const auto dy = EFloat{ray.d.y, dErr.y};
-        const auto dz = EFloat{ray.d.z, dErr.z};
+        const auto ox = EFloat(ray.o.x, oErr.x);
+        const auto oy = EFloat(ray.o.y, oErr.y);
+        const auto oz = EFloat(ray.o.z, oErr.z);
+        const auto dx = EFloat(ray.d.x, dErr.x);
+        const auto dy = EFloat(ray.d.y, dErr.y);
+        const auto dz = EFloat(ray.d.z, dErr.z);
 
         const EFloat px = ox + t * dx;
         const EFloat py = oy + t * dy;
