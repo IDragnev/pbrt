@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/core.hpp"
+#include "core.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
@@ -82,4 +82,4 @@ namespace idragnev::pbrt {
     bool operator!=(const Vector2<T>& u, const Vector2<T>& v) noexcept;
 } // namespace idragnev::pbrt
 
-#include "core/Vector2Impl.hpp"
+#include "Vector2Impl.hpp"

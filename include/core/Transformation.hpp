@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/core.hpp"
-#include "core/Matrix4x4.hpp"
-#include "core/Ray.hpp"
+#include "core.hpp"
+#include "Matrix4x4.hpp"
+#include "Ray.hpp"
 
 namespace idragnev::pbrt {
     struct RayWithErrorBound

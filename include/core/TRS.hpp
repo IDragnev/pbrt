@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/Vector3.hpp"
-#include "core/Quaternion.hpp"
-#include "core/Matrix4x4.hpp"
+#include "Vector3.hpp"
+#include "Quaternion.hpp"
+#include "Matrix4x4.hpp"
 
 namespace idragnev::pbrt {
     struct TRS

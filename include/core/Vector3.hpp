@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-#include "core/core.hpp"
+#include "core.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
@@ -129,4 +129,4 @@ namespace idragnev::pbrt {
     bool operator!=(const Vector3<T>& u, const Vector3<T>& v) noexcept;
 } // namespace idragnev::pbrt
 
-#include "core/Vector3Impl.hpp"
+#include "Vector3Impl.hpp"

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/core.hpp"
-#include "core/SurfaceInteraction.hpp"
+#include "core.hpp"
+#include "SurfaceInteraction.hpp"
 
 #include <optional>
 

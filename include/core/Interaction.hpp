@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/core.hpp"
-#include "core/Point3.hpp"
-#include "core/Vector3.hpp"
-#include "core/Normal3.hpp"
+#include "core.hpp"
+#include "Point3.hpp"
+#include "Vector3.hpp"
+#include "Normal3.hpp"
 
 namespace idragnev::pbrt {
     class Interaction

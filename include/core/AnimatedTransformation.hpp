@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/core.hpp"
-#include "core/TRS.hpp"
+#include "core.hpp"
+#include "TRS.hpp"
 
 namespace idragnev::pbrt {
     class AnimatedTransformation

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core/core.hpp"
-#include "core/Interaction.hpp"
-#include "core/Point2.hpp"
-#include "core/Vector3.hpp"
-#include "core/Normal3.hpp"
+#include "core.hpp"
+#include "Interaction.hpp"
+#include "Point2.hpp"
+#include "Vector3.hpp"
+#include "Normal3.hpp"
 
 namespace idragnev::pbrt {
     class SurfaceInteraction : public Interaction

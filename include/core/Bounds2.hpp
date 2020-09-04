@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/Point2.hpp"
-#include "core/Vector2.hpp"
-#include "core/BoundingSphere.hpp"
-#include "core/Bounds2Iterator.hpp"
+#include "Point2.hpp"
+#include "Vector2.hpp"
+#include "BoundingSphere.hpp"
+#include "Bounds2Iterator.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
@@ -77,4 +77,4 @@ namespace idragnev::pbrt {
     Bounds2<T> expand(const Bounds2<T>& bounds, U delta);
 } // namespace idragnev::pbrt
 
-#include "core/Bounds2Impl.hpp"
+#include "Bounds2Impl.hpp"

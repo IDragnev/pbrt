@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/core.hpp"
-#include "core/Interval.hpp"
+#include "core.hpp"
+#include "Interval.hpp"
 
 #include <optional>
 

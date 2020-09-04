@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/core.hpp"
-#include "core/Point3.hpp"
-#include "core/BoundingSphere.hpp"
+#include "core.hpp"
+#include "Point3.hpp"
+#include "BoundingSphere.hpp"
 
 #include <optional>
 
@@ -86,4 +86,4 @@ namespace idragnev::pbrt {
     Float distance(const Point3<T>& p, const Bounds3<U>& b);
 } // namespace idragnev::pbrt
 
-#include "core/Bounds3Impl.hpp"
+#include "Bounds3Impl.hpp"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/core.hpp"
+#include "core.hpp"
 
 namespace idragnev::pbrt {
     class Matrix4x4

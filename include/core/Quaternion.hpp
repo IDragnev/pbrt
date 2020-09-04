@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/core.hpp"
-#include "core/Vector3.hpp"
+#include "core.hpp"
+#include "Vector3.hpp"
 
 namespace idragnev::pbrt {
     class Quaternion

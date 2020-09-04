@@ -3,7 +3,7 @@
 #include <type_traits>
 #include <assert.h>
 
-#include "core/core.hpp"
+#include "core.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
@@ -121,4 +121,4 @@ namespace idragnev::pbrt {
     Point2<T> permute(const Point2<T>& p, std::size_t x, std::size_t y);
 } // namespace idragnev::pbrt
 
-#include "core/Point2Impl.hpp"
+#include "Point2Impl.hpp"

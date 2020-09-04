@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/Vector3.hpp"
-#include "core/Interval.hpp"
-#include "core/Ray.hpp"
+#include "Vector3.hpp"
+#include "Interval.hpp"
+#include "Ray.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>

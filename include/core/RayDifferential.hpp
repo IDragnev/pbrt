@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Ray.hpp"
+#include "Ray.hpp"
 
 namespace idragnev::pbrt {
     class RayDifferential : public Ray

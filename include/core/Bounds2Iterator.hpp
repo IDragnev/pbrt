@@ -2,7 +2,7 @@
 
 #include <iterator>
 
-#include "core/Point2.hpp"
+#include "Point2.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>

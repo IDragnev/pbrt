@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/Point3.hpp"
-#include "core/Vector3.hpp"
+#include "Point3.hpp"
+#include "Vector3.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>

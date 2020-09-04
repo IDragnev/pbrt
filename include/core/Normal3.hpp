@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-#include "core/core.hpp"
+#include "core.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
@@ -96,4 +96,4 @@ namespace idragnev::pbrt {
     T faceforward(const T& u, const F& v);
 } // namespace idragnev::pbrt
 
-#include "core/Normal3Impl.hpp"
+#include "Normal3Impl.hpp"
