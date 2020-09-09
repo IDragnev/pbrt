@@ -56,8 +56,8 @@ namespace idragnev::pbrt {
         Point3& operator+=(const Vector3<T>& v);
         Point3& operator-=(const Vector3<T>& v);
 
-        T& operator[](std::size_t i);
-        T operator[](std::size_t i) const;
+        T& operator[](const std::size_t i);
+        T operator[](const std::size_t i) const;
 
     public:
         T x{};

@@ -23,7 +23,7 @@ namespace idragnev::pbrt {
         , dpdv{dpdv}
         , dndu{dndu}
         , dndv{dndv}
-        , shape{shape}
+        , shape{sh}
         , faceIndex(faceIndex) {
         shading.n = n;
         shading.dpdu = dpdu;

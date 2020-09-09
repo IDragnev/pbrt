@@ -28,37 +28,31 @@ namespace idragnev::pbrt {
     inline Float Vector3<T>::length() const {
         return std::sqrt(lengthSquared());
     }
-
+    
     template <typename T>
-    inline T Vector3<T>::operator[](std::size_t i) const {
+    T Vector3<T>::operator[](const std::size_t i) const {
         assert(i < 3);
-        switch (i) {
-            case 0: {
-                return x;
-            }
-            case 1: {
-                return y;
-            }
-            case 2: {
-                return z;
-            }
+        if (i == 0) {
+            return x;
         }
+        else if (i == 1) {
+            return y;
+        }
+        
+        return z; 
     }
 
     template <typename T>
-    inline T& Vector3<T>::operator[](std::size_t i) {
+    T& Vector3<T>::operator[](const std::size_t i) {
         assert(i < 3);
-        switch (i) {
-            case 0: {
-                return x;
-            }
-            case 1: {
-                return y;
-            }
-            case 2: {
-                return z;
-            }
+        if (i == 0) {
+            return x;
         }
+        else if (i == 1) {
+            return y;
+        }
+
+        return z;
     }
 
     template <typename T>
