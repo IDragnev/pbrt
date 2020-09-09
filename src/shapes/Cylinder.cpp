@@ -90,10 +90,8 @@ namespace idragnev::pbrt {
                                      const Vector3f& dErr) const {
         const auto ox = EFloat(ray.o.x, oErr.x);
         const auto oy = EFloat(ray.o.y, oErr.y);
-        const auto oz = EFloat(ray.o.z, oErr.z);
         const auto dx = EFloat(ray.d.x, dErr.x);
         const auto dy = EFloat(ray.d.y, dErr.y);
-        const auto dz = EFloat(ray.d.z, dErr.z);
 
         const auto a = dx * dx + dy * dy;
         const auto b = 2 * (dx * ox + dy * oy);

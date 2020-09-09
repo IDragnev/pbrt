@@ -96,7 +96,7 @@ namespace idragnev::pbrt {
         const auto pError = Vector3f{0.f, 0.f, 0.f};
         const auto wo = -ray.d;
 
-        const auto interaction = SurfaceInteraction{hitPoint,
+        const auto interaction = SurfaceInteraction{p,
                                                     pError,
                                                     Point2f{u, v},
                                                     wo,
