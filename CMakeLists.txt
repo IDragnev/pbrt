@@ -23,11 +23,13 @@ if(RT_FLOAT_AS_DOUBLE)
   add_definitions(-D RT_FLOAT_AS_DOUBLE)
 endif()
 
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+if (MSVC)
+    add_compile_options(/W4)
+else()
+    add_compile_options(-Wall -Wextra -pedantic)
+endif()
 
-# Visual Studio source folders
-source_group(core_source  REGULAR_EXPRESSION src/core/.*)
-source_group(core_headers REGULAR_EXPRESSION include/core/.*)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 add_subdirectory(src/core)
 add_subdirectory(src/shapes)
