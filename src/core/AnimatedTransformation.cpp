@@ -869,6 +869,22 @@ namespace idragnev::pbrt {
         return kc + kx * p.x + ky * p.y + kz * p.z;
     }
 
+    // will be instantiated only in this translation unit
+    // so it is fine to define it here
+    template <typename T>
+    auto AnimatedTransformation::transform(const Float time, const T& x) const {
+        if (!actuallyAnimated || time <= startTime) {
+            return (*startTransform)(x);
+        }
+        else if (time >= endTime) {
+            return (*endTransform)(x);
+        }
+        else {
+            const auto transformation = this->interpolate(time);
+            return transformation(x);
+        }
+    }
+
     Ray AnimatedTransformation::operator()(const Ray& ray) const {
         return transform(ray.time, ray);
     }

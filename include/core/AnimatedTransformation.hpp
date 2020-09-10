@@ -69,18 +69,4 @@ namespace idragnev::pbrt {
         DerivativeTerm c4[3];
         DerivativeTerm c5[3];
     };
-
-    template <typename T>
-    auto AnimatedTransformation::transform(const Float time, const T& x) const {
-        if (!actuallyAnimated || time <= startTime) {
-            return (*startTransform)(x);
-        }
-        else if (time >= endTime) {
-            return (*endTransform)(x);
-        }
-        else {
-            const auto transformation = this->interpolate(time);
-            return transformation(x);
-        }
-    }
 } // namespace idragnev::pbrt
