@@ -4,6 +4,7 @@ set(RAY_TRACER_SHAPES_SOURCE
   Disk.cpp
   Cone.cpp
   Paraboloid.cpp
+  Triangle.cpp
 )
 
 set(SHAPES_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/shapes)
@@ -14,6 +15,7 @@ set(RAY_TRACER_SHAPES_HEADERS
   ${SHAPES_HEADERS_DIR}/Disk.hpp
   ${SHAPES_HEADERS_DIR}/Cone.hpp
   ${SHAPES_HEADERS_DIR}/Paraboloid.hpp
+  ${SHAPES_HEADERS_DIR}/Triangle.hpp
 )
 
 add_library(

@@ -5,5 +5,6 @@ bounds3.cpp
 matrix4x4.cpp
 transformation.cpp
 interval.cpp
+functional.cpp
 )
 target_link_libraries(core_test corelib doctest)

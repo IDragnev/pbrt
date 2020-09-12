@@ -17,6 +17,7 @@ set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/core)
 
 set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/core.hpp
+  ${CORE_HEADERS_DIR}/Functional.hpp
   ${CORE_HEADERS_DIR}/Vector2.hpp
   ${CORE_HEADERS_DIR}/Vector2Impl.hpp
   ${CORE_HEADERS_DIR}/Vector3.hpp
@@ -46,6 +47,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/SurfaceInteraction.hpp
   ${CORE_HEADERS_DIR}/Shape.hpp
   ${CORE_HEADERS_DIR}/EFloat.hpp
+  ${CORE_HEADERS_DIR}/Texture.hpp
 )
 
 add_library(
