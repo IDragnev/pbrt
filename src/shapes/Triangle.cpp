@@ -25,13 +25,13 @@ namespace idragnev::pbrt {
         , vertexIndices(vertexIndices)
         , vertexWorldCoordinates(fmap(
               vertexCoordinates,
-              [objectToWorld](const Point3f& p) { return objectToWorld(p); }))
+              [&objectToWorld](const Point3f& p) { return objectToWorld(p); }))
         , vertexNormalVectors(fmap(
               vertexNormalVectors,
-              [objectToWorld](const Normal3f& n) { return objectToWorld(n); }))
+              [&objectToWorld](const Normal3f& n) { return objectToWorld(n); }))
         , vertexTangentVectors(fmap(
               vertexTangentVectors,
-              [objectToWorld](const Vector3f& v) { return objectToWorld(v); }))
+              [&objectToWorld](const Vector3f& v) { return objectToWorld(v); }))
         , vertexUVs(vertexUVs)
         , alphaMask(alphaMask)
         , shadowAlphaMask(shadowAlphaMask)

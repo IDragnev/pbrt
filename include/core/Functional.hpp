@@ -3,6 +3,8 @@
 #include <type_traits>
 
 namespace idragnev::pbrt {
+    // maps the elements of the given container with the given function,
+    // returning a container of type C<G>, where G is the return type of F
     template <template <typename...> typename C,
               typename T,
               typename F,
