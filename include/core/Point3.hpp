@@ -42,6 +42,8 @@ namespace idragnev::pbrt {
         }
 #endif // !NDEBUG
 
+        static auto zero() { return Point3{}; }
+
         bool hasNaNs() const noexcept;
 
         template <typename U>

@@ -15,9 +15,9 @@ TEST_CASE(
     CHECK(v.length() == 1.f);
     CHECK(w.length() == 1.f);
 
-    CHECK(dot(u, v) == 0.f);
-    CHECK(dot(u, w) == 0.f);
-    CHECK(dot(w, v) == 0.f);
+    CHECK(pbrt::dot(u, v) == 0.f);
+    CHECK(pbrt::dot(u, w) == 0.f);
+    CHECK(pbrt::dot(w, v) == 0.f);
 }
 
 TEST_CASE("faceforward flips a normal so that it lies in the same hemisphere"
