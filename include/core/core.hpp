@@ -84,6 +84,9 @@ namespace idragnev::pbrt {
     class EFloat;
     struct QuadraticRoots;
 
+    template <typename T>
+    class Texture;
+
     template <typename T,
               typename = std::enable_if_t<std::is_floating_point_v<T>>>
     inline bool isNaN(const T x) {

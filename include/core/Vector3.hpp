@@ -43,6 +43,8 @@ namespace idragnev::pbrt {
         }
 #endif // !NDEBUG
 
+        static auto zero() { return Vector3{}; }
+
         bool hasNaNs() const noexcept;
         Float lengthSquared() const noexcept;
         Float length() const;
