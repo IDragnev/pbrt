@@ -1,6 +1,7 @@
 #pragma once
 
 #include <type_traits>
+#include <utility>
 
 namespace idragnev::pbrt {
     // Maps the elements of the given container with f,
