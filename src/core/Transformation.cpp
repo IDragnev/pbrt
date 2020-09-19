@@ -55,22 +55,21 @@ namespace idragnev::pbrt {
     }
 
     SurfaceInteraction
-    Transformation::operator()(const SurfaceInteraction& si) const {
-        // TODO
-        const auto result = si;
-        return result;
-    }
-
-    RayWithErrorBound
-    Transformation::transformWithErrBound(const Ray& r) const {
+    Transformation::operator()([[maybe_unused]] const SurfaceInteraction& si) const {
         // TODO
         return {};
     }
 
     RayWithErrorBound
-    Transformation::transformWithErrBound(const Ray& r,
-                                          const Vector3f& oErrorIn,
-                                          const Vector3f& dErrorIn) const {
+    Transformation::transformWithErrBound([[maybe_unused]] const Ray& r) const {
+        // TODO
+        return {};
+    }
+
+    RayWithErrorBound
+    Transformation::transformWithErrBound([[maybe_unused]] const Ray& r,
+                                          [[maybe_unused]] const Vector3f& oErrorIn,
+                                          [[maybe_unused]] const Vector3f& dErrorIn) const {
         // TODO
         return {};
     }
