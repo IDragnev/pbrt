@@ -2,6 +2,7 @@
 #include "core/Functional.hpp"
 
 #include <vector>
+#include <string>
 
 namespace pbrt = idragnev::pbrt;
 
@@ -10,7 +11,7 @@ TEST_CASE("fmap") {
         return x * x;
     };
 
-    SUBCASE("with empty container") {
+    SUBCASE("on empty container") {
         const std::vector<int> nums;
 
         const auto result = pbrt::fmap(nums, square);
@@ -18,7 +19,7 @@ TEST_CASE("fmap") {
         CHECK(result.empty());
     }
 
-    SUBCASE("with non-empty container") {
+    SUBCASE("on non-empty container") {
         const std::vector nums = {1, 2, 3};
 
         const auto result = pbrt::fmap(nums, square);
@@ -26,17 +27,25 @@ TEST_CASE("fmap") {
         CHECK(result == std::vector{1, 4, 9});
     }
 
-    SUBCASE("with prvalue") {
-        const auto result = pbrt::fmap(std::vector{1, 2, 3}, square);
+    SUBCASE("on prvalue container calls the supplied function with moved values") {
+        const auto times2 = [](int&& x) {
+            return 2 * x;
+        };
+        const auto result = pbrt::fmap(std::vector{1, 2, 3}, times2);
 
-        CHECK(result == std::vector{1, 4, 9});
+        CHECK(result == std::vector{2, 4, 6});
     }
 
-    SUBCASE("with xvalue") {
-        std::vector nums = std::vector{1, 2, 3};
-        const auto result = pbrt::fmap(std::move(nums), square);
+    SUBCASE("on xvalue container calls the supplied function with moved values") {
+        const auto move = [](std::string&& s) -> std::string {
+            return std::move(s);
+        };
+        std::vector<std::string> vec = {"a", "b"};
 
-        CHECK(result == std::vector{1, 4, 9});
+        const auto result = pbrt::fmap(std::move(vec), move);
+
+        CHECK(vec == std::vector<std::string>{"", ""});
+        CHECK(result == std::vector<std::string>{"a", "b"});
     }
 
     SUBCASE("with different inner result type") {
