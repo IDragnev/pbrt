@@ -20,7 +20,7 @@ endif()
 option(RT_FLOAT_AS_DOUBLE "Use 64-bit floats" OFF)
 
 if(RT_FLOAT_AS_DOUBLE)
-  add_definitions(-D RT_FLOAT_AS_DOUBLE)
+  add_definitions(-DRT_FLOAT_AS_DOUBLE)
 endif()
 
 if (MSVC)

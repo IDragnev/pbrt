@@ -48,6 +48,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/Shape.hpp
   ${CORE_HEADERS_DIR}/EFloat.hpp
   ${CORE_HEADERS_DIR}/Texture.hpp
+  ${CORE_HEADERS_DIR}/Parallel.hpp
 )
 
 add_library(
