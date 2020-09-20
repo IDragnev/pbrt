@@ -37,15 +37,17 @@ TEST_CASE("fmap") {
     }
 
     SUBCASE("on xvalue container calls the supplied function with moved values") {
+        using namespace std::string_literals;
+
         const auto move = [](std::string&& s) -> std::string {
             return std::move(s);
         };
-        std::vector<std::string> vec = {"a", "b"};
+        std::vector vec = {"a"s, "b"s};
 
         const auto result = pbrt::fmap(std::move(vec), move);
 
-        CHECK(vec == std::vector<std::string>{"", ""});
-        CHECK(result == std::vector<std::string>{"a", "b"});
+        CHECK(vec == std::vector{""s, ""s});
+        CHECK(result == std::vector{"a"s, "b"s});
     }
 
     SUBCASE("with different inner result type") {

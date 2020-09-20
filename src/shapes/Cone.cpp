@@ -35,8 +35,8 @@ namespace idragnev::pbrt {
         });
     }
 
-    // will be instantiated only in this translation unit so it's ok to be
-    // defined here
+    // will be instantiated only in this translation unit
+    // so it is fine to define it here
     template <typename R, typename S, typename F>
     R Cone::intersectImpl(const Ray& rayInWorldSpace,
                           F failure,

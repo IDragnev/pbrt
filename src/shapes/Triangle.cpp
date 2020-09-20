@@ -108,8 +108,8 @@ namespace idragnev::pbrt {
                                    [](const auto&...) { return true; });
     }
 
-    // will be instantiated only in this translation unit so its ok to be
-    // defined here
+    // will be instantiated only in this translation unit
+    // so it is fine to define it here
     template <typename R, typename S, typename F>
     R Triangle::intersectImpl(const Ray& ray,
                               const bool testAlphaTexture,
