@@ -11,6 +11,7 @@ set(RAY_TRACER_CORE_SOURCE
   SurfaceInteraction.cpp
   Shape.cpp
   EFloat.cpp
+  Parallel.cpp
 )
 
 set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/core)

@@ -3,6 +3,8 @@
 #include "core.hpp"
 
 #include <atomic>
+#include <mutex>
+#include <condition_variable>
 
 namespace idragnev::pbrt {
     class AtomicFloat
@@ -36,5 +38,22 @@ namespace idragnev::pbrt {
 
     private:
         std::atomic<UnderlyingType> bits;
+    };
+
+    // Simple one-use barrier; ensures that multiple threads all reach a
+    // particular point of execution before allowing any of them to proceed
+    // past it.
+    class Barrier
+    {
+    public:
+        Barrier(const int threadsCount);
+        ~Barrier();
+
+        void wait();
+
+    private:
+        std::mutex mutex;
+        std::condition_variable cv;
+        int threadsNotReached = 0;
     };
 } // namespace idragnev::pbrt
