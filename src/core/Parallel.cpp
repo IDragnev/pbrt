@@ -134,22 +134,53 @@ namespace idragnev::pbrt {
             shutdownThreads = false;
         }
 
+        void parallelFor(ParallelForLoop& loop);
+
         void parallelFor(std::function<void(std::int64_t)> func,
                          const std::int64_t iterationsCount,
                          const std::int64_t chunkSize) {
-            using statics::threads, statics::workListHead;
-            using statics::workListMutex, statics::workListCondVar;
+            using statics::threads;
 
             assert(threads.size() > 0 || maxThreadIndex() == 1);
 
-            if (threads.empty() || iterationsCount < chunkSize) {
+            if (iterationsCount > chunkSize && threads.size() > 0) {
+                ParallelForLoop loop(std::move(func),
+                                     iterationsCount,
+                                     chunkSize);
+                parallelFor(loop);
+            }
+            else {
                 for (std::int64_t i = 0; i < iterationsCount; ++i) {
                     func(i);
                 }
-                return;
             }
+        }
 
-            ParallelForLoop loop(std::move(func), iterationsCount, chunkSize);
+        void parallelFor2D(std::function<void(Point2i)> func,
+                           const Point2i& iterationsCount) {
+            using statics::threads;
+
+            assert(threads.size() > 0 || maxThreadIndex() == 1);
+
+            if (const auto tilesCount = iterationsCount.x * iterationsCount.y;
+                tilesCount > 1 && threads.size() > 0)
+            {
+                ParallelForLoop loop(std::move(func), iterationsCount);
+                parallelFor(loop);
+            }
+            else {
+                for (auto y = 0; y < iterationsCount.y; ++y) {
+                    for (auto x = 0; x < iterationsCount.x; ++x) {
+                        func(Point2i(x, y));
+                    }
+                }
+            }
+        }
+
+        void parallelFor(ParallelForLoop& loop) {
+            using statics::workListHead;
+            using statics::workListMutex, statics::workListCondVar;
+
             {
                 const auto lock = std::lock_guard(workListMutex);
                 loop.next = workListHead;

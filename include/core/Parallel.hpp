@@ -65,5 +65,7 @@ namespace idragnev::pbrt {
         void parallelFor(std::function<void(std::int64_t)> func,
                          const std::int64_t iterationsCount,
                          const std::int64_t chunkSize = 1);
+        void parallelFor2D(std::function<void(Point2i)> func,
+                           const Point2i& iterationsCount);
     } // namespace parallel
 } // namespace idragnev::pbrt

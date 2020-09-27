@@ -3,6 +3,7 @@
 #include "core/core.hpp"
 #include "core/Parallel.hpp"
 #include "core/Functional.hpp"
+#include "core/Point2.hpp"
 
 namespace pbrt = idragnev::pbrt;
 namespace parallel = pbrt::parallel;
@@ -60,7 +61,7 @@ TEST_CASE("parallelFor basics") {
     }
 }
 
- TEST_CASE("nested parallelFor") {
+TEST_CASE("nested parallelFor") {
     [[maybe_unused]] const auto cleanup = pbrt::ScopedFn{[]() noexcept {
         parallel::cleanup();
     }};
@@ -71,9 +72,8 @@ TEST_CASE("parallelFor basics") {
 
     parallel::parallelFor(
         [&arr, n](const auto i) {
-            parallel::parallelFor(
-                [&arr, i](const auto j) { arr[i][j] = 1; },
-                n);
+            parallel::parallelFor([&arr, i](const auto j) { arr[i][j] = 1; },
+                                  n);
         },
         n);
 
@@ -81,5 +81,31 @@ TEST_CASE("parallelFor basics") {
         for (const auto e : row) {
             REQUIRE(e == 1);
         }
+    }
+}
+
+TEST_CASE("parallelFor2D") {
+    [[maybe_unused]] const auto cleanup = pbrt::ScopedFn{[]() noexcept {
+        parallel::cleanup();
+    }};
+    parallel::init();
+
+    SUBCASE("with iterationsCount = 0") {
+        std::atomic<int> n = 0;
+
+        parallel::parallelFor2D([&n](const pbrt::Point2i) { ++n; },
+                                pbrt::Point2i{0, 0});
+
+        CHECK(n == 0);
+    }
+
+    SUBCASE("with iterationsCount > 0") {
+        const auto iterations = pbrt::Point2i{15, 14};
+        std::atomic<int> n = 0;
+
+        parallel::parallelFor2D([&](const pbrt::Point2i) { ++n; },
+                                iterations);
+
+        CHECK(n == iterations.x * iterations.y);
     }
 }
