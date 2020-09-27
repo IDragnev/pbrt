@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(ray-tracer
-LANGUAGES CXX
+  LANGUAGES CXX
 )
 
 set(default_build_type "Release")
@@ -10,7 +10,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
       STRING "Choose the type of build." FORCE)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
-    "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+               "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES RELEASE)
@@ -24,9 +24,9 @@ if(RT_FLOAT_AS_DOUBLE)
 endif()
 
 if (MSVC)
-    add_compile_options(/W4)
+  add_compile_options(/W4)
 else()
-    add_compile_options(-Wall -Wextra -pedantic)
+  add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
