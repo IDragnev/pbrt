@@ -63,4 +63,22 @@ namespace idragnev::pbrt {
 
         return result;
     }
+
+    template <typename Callable>
+    class ScopedFn
+    {
+    private:
+        static_assert(std::is_nothrow_invocable_v<Callable>);
+        static_assert(std::is_nothrow_move_constructible_v<Callable>);
+
+    public:
+        ScopedFn(Callable f) noexcept : f{std::move(f)} {}
+        ~ScopedFn() { f(); }
+
+        ScopedFn(const ScopedFn&) = delete;
+        ScopedFn& operator=(const ScopedFn&) = delete;
+
+    private:
+        Callable f;
+    };
 } // namespace idragnev::pbrt

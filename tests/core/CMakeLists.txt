@@ -7,5 +7,6 @@ add_executable(core_test
   transformation.cpp
   interval.cpp
   functional.cpp
+  parallel.cpp
 )
 target_link_libraries(core_test corelib doctest)
