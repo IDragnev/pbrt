@@ -1,3 +1,5 @@
+find_package(Threads)
+
 set(RAY_TRACER_CORE_SOURCE
   core.cpp
   Ray.cpp
@@ -57,6 +59,10 @@ add_library(
   STATIC
   ${RAY_TRACER_CORE_SOURCE}
   ${RAY_TRACER_CORE_HEADERS}
+)
+target_link_libraries(
+  corelib
+  ${CMAKE_THREAD_LIBS_INIT}
 )
 target_include_directories(corelib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_compile_features(corelib PUBLIC cxx_std_17)

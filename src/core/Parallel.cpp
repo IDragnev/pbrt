@@ -2,6 +2,7 @@
 #include "core/Point2.hpp"
 #include "core/Functional.hpp"
 
+#include <thread>
 #include <assert.h>
 
 namespace idragnev::pbrt {
