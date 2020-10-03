@@ -112,9 +112,9 @@ namespace idragnev::pbrt {
                       "Cannot scale a point with non-arithmetic type");
         assert(!isNaN(f));
 
-        x *= f;
-        y *= f;
-        z *= f;
+        x *= static_cast<T>(f);
+        y *= static_cast<T>(f);
+        z *= static_cast<T>(f);
         return *this;
     }
 
