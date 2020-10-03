@@ -64,9 +64,9 @@ namespace idragnev::pbrt {
 #endif //! NDEBUG
 
         if (rhs.lowerBound() < 0.f && rhs.upperBound() > 0.f) {
-            result.bounds = ErrBounds{-constants::Infinity,
+            result.bounds = ErrBounds(-constants::Infinity,
                                       constants::Infinity,
-                                      NoOrderCheck{}};
+                                      NoOrderCheck{});
         }
         else {
             const auto [min, max] =
