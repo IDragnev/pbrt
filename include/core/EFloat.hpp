@@ -12,6 +12,8 @@ namespace idragnev::pbrt {
         friend EFloat abs(const EFloat& fe);
         friend EFloat sqrt(const EFloat& fe);
 
+        using ErrBounds = Interval<float>;
+
     public:
         EFloat() = default;
         EFloat(const float v, const float err = 0.f) noexcept;
@@ -51,7 +53,7 @@ namespace idragnev::pbrt {
 
     private:
         float v = 0.f;
-        Interval bounds = {0.f, 0.f, Interval::NoOrderCheck{}};
+        ErrBounds bounds = {0.f, 0.f, NoOrderCheck{}};
 
 #ifndef NDEBUG
         long double vPrecise = 0.;

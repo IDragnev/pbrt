@@ -23,7 +23,7 @@ namespace idragnev::pbrt {
         template <typename U>
         explicit operator Bounds3<U>() const;
 
-        std::optional<Interval> intersectP(const Ray& ray) const noexcept;
+        std::optional<Intervalf> intersectP(const Ray& ray) const noexcept;
         bool intersectP(const Ray& ray,
                         const Vector3f& invDir,
                         const std::size_t dirIsNeg[3]) const noexcept;

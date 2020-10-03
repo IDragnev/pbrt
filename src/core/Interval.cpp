@@ -4,24 +4,7 @@
 #include <assert.h>
 
 namespace idragnev::pbrt {
-    Interval::Interval(const Float a, const Float b) noexcept
-        : _low(std::min(a, b))
-        , _high(std::max(a, b)) {}
-
-    Interval operator*(const Interval& lhs, const Interval& rhs) noexcept {
-        // clang-format off
-        const auto [min, max] = std::minmax({
-                lhs.low()  * rhs.low(),
-                lhs.low()  * rhs.high(),
-                lhs.high() * rhs.low(),
-                lhs.high() * rhs.high()
-        });
-        // clang-format on
-
-        return Interval{min, max};
-    }
-
-    Interval sin(const Interval& i) {
+    Intervalf sin(const Intervalf& i) {
         using constants::Pi;
         using constants::PiOver2;
 
@@ -43,10 +26,10 @@ namespace idragnev::pbrt {
             sinLow = -1.f;
         }
 
-        return Interval{sinLow, sinHigh};
+        return Intervalf{sinLow, sinHigh};
     }
 
-    Interval cos(const Interval& i) {
+    Intervalf cos(const Intervalf& i) {
         using constants::Pi;
         using constants::PiOver2;
 
@@ -63,6 +46,6 @@ namespace idragnev::pbrt {
             cosLow = -1.f;
         }
 
-        return Interval{cosLow, cosHigh};
+        return Intervalf{cosLow, cosHigh};
     }
 } // namespace idragnev::pbrt

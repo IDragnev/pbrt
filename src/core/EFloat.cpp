@@ -7,10 +7,10 @@ namespace idragnev::pbrt {
     EFloat::EFloat(const float v, const float err) noexcept
         : v(v)
         , bounds([err, v] {
-            return err == 0.f ? Interval{v}
-                              : Interval{nextFloatDown(v - err),
-                                         nextFloatUp(v + err),
-                                         Interval::NoOrderCheck{}};
+            return err == 0.f ? ErrBounds{v}
+                              : ErrBounds{nextFloatDown(v - err),
+                                          nextFloatUp(v + err),
+                                          NoOrderCheck{}};
         }())
 #ifndef NDEBUG
         , vPrecise(v)
@@ -42,9 +42,9 @@ namespace idragnev::pbrt {
         result.v = v + rhs.v;
 
         const auto b = bounds + rhs.bounds;
-        result.bounds = Interval{nextFloatDown(b.low()),
-                                 nextFloatUp(b.high()),
-                                 Interval::NoOrderCheck{}};
+        result.bounds = ErrBounds{nextFloatDown(b.low()),
+                                  nextFloatUp(b.high()),
+                                  NoOrderCheck{}};
 
 #ifndef NDEBUG
         result.vPrecise = vPrecise + rhs.vPrecise;
@@ -64,9 +64,9 @@ namespace idragnev::pbrt {
 #endif //! NDEBUG
 
         if (rhs.lowerBound() < 0.f && rhs.upperBound() > 0.f) {
-            result.bounds = Interval{-constants::Infinity,
-                                     constants::Infinity,
-                                     Interval::NoOrderCheck{}};
+            result.bounds = ErrBounds{-constants::Infinity,
+                                      constants::Infinity,
+                                      NoOrderCheck{}};
         }
         else {
             const auto [min, max] =
@@ -74,9 +74,8 @@ namespace idragnev::pbrt {
                              lowerBound() / rhs.upperBound(),
                              upperBound() / rhs.lowerBound(),
                              upperBound() / rhs.upperBound()});
-            result.bounds = Interval{nextFloatDown(min),
-                                     nextFloatUp(max),
-                                     Interval::NoOrderCheck{}};
+            result.bounds =
+                ErrBounds{nextFloatDown(min), nextFloatUp(max), NoOrderCheck{}};
         }
 
         return result;
@@ -88,9 +87,9 @@ namespace idragnev::pbrt {
         result.v = v * rhs.v;
 
         const auto b = bounds * rhs.bounds;
-        result.bounds = Interval{nextFloatDown(b.low()),
-                                 nextFloatUp(b.high()),
-                                 Interval::NoOrderCheck{}};
+        result.bounds = ErrBounds{nextFloatDown(b.low()),
+                                  nextFloatUp(b.high()),
+                                  NoOrderCheck{}};
 
 #ifndef NDEBUG
         result.vPrecise = vPrecise * rhs.vPrecise;
@@ -105,9 +104,9 @@ namespace idragnev::pbrt {
         result.v = v - rhs.v;
 
         const auto b = bounds - rhs.bounds;
-        result.bounds = Interval{nextFloatDown(b.low()),
-                                 nextFloatUp(b.high()),
-                                 Interval::NoOrderCheck{}};
+        result.bounds = ErrBounds{nextFloatDown(b.low()),
+                                  nextFloatUp(b.high()),
+                                  NoOrderCheck{}};
 
 #ifndef NDEBUG
         result.vPrecise = vPrecise - rhs.vPrecise;
@@ -129,9 +128,10 @@ namespace idragnev::pbrt {
 
         assert(ef.lowerBound() >= 0.f);
         assert(ef.upperBound() >= 0.f);
-        result.bounds = Interval{nextFloatDown(std::sqrt(ef.lowerBound())),
-                                 nextFloatUp(std::sqrt(ef.upperBound())),
-                                 Interval::NoOrderCheck{}};
+        result.bounds =
+            EFloat::ErrBounds{nextFloatDown(std::sqrt(ef.lowerBound())),
+                              nextFloatUp(std::sqrt(ef.upperBound())),
+                              NoOrderCheck{}};
 
         return result;
     }
@@ -148,9 +148,9 @@ namespace idragnev::pbrt {
 
             result.v = std::abs(ef.v);
             result.bounds =
-                Interval{0.f,
-                         std::max(-ef.lowerBound(), ef.upperBound()),
-                         Interval::NoOrderCheck{}};
+                EFloat::ErrBounds{0.f,
+                                  std::max(-ef.lowerBound(), ef.upperBound()),
+                                  NoOrderCheck{}};
 
 #ifndef NDEBUG
             result.vPrecise = std::abs(ef.vPrecise);

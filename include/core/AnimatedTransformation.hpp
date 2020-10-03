@@ -49,7 +49,7 @@ namespace idragnev::pbrt {
 
         static void intervalFindZeros(const Coefficients& cs,
                                       const Float theta,
-                                      const Interval& tInterval,
+                                      const Intervalf& tInterval,
                                       Float zeros[8],
                                       unsigned& zerosCount,
                                       int depth = 8);
