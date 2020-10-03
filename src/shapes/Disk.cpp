@@ -115,6 +115,6 @@ namespace idragnev::pbrt {
     }
 
     Float Disk::area() const {
-        return phiMax * 0.5 * (radius * radius - innerRadius * innerRadius);
+        return phiMax * 0.5f * (radius * radius - innerRadius * innerRadius);
     }
 } // namespace idragnev::pbrt

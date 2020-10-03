@@ -470,7 +470,7 @@ namespace idragnev::pbrt {
     Float Triangle::area() const {
         const auto [p0, p1, p2] = verticesCoordinates();
 
-        return 0.5 * cross(p1 - p0, p2 - p0).length();
+        return 0.5f * cross(p1 - p0, p2 - p0).length();
     }
 
     std::vector<std::shared_ptr<Shape>> createTriangleMesh(

@@ -216,11 +216,16 @@ namespace idragnev::pbrt {
         assert(!u.hasNaNs());
         assert(!v.hasNaNs());
 
-        double ux = u.x, uy = u.y, uz = u.z;
-        double vx = v.x, vy = v.y, vz = v.z;
-        return Vector3<T>((uy * vz) - (uz * vy),
-                          (uz * vx) - (ux * vz),
-                          (ux * vy) - (uy * vx));
+        const double ux = u.x;
+        const double uy = u.y;
+        const double uz = u.z;
+        const double vx = v.x;
+        const double vy = v.y;
+        const double vz = v.z;
+
+        return Vector3<T>(static_cast<T>((uy * vz) - (uz * vy)),
+                          static_cast<T>((uz * vx) - (ux * vz)),
+                          static_cast<T>((ux * vy) - (uy * vx)));
     }
 
     template <typename T>
