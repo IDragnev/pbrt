@@ -84,7 +84,10 @@ namespace idragnev::pbrt {
     struct TRS;
     class AnimatedTransformation;
 
+    template <typename T>
     class Interval;
+
+    using Intervalf = Interval<Float>;
 
     class Interaction;
     class SurfaceInteraction;

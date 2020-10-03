@@ -783,7 +783,7 @@ namespace idragnev::pbrt {
 
         const auto cosTheta = dot(startTRS.R, endTRS.R);
         const auto theta = std::acos(clamp(cosTheta, -1.f, 1.f));
-        const auto tInterval = Interval{0.f, 1.f};
+        const auto tInterval = Intervalf{0.f, 1.f};
 
         auto bounds = Bounds3f{(*startTransform)(p), (*endTransform)(p)};
         for (std::size_t c = 0; c < 3; ++c) {
@@ -807,15 +807,15 @@ namespace idragnev::pbrt {
 
     void AnimatedTransformation::intervalFindZeros(const Coefficients& cs,
                                                    const Float theta,
-                                                   const Interval& tInterval,
+                                                   const Intervalf& tInterval,
                                                    Float zeros[8],
                                                    unsigned& zerosCount,
                                                    int depth) {
-        const auto range = Interval{cs.c1} +
-                           (Interval{cs.c2} + Interval{cs.c3} * tInterval) *
-                               cos(Interval{2.f * theta} * tInterval) +
-                           (Interval{cs.c4} + Interval{cs.c5} * tInterval) *
-                               sin(Interval{2.f * theta} * tInterval);
+        const auto range = Intervalf{cs.c1} +
+                           (Intervalf{cs.c2} + Intervalf{cs.c3} * tInterval) *
+                               cos(Intervalf{2.f * theta} * tInterval) +
+                           (Intervalf{cs.c4} + Intervalf{cs.c5} * tInterval) *
+                               sin(Intervalf{2.f * theta} * tInterval);
         if (range.low() > 0.f || range.high() < 0.f ||
             range.low() == range.high()) {
             return;

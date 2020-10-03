@@ -31,7 +31,7 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    std::optional<Interval>
+    std::optional<Intervalf>
     Bounds3<T>::intersectP(const Ray& ray) const noexcept {
         Float t0 = 0.f;
         Float t1 = ray.tMax;
@@ -55,7 +55,7 @@ namespace idragnev::pbrt {
             }
         }
 
-        return std::make_optional(Interval{t0, t1});
+        return std::make_optional(Intervalf{t0, t1});
     }
 
     template <typename T>

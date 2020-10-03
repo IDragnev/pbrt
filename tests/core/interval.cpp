@@ -5,8 +5,8 @@ namespace pbrt = idragnev::pbrt;
 
 TEST_CASE("construction from two values does not depend on"
           "arguments order") {
-    const auto i1 = pbrt::Interval{1.f, 0.f};
-    const auto i2 = pbrt::Interval{0.f, 1.f};
+    const auto i1 = pbrt::Intervalf{1.f, 0.f};
+    const auto i2 = pbrt::Intervalf{0.f, 1.f};
 
     CHECK(i1.low() == 0.f);
     CHECK(i1.high() == 1.f);
@@ -16,8 +16,8 @@ TEST_CASE("construction from two values does not depend on"
 }
 
 TEST_CASE("multiplication") {
-    const auto a = pbrt::Interval{0.f, 5.f};
-    const auto b = pbrt::Interval{2.f, 10.f};
+    const auto a = pbrt::Intervalf{0.f, 5.f};
+    const auto b = pbrt::Intervalf{2.f, 10.f};
 
     const auto c = a * b;
 
@@ -26,8 +26,8 @@ TEST_CASE("multiplication") {
 }
 
 TEST_CASE("sum") {
-    const auto a = pbrt::Interval{0.f, 5.f};
-    const auto b = pbrt::Interval{2.f, 10.f};
+    const auto a = pbrt::Intervalf{0.f, 5.f};
+    const auto b = pbrt::Intervalf{2.f, 10.f};
 
     const auto c = a + b;
 
@@ -36,8 +36,8 @@ TEST_CASE("sum") {
 }
 
 TEST_CASE("subtraction") {
-    const auto a = pbrt::Interval{0.f, 5.f};
-    const auto b = pbrt::Interval{2.f, 10.f};
+    const auto a = pbrt::Intervalf{0.f, 5.f};
+    const auto b = pbrt::Intervalf{2.f, 10.f};
 
     const auto c = a - b;
 
@@ -46,7 +46,7 @@ TEST_CASE("subtraction") {
 }
 
 TEST_CASE("negation") {
-    const auto a = pbrt::Interval{2.f, 10.f};
+    const auto a = pbrt::Intervalf{2.f, 10.f};
 
     const auto b = -a;
 
@@ -55,7 +55,7 @@ TEST_CASE("negation") {
 }
 
 TEST_CASE("withLow") {
-    const auto interval = pbrt::Interval{0.f, 3.f};
+    const auto interval = pbrt::Intervalf{0.f, 3.f};
 
     SUBCASE("with higher argument than high") {
         const auto i = interval.withLow(4.f);
@@ -73,7 +73,7 @@ TEST_CASE("withLow") {
 }
 
 TEST_CASE("withHigh") {
-    const auto interval = pbrt::Interval{0.f, 3.f};
+    const auto interval = pbrt::Intervalf{0.f, 3.f};
 
     SUBCASE("with higher argument than high") {
         const auto i = interval.withHigh(4.f);
