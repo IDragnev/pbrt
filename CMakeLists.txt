@@ -24,9 +24,9 @@ if(RT_FLOAT_AS_DOUBLE)
 endif()
 
 if (MSVC)
-  add_compile_options(/W4)
+  add_compile_options(/WX)
 else()
-  add_compile_options(-Wall -Wextra -pedantic)
+  add_compile_options(-Wall -Wextra -Werror -pedantic)
 endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
