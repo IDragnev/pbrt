@@ -5,11 +5,6 @@
 #include <cstring>
 #include <cstdint>
 
-#ifdef _MSC_VER
-    #pragma warning(disable : 4305) // double constant assigned to float
-    #pragma warning(disable : 4244) // double to float conversion
-#endif
-
 namespace idragnev::pbrt {
 
 #ifdef RT_FLOAT_AS_DOUBLE
@@ -19,6 +14,12 @@ namespace idragnev::pbrt {
 #endif
 
     namespace constants {
+#ifdef _MSC_VER
+    #pragma warning(push)
+    #pragma warning(disable : 4305) // double constant assigned to float
+    #pragma warning(disable : 4244) // double to float conversion
+#endif
+
         inline constexpr Float MaxFloat = std::numeric_limits<Float>::max();
         inline constexpr Float Infinity =
             std::numeric_limits<Float>::infinity();
@@ -32,6 +33,10 @@ namespace idragnev::pbrt {
         inline constexpr Float PiOver2 = 1.57079632679489661923;
         inline constexpr Float PiOver4 = 0.78539816339744830961;
         inline constexpr Float Sqrt2 = 1.41421356237309504880;
+
+#ifdef _MSC_VER
+    #pragma warning(pop)
+#endif
     } // namespace constants
 
     template <typename T>
