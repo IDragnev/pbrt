@@ -5,6 +5,11 @@
 #include <cstring>
 #include <cstdint>
 
+#ifdef _MSC_VER
+    #pragma warning(disable : 4305) // double constant assigned to float
+    #pragma warning(disable : 4244) // double to float conversion
+#endif
+
 namespace idragnev::pbrt {
 
 #ifdef RT_FLOAT_AS_DOUBLE
