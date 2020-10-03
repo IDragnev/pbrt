@@ -12,7 +12,7 @@
 namespace idragnev::pbrt {
     TriangleMesh::TriangleMesh(
         const Transformation& objectToWorld,
-        const int trianglesCount,
+        const unsigned trianglesCount,
         const std::vector<std::size_t>& vertexIndices,
         const std::vector<Point3f>& vertexCoordinates,
         const std::vector<Vector3f>& vertexTangentVectors,
@@ -22,7 +22,7 @@ namespace idragnev::pbrt {
         const std::shared_ptr<const Texture<Float>>& shadowAlphaMask,
         const std::vector<std::size_t>& faceIndices)
         : trianglesCount(trianglesCount)
-        , verticesCount(vertexCoordinates.size())
+        , verticesCount(static_cast<unsigned>(vertexCoordinates.size()))
         , vertexIndices(vertexIndices)
         , vertexWorldCoordinates(fmap(
               vertexCoordinates,
@@ -42,12 +42,12 @@ namespace idragnev::pbrt {
                        const Transformation& worldToObject,
                        const bool reverseOrientaton,
                        const std::shared_ptr<const TriangleMesh>& parentMesh,
-                       const int number)
+                       const unsigned number)
         : Shape(objectToWorld, worldToObject, reverseOrientaton)
         , parentMesh(parentMesh)
         // unsafe: assumes that parentMesh->vertexIndices will not change
         // after construction
-        , firstVertexIndexAddress(&parentMesh->vertexIndices[3 * number])
+        , firstVertexIndexAddress(&parentMesh->vertexIndices[3ull * number])
         , faceIndex(parentMesh->faceIndices.size() > 0
                         ? parentMesh->faceIndices[number]
                         : 0) {}
@@ -477,7 +477,7 @@ namespace idragnev::pbrt {
         const Transformation& objectToWorld,
         const Transformation& worldToObject,
         const bool reverseOrientation,
-        const int trianglesCount,
+        const unsigned trianglesCount,
         const std::vector<std::size_t>& vertexIndices,
         const std::vector<Point3f>& vertexCoordinates,
         const std::vector<Vector3f>& vertexTangentVectors,
@@ -497,9 +497,9 @@ namespace idragnev::pbrt {
                                                          shadowAlphaMask,
                                                          faceIndices);
         return mapIntegerRange<std::vector>(
-            0,
+            0u,
             trianglesCount,
-            [&](const int i) -> std::shared_ptr<Shape> {
+            [&](const unsigned i) -> std::shared_ptr<Shape> {
                 return std::make_shared<Triangle>(objectToWorld,
                                                   worldToObject,
                                                   reverseOrientation,

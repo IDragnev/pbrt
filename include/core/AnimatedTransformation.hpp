@@ -51,7 +51,7 @@ namespace idragnev::pbrt {
                                       const Float theta,
                                       const Interval& tInterval,
                                       Float zeros[8],
-                                      int& zeroCount,
+                                      unsigned& zerosCount,
                                       int depth = 8);
 
     private:

@@ -791,7 +791,7 @@ namespace idragnev::pbrt {
                 Coefficients{c1[c](p), c2[c](p), c3[c](p), c4[c](p), c5[c](p)};
 
             Float zeros[8];
-            auto zerosCount = 0;
+            unsigned zerosCount = 0;
             intervalFindZeros(cs, theta, tInterval, zeros, zerosCount);
 
             assert(zerosCount <= std::extent_v<decltype(zeros)>);
@@ -809,7 +809,7 @@ namespace idragnev::pbrt {
                                                    const Float theta,
                                                    const Interval& tInterval,
                                                    Float zeros[8],
-                                                   int& zeroCount,
+                                                   unsigned& zerosCount,
                                                    int depth) {
         const auto range = Interval{cs.c1} +
                            (Interval{cs.c2} + Interval{cs.c3} * tInterval) *
@@ -827,13 +827,13 @@ namespace idragnev::pbrt {
                               theta,
                               tInterval.withHigh(mid),
                               zeros,
-                              zeroCount,
+                              zerosCount,
                               depth - 1);
             intervalFindZeros(cs,
                               theta,
                               tInterval.withLow(mid),
                               zeros,
-                              zeroCount,
+                              zerosCount,
                               depth - 1);
         }
         else {
@@ -859,7 +859,7 @@ namespace idragnev::pbrt {
 
             if (tNewton >= tInterval.low() - 1e-3f &&
                 tNewton < tInterval.high() + 1e-3f) {
-                zeros[zeroCount++] = tNewton;
+                zeros[zerosCount++] = tNewton;
             }
         }
     }

@@ -24,10 +24,10 @@ namespace idragnev::pbrt {
             Float t30, Float t31, Float t32, Float t33
         ) noexcept
             : m{
-                t00, t01, t02, t03,
-                t10, t11, t12, t13,
-                t20, t21, t22, t23,
-                t30, t31, t32, t33
+                {t00, t01, t02, t03},
+                {t10, t11, t12, t13},
+                {t20, t21, t22, t23},
+                {t30, t31, t32, t33}
             } {}
         // clang-format on
 

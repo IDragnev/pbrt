@@ -12,7 +12,7 @@ namespace idragnev::pbrt {
     {
         TriangleMesh(
             const Transformation& objectToWorld,
-            const int trianglesCount,
+            const unsigned trianglesCount,
             const std::vector<std::size_t>& vertexIndices,
             const std::vector<Point3f>& vertexCoordinates,
             const std::vector<Vector3f>& vertexTangentVectors,
@@ -22,8 +22,8 @@ namespace idragnev::pbrt {
             const std::shared_ptr<const Texture<Float>>& shadowAlphaMask,
             const std::vector<std::size_t>& faceIndices);
 
-        int trianglesCount = 0;
-        int verticesCount = 0;
+        unsigned trianglesCount = 0;
+        unsigned verticesCount = 0;
         std::vector<std::size_t> vertexIndices;
         std::vector<Point3f> vertexWorldCoordinates;
         std::vector<Normal3f> vertexNormalVectors;
@@ -56,7 +56,7 @@ namespace idragnev::pbrt {
                  const Transformation& worldToObject,
                  const bool reverseOrientaton,
                  const std::shared_ptr<const TriangleMesh>& parentMesh,
-                 const int number);
+                 const unsigned number);
 
         Bounds3f objectBound() const override;
         Bounds3f worldBound() const override;
@@ -110,7 +110,7 @@ namespace idragnev::pbrt {
         const Transformation& objectToWorld,
         const Transformation& worldToObject,
         const bool reverseOrientation,
-        const int trianglesCount,
+        const unsigned trianglesCount,
         const std::vector<std::size_t>& vertexIndices,
         const std::vector<Point3f>& vertexCoordinates,
         const std::vector<Vector3f>& vertexTangentVectors,
