@@ -18,6 +18,10 @@ namespace idragnev::pbrt {
         EFloat() = default;
         EFloat(const float v, const float err = 0.f) noexcept;
 
+        // Always use float as the underlying type
+        EFloat(const double v, const double err = 0.) noexcept
+            : EFloat{static_cast<float>(v), static_cast<float>(err)} {}
+
 #ifndef NDEBUG
         EFloat(const float v,
                const long double precise,
@@ -39,7 +43,7 @@ namespace idragnev::pbrt {
         long double preciseValue() const noexcept { return vPrecise; }
 
         float relativeError() const noexcept {
-            return std::abs((vPrecise - v) / vPrecise);
+            return static_cast<float>(std::abs((vPrecise - v) / vPrecise));
         }
 #endif //! NDEBUG
 
