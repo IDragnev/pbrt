@@ -8,7 +8,6 @@ The project is regularly built with:
  - Clang 10.0
  - GCC 10.1
  - GCC 9.3 (less often)
- - GCC 7.5 (less often)
 
 CMake options:
  - RT_FLOAT_AS_DOUBLE - use 64-bit floats (off by default)
