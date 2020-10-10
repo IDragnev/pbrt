@@ -1,5 +1,9 @@
 #include "memory/Memory.hpp"
 
+#ifndef PBRT_HAS_ALIGNED_MALLOC
+    #include <stdlib.h>
+#endif
+
 namespace idragnev::pbrt {
     void* allocAligned(const std::size_t size) {
         using constants::L1_CACHE_LINE_SIZE;
