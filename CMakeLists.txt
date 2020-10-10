@@ -32,6 +32,7 @@ endif()
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 add_subdirectory(src/core)
+add_subdirectory(src/memory)
 add_subdirectory(src/shapes)
 add_subdirectory(app)
 add_subdirectory(external/doctest)
