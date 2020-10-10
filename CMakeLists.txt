@@ -14,13 +14,13 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES RELEASE)
-  add_definitions(-DNDEBUG)
+  add_compile_definitions(NDEBUG)
 endif()
 
 option(RT_FLOAT_AS_DOUBLE "Use 64-bit floats" OFF)
 
 if(RT_FLOAT_AS_DOUBLE)
-  add_definitions(-DRT_FLOAT_AS_DOUBLE)
+  add_compile_definitions(RT_FLOAT_AS_DOUBLE)
 endif()
 
 if (MSVC)
