@@ -5,6 +5,15 @@
 #endif
 
 namespace idragnev::pbrt {
+    static_assert(isPowerOfTwo(alignof(std::max_align_t)),
+                  "Strictest machine alignment is not a power of two");
+    static_assert(
+        toMultipleOfStrictestAlign(constants::L1_CACHE_LINE_SIZE) ==
+            constants::L1_CACHE_LINE_SIZE,
+        "Memory aligned to L1_CACHE_LINE_SIZE will not meet "
+        "the strictest machine alignment."
+        "L1_CACHE_LINE_SIZE must be a multiple of alignof(std::max_align_t)");
+
     void* allocAligned(const std::size_t size) {
         using constants::L1_CACHE_LINE_SIZE;
 

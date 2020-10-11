@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <type_traits>
 
 #if __has_include(<alloca.h>)
     #include <alloca.h>
@@ -25,5 +26,25 @@ namespace idragnev::pbrt {
     template <typename T>
     [[nodiscard]] inline auto allocAligned(const std::size_t count) {
         return static_cast<T*>(allocAligned(count * sizeof(T)));
+    }
+
+    template <typename T>
+    inline constexpr bool isPowerOfTwo(const T n) noexcept {
+        static_assert(
+            std::is_integral_v<T> && !std::is_same_v<T, bool>,
+            "Cannot call isPowerOfTwo with non-integral type or bool");
+        return n > 0 && ((n & (n - 1)) == 0);
+    }
+
+    // Align `num` upwards to alignment `align`.
+    // Requires that `align` is a power of two.
+    inline constexpr std::size_t alignUp(const std::size_t num,
+                                         const std::size_t align) {
+        return (num + align - 1) & ~(align - 1);
+    }
+
+    inline constexpr std::size_t
+    toMultipleOfStrictestAlign(const std::size_t num) noexcept {
+        return alignUp(num, alignof(std::max_align_t));
     }
 } // namespace idragnev::pbrt

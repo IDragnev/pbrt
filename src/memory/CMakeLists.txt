@@ -35,11 +35,13 @@ endif()
 
 set(PBRT_MEMORY_SOURCE_FILES
   Memory.cpp
+  MemoryArena.cpp
 )
 
 set(PBRT_MEMORY_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/memory)
 set(PBRT_MEMORY_HEADERS
   ${PBRT_MEMORY_HEADERS_DIR}/Memory.hpp
+  ${PBRT_MEMORY_HEADERS_DIR}/MemoryArena.hpp
 )
 
 add_library(
