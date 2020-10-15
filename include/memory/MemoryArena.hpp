@@ -42,6 +42,8 @@ namespace idragnev::pbrt {
 
     template <typename T>
     T* MemoryArena::alloc(const std::size_t count, const bool zeroInitialize) {
+        static_assert(std::is_default_constructible_v<T>,
+                      "T must be default constructible");
         auto* const mem = static_cast<T*>(this->alloc(count * sizeof(T)));
         if (zeroInitialize) {
             for (std::size_t i = 0; i < count; ++i) {

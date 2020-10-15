@@ -11,6 +11,12 @@ namespace idragnev::pbrt {
         }
     }
 
+    // Guarantees that the allocated memory meets the strictest
+    // machine alignment (SMA) by:
+    // 1. Allocating memory blocks which are cache aligned
+    //    (The L1 cache line size meets the SMA)
+    // 2. Bumping the allocation size to a multiple of the SMA
+    //    so every following allocation is also SMA aligned
     void* MemoryArena::alloc(const std::size_t nBytes) {
         // ensure all handed out memory addresses meet the strictest
         // machine alignment in order to not slow down (or break)
