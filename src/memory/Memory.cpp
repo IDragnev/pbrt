@@ -7,6 +7,8 @@
 namespace idragnev::pbrt {
     static_assert(isPowerOfTwo(alignof(std::max_align_t)),
                   "Strictest machine alignment is not a power of two");
+    static_assert(isPowerOfTwo(constants::L1_CACHE_LINE_SIZE),
+                  "L1_CACHE_LINE_SIZE must be a power of 2");
     static_assert(
         toMultipleOfStrictestAlign(constants::L1_CACHE_LINE_SIZE) ==
             constants::L1_CACHE_LINE_SIZE,

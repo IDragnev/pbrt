@@ -13,8 +13,13 @@
 
 namespace idragnev::pbrt {
     namespace constants {
+#ifndef PBRT_L1_CACHE_LINE_SIZE
         inline constexpr std::size_t L1_CACHE_LINE_SIZE = 64u;
-    }
+#else
+        inline constexpr std::size_t L1_CACHE_LINE_SIZE =
+            PBRT_L1_CACHE_LINE_SIZE;
+#endif
+    } // namespace constants
 
     template <typename T>
     [[nodiscard]] inline auto pbrtAlloca(const std::size_t count) {
