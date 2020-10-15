@@ -14,7 +14,7 @@ namespace idragnev::pbrt {
         "the strictest machine alignment."
         "L1_CACHE_LINE_SIZE must be a multiple of alignof(std::max_align_t)");
 
-    void* allocAligned(const std::size_t size) {
+    void* allocCacheAligned(const std::size_t size) {
         using constants::L1_CACHE_LINE_SIZE;
 
 #if defined(PBRT_HAS_ALIGNED_MALLOC)

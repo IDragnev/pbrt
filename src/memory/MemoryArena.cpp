@@ -36,7 +36,8 @@ namespace idragnev::pbrt {
 
             if (currentBlock.startAddress == nullptr) {
                 const auto size = std::max(allocSize, blockSize);
-                currentBlock.startAddress = allocAligned<std::uint8_t>(size);
+                currentBlock.startAddress =
+                    allocCacheAligned<std::uint8_t>(size);
                 currentBlock.size = size;
             }
 

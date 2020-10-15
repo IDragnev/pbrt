@@ -20,12 +20,14 @@ namespace idragnev::pbrt {
         return static_cast<T*>(alloca(count * sizeof(T)));
     }
 
-    [[nodiscard]] void* allocAligned(const std::size_t size);
+    // Allocates memory aligned to L1 Cache line boundary
+    [[nodiscard]] void* allocCacheAligned(const std::size_t size);
     void freeAligned(void* ptr);
 
+    // Allocates memory for `count` Ts aligned to L1 Cache line boundary
     template <typename T>
-    [[nodiscard]] inline auto allocAligned(const std::size_t count) {
-        return static_cast<T*>(allocAligned(count * sizeof(T)));
+    [[nodiscard]] inline auto allocCacheAligned(const std::size_t count) {
+        return static_cast<T*>(allocCacheAligned(count * sizeof(T)));
     }
 
     template <typename T>
@@ -44,7 +46,7 @@ namespace idragnev::pbrt {
     }
 
     inline constexpr std::size_t
-    toMultipleOfStrictestAlign(const std::size_t num) noexcept {
-        return alignUp(num, alignof(std::max_align_t));
+    toMultipleOfStrictestAlign(const std::size_t size) noexcept {
+        return alignUp(size, alignof(std::max_align_t));
     }
 } // namespace idragnev::pbrt
