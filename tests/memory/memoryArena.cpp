@@ -1,7 +1,13 @@
 #include "doctest/doctest.h"
 #include "memory/MemoryArena.hpp"
 
+#include <algorithm>
+
 namespace pbrt = idragnev::pbrt;
+
+bool areAllZeros(const int* const arr, const std::size_t size) {
+    return std::all_of(arr, arr + size, [](const int i) { return i == 0; });
+}
 
 TEST_CASE("alloc<T> uses zero initialization by default") {
     pbrt::MemoryArena arena;
@@ -10,9 +16,32 @@ TEST_CASE("alloc<T> uses zero initialization by default") {
 
     int* const arr = arena.alloc<int>(size);
 
-    for (std::size_t i = 0; i < size; ++i) {
-        CHECK(arr[i] == 0);
-    }
+    CHECK(areAllZeros(arr, size));
+}
+
+TEST_CASE("allocation bigger than the block size") {
+    const auto blockSize = 1024u;
+    pbrt::MemoryArena arena(blockSize);
+
+    const auto size = blockSize + 10;
+
+    int* const arr = arena.alloc<int>(size);
+
+    CHECK(areAllZeros(arr, size));
+}
+
+TEST_CASE("multiple allocations") {
+    pbrt::MemoryArena arena;
+
+    const auto size = 100;
+
+    int* const arr1 = arena.alloc<int>(size);
+    int* const arr2 = arena.alloc<int>(size);
+    int* const arr3 = arena.alloc<int>(size);
+
+    CHECK(areAllZeros(arr1, size));
+    CHECK(areAllZeros(arr2, size));
+    CHECK(areAllZeros(arr3, size));
 }
 
 TEST_CASE("reset does not free the allocated memory "

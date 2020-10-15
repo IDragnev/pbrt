@@ -1,5 +1,7 @@
 #include "memory/MemoryArena.hpp"
 
+#include <algorithm>
+
 namespace idragnev::pbrt {
     MemoryArena::~MemoryArena() {
         freeAligned(currentBlock.startAddress);
@@ -29,15 +31,14 @@ namespace idragnev::pbrt {
                 currentBlock = {};
             }
 
-            for (auto it = availableBlocks.begin(); it != availableBlocks.end();
-                 ++it) {
-                const auto& block = *it;
-                if (block.size >= allocSize) {
-                    currentBlock.startAddress = block.startAddress;
-                    currentBlock.size = block.size;
-                    availableBlocks.erase(it);
-                    break;
-                }
+            const auto it = std::find_if(
+                availableBlocks.cbegin(),
+                availableBlocks.cend(),
+                [allocSize](const Block& b) { return b.size >= allocSize; });
+            if (it != availableBlocks.cend()) {
+                currentBlock.startAddress = it->startAddress;
+                currentBlock.size = it->size;
+                availableBlocks.erase(it);
             }
 
             if (currentBlock.startAddress == nullptr) {
