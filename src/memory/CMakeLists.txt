@@ -42,6 +42,8 @@ set(PBRT_MEMORY_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/memory)
 set(PBRT_MEMORY_HEADERS
   ${PBRT_MEMORY_HEADERS_DIR}/Memory.hpp
   ${PBRT_MEMORY_HEADERS_DIR}/MemoryArena.hpp
+  ${PBRT_MEMORY_HEADERS_DIR}/BlockedUVArray.hpp
+  ${PBRT_MEMORY_HEADERS_DIR}/BlockedUVArrayImpl.hpp
 )
 
 add_library(
