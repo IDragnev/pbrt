@@ -6,21 +6,21 @@ check_cxx_source_compiles(
   HAS_ALIGNED_MALLOC)
 
 check_cxx_source_compiles(
- "
- #include <stdlib.h>
- int main() {
-   void *ptr;
-   posix_memalign(&ptr, 32, 1024);
- }
- "
- HAS_POSIX_MEMALIGN)
+  "
+  #include <stdlib.h>
+  int main() {
+      void *ptr;
+      posix_memalign(&ptr, 32, 1024);
+  }
+  "
+  HAS_POSIX_MEMALIGN)
 
 check_cxx_source_compiles(
-"
-#include <malloc.h>
-int main() { void *p = memalign(32, 1024); }
-"
-HAS_MEMALIGN)
+  "
+  #include <malloc.h>
+  int main() { void *p = memalign(32, 1024); }
+  "
+  HAS_MEMALIGN)
 
 if(HAS_ALIGNED_MALLOC)
   add_compile_definitions(PBRT_HAS_ALIGNED_MALLOC)
