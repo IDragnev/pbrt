@@ -3,7 +3,7 @@
 #include "core/core.hpp"
 #include "core/Shape.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::shapes {
     class Paraboloid : Shape
     {
     public:
@@ -50,4 +50,4 @@ namespace idragnev::pbrt {
         Float zMax;
         Float phiMax;
     };
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::shapes

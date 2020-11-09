@@ -3,7 +3,7 @@
 #include "core/Transformation.hpp"
 #include "core/EFloat.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::shapes {
     Cone::Cone(const Transformation& objectToWorld,
                const Transformation& worldToObject,
                const bool reverseOrientation,
@@ -178,4 +178,4 @@ namespace idragnev::pbrt {
         return radius * std::sqrt((height * height) + (radius * radius)) *
                phiMax / 2;
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::shapes

@@ -3,7 +3,7 @@
 #include "core/core.hpp"
 #include "core/Shape.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::shapes {
     class Sphere : public Shape
     {
     public:
@@ -51,4 +51,4 @@ namespace idragnev::pbrt {
         Float thetaMax;
         Float phiMax;
     };
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::shapes

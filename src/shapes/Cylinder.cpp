@@ -3,7 +3,7 @@
 #include "core/Transformation.hpp"
 #include "core/EFloat.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::shapes {
     Cylinder::Cylinder(const Transformation& objectToWorld,
                        const Transformation& worldToObject,
                        const bool reverseOrientation,
@@ -166,4 +166,4 @@ namespace idragnev::pbrt {
     }
 
     Float Cylinder::area() const { return (zMax - zMin) * radius * phiMax; }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::shapes

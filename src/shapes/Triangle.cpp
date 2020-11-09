@@ -9,7 +9,7 @@
 #include "core/Functional.hpp"
 #include "core/Bounds3.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::shapes {
     TriangleMesh::TriangleMesh(
         const Transformation& objectToWorld,
         const unsigned trianglesCount,
@@ -507,4 +507,4 @@ namespace idragnev::pbrt {
                                                   i);
             });
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::shapes

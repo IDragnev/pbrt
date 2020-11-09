@@ -3,7 +3,7 @@
 #include "core/EFloat.hpp"
 #include "core/Transformation.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::shapes {
     Paraboloid::Paraboloid(const Transformation& objectToWorld,
                            const Transformation& worldToObject,
                            const bool reverseOrientation,
@@ -195,4 +195,4 @@ namespace idragnev::pbrt {
         return (radius2 * radius2 * phiMax / (12 * zMax * zMax)) *
                (std::pow(k * zMax + 1, 1.5f) - std::pow(k * zMin + 1, 1.5f));
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::shapes

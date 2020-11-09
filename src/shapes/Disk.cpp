@@ -3,7 +3,7 @@
 #include "core/EFloat.hpp"
 #include "core/Bounds3.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::shapes {
     Disk::Disk(const Transformation& objectToWorld,
                const Transformation& worldToObject,
                const bool reverseOrientation,
@@ -117,4 +117,4 @@ namespace idragnev::pbrt {
     Float Disk::area() const {
         return phiMax * 0.5f * (radius * radius - innerRadius * innerRadius);
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::shapes

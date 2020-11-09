@@ -3,7 +3,7 @@
 #include "core/Transformation.hpp"
 #include "core/EFloat.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::shapes {
     Sphere::Sphere(const Transformation& objectToWorld,
                    const Transformation& worldToObject,
                    const bool reverseOrientation,
@@ -186,4 +186,4 @@ namespace idragnev::pbrt {
     }
 
     Float Sphere::area() const { return phiMax * radius * (zMax - zMin); }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::shapes

@@ -7,7 +7,7 @@
 #include <memory>
 #include <array>
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::shapes {
     struct TriangleMesh
     {
         TriangleMesh(
@@ -119,4 +119,4 @@ namespace idragnev::pbrt {
         const std::shared_ptr<const Texture<Float>>& alphaMask,
         const std::shared_ptr<const Texture<Float>>& shadowAlphaMask,
         const std::vector<std::size_t>& faceIndices);
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::shapes

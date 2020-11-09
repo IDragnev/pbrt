@@ -3,7 +3,7 @@
 #include "core/core.hpp"
 #include "core/Shape.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::shapes {
     class Disk : public Shape
     {
     public:
@@ -43,4 +43,4 @@ namespace idragnev::pbrt {
         Float innerRadius;
         Float phiMax;
     };
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::shapes
