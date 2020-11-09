@@ -20,9 +20,6 @@ namespace idragnev::pbrt::memory {
     // 2. Bumping the allocation size to a multiple of the SMA
     //    so every following allocation is also SMA aligned
     void* MemoryArena::alloc(const std::size_t nBytes) {
-        // ensure all handed out memory addresses meet the strictest
-        // machine alignment in order to not slow down (or break)
-        // memory accesses
         const auto allocSize = toMultipleOfStrictestAlign(nBytes);
 
         if (currentBlock.usedBytes + allocSize > currentBlock.size) {
