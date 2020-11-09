@@ -6,7 +6,7 @@ A **C++17** compliant compiler is needed.
 The project is regularly built with:  
  - MSVC 19.27
  - Clang 10.0
- - GCC 10.1
+ - GCC 10.2
  - GCC 9.3 (less often)  
 
 Note that **the warning level is set to Error for CMake builds**,  
