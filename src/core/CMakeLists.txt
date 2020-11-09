@@ -62,7 +62,7 @@ add_library(
 )
 target_link_libraries(
   corelib
-  ${CMAKE_THREAD_LIBS_INIT}
+  PRIVATE ${CMAKE_THREAD_LIBS_INIT}
 )
 target_include_directories(corelib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_compile_features(corelib PUBLIC cxx_std_17)
