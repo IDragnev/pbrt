@@ -11,7 +11,7 @@
     #include <malloc.h>
 #endif
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::memory {
     namespace constants {
 #ifndef PBRT_L1_CACHE_LINE_SIZE
         inline constexpr std::size_t L1_CACHE_LINE_SIZE = 64u;
@@ -55,4 +55,4 @@ namespace idragnev::pbrt {
     toMultipleOfStrictestAlign(const std::size_t size) noexcept {
         return alignUp(size, alignof(std::max_align_t));
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::memory

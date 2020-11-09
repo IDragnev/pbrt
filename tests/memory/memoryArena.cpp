@@ -3,14 +3,14 @@
 
 #include <algorithm>
 
-namespace pbrt = idragnev::pbrt;
+namespace mem = idragnev::pbrt::memory;
 
 bool areAllZeros(const int* const arr, const std::size_t size) {
     return std::all_of(arr, arr + size, [](const int i) { return i == 0; });
 }
 
 TEST_CASE("alloc<T> uses zero initialization by default") {
-    pbrt::MemoryArena arena;
+    mem::MemoryArena arena;
 
     const auto size = 10;
 
@@ -21,7 +21,7 @@ TEST_CASE("alloc<T> uses zero initialization by default") {
 
 TEST_CASE("allocation bigger than the block size") {
     const auto blockSize = 1024u;
-    pbrt::MemoryArena arena(blockSize);
+    mem::MemoryArena arena(blockSize);
 
     const auto size = blockSize + 10;
 
@@ -31,7 +31,7 @@ TEST_CASE("allocation bigger than the block size") {
 }
 
 TEST_CASE("multiple allocations") {
-    pbrt::MemoryArena arena;
+    mem::MemoryArena arena;
 
     const auto size = 100;
 
@@ -46,7 +46,7 @@ TEST_CASE("multiple allocations") {
 
 TEST_CASE("reset does not free the allocated memory "
           "but simply reuses it") {
-    pbrt::MemoryArena arena;
+    mem::MemoryArena arena;
     [[maybe_unused]] void* const arr = arena.alloc(10);
 
     const auto allocSize = arena.totalAllocationSize();

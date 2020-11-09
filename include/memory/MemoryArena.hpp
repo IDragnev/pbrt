@@ -2,7 +2,7 @@
 
 #include <list>
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::memory {
     class alignas(constants::L1_CACHE_LINE_SIZE) MemoryArena
     {
         struct Block
@@ -53,4 +53,4 @@ namespace idragnev::pbrt {
 
         return mem;
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::memory

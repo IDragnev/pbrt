@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::memory {
     MemoryArena::~MemoryArena() {
         freeAligned(currentBlock.startAddress);
         for (auto& block : usedBlocks) {
@@ -73,4 +73,4 @@ namespace idragnev::pbrt {
 
         return total;
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::memory

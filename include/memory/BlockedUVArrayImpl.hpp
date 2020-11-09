@@ -1,6 +1,6 @@
 #include "BlockedUVArray.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::memory {
     template <typename T, unsigned LogBlockSize>
     BlockedUVArray<T, LogBlockSize>::BlockedUVArray(const std::size_t uextent,
                                                     const std::size_t vextent,
@@ -93,4 +93,4 @@ namespace idragnev::pbrt {
         const std::size_t n) const noexcept {
         return (n & (BLOCK_EXTENT - 1));
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::memory

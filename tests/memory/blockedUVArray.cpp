@@ -3,13 +3,13 @@
 
 #include <algorithm>
 
-namespace pbrt = idragnev::pbrt;
+namespace mem = idragnev::pbrt::memory;
 
 TEST_CASE("zero initialization is used by default") {
     const std::size_t uExtent = 2;
     const std::size_t vExtent = 2;
 
-    pbrt::BlockedUVArray<int, 1> arr(uExtent, vExtent);
+    mem::BlockedUVArray<int, 1> arr(uExtent, vExtent);
 
     REQUIRE(arr.uExtent() == uExtent);
     REQUIRE(arr.vExtent() == vExtent);
@@ -28,7 +28,7 @@ TEST_CASE("at") {
     const std::size_t uExtent = 2;
     const std::size_t vExtent = 2;
 
-    pbrt::BlockedUVArray<int, 1> arr(uExtent, vExtent, data);
+    mem::BlockedUVArray<int, 1> arr(uExtent, vExtent, data);
 
     for (std::size_t v = 0; v < vExtent; ++v) {
         for (std::size_t u = 0; u < uExtent; ++u) {
@@ -42,7 +42,7 @@ TEST_CASE("asLinearArray") {
     const std::size_t uExtent = 2;
     const std::size_t vExtent = 2;
 
-    pbrt::BlockedUVArray<int, 1> arr(uExtent, vExtent, data);
+    mem::BlockedUVArray<int, 1> arr(uExtent, vExtent, data);
 
     const auto size = std::extent_v<decltype(data)>;
     int dest[size] = {};

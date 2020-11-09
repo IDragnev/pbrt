@@ -4,7 +4,7 @@
     #include <stdlib.h>
 #endif
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::memory {
     static_assert(isPowerOfTwo(alignof(std::max_align_t)),
                   "Strictest machine alignment is not a power of two");
     static_assert(isPowerOfTwo(constants::L1_CACHE_LINE_SIZE),
@@ -43,4 +43,4 @@ namespace idragnev::pbrt {
         free(ptr);
 #endif
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::memory

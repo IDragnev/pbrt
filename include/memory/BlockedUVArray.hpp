@@ -2,7 +2,7 @@
 
 #include "Memory.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::memory {
     template <typename T, unsigned LogBlockSize>
     class BlockedUVArray
     {
@@ -38,6 +38,6 @@ namespace idragnev::pbrt {
         std::size_t vextent = 0;
         std::size_t uBlocksCount = 0;
     };
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::memory
 
 #include "BlockedUVArrayImpl.hpp"
