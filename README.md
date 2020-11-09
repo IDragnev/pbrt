@@ -20,7 +20,7 @@ Example (build with 64-bit floats):
  ```
  $ git clone --recursive https://github.com/IDragnev/pb-ray-tracer.git  
  $ cd pb-ray-tracer  
- $ mkdir src/build && cd src/build  
- $ cmake -D RT_FLOAT_AS_DOUBLE=ON ../..  
+ $ mkdir build && cd build  
+ $ cmake -D RT_FLOAT_AS_DOUBLE=ON ..  
  $ cmake --build .  
  ```
