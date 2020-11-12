@@ -22,17 +22,6 @@ check_cxx_source_compiles(
   "
   HAS_MEMALIGN)
 
-if(HAS_ALIGNED_MALLOC)
-  add_compile_definitions(PBRT_HAS_ALIGNED_MALLOC)
-elseif(HAS_POSIX_MEMALIGN)
-  add_compile_definitions(PBRT_HAS_POSIX_MEMALIGN)
-elseif(HAS_MEMALIGN)
-  add_compile_definitions(PBRT_HAS_MEMALIGN)
-else()
-  message(SEND_ERROR "Unable to find a way to allocate aligned memory")
-endif()
-
-
 set(PBRT_MEMORY_SOURCE_FILES
   Memory.cpp
   MemoryArena.cpp
@@ -54,3 +43,13 @@ add_library(
 )
 target_include_directories(memory PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_compile_features(memory PUBLIC cxx_std_17)
+
+if(HAS_ALIGNED_MALLOC)
+  target_compile_definitions(memory PRIVATE PBRT_HAS_ALIGNED_MALLOC)
+elseif(HAS_POSIX_MEMALIGN)
+  target_compile_definitions(memory PRIVATE PBRT_HAS_POSIX_MEMALIGN)
+elseif(HAS_MEMALIGN)
+  target_compile_definitions(memory PRIVATE PBRT_HAS_MEMALIGN)
+else()
+  message(SEND_ERROR "Unable to find a way to allocate aligned memory")
+endif()
