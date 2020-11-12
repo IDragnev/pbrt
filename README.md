@@ -4,7 +4,7 @@ A ray tracer based on [pbrt-v3](http://www.pbr-book.org/3ed-2018/contents.html).
 ## Build
 A **C++17** compliant compiler is needed.  
 The project is regularly built with:  
- - MSVC 19.27
+ - MSVC 19.28
  - Clang 10.0
  - GCC 10.2
  - GCC 9.3 (less often)  
