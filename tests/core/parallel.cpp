@@ -87,20 +87,19 @@ TEST_CASE("parallelFor2D") {
     SUBCASE("with iterationsCount = 0") {
         std::atomic<int> n = 0;
 
-        parallel::parallelFor2D([&n](const pbrt::Point2i) { ++n; },
-                                pbrt::Point2i{0, 0});
+        parallel::parallelFor2D([&n](auto...) { ++n; }, 0, 0);
 
         CHECK(n == 0);
     }
 
     SUBCASE("with iterationsCount > 0") {
-        const auto iterations = pbrt::Point2i{15, 14};
+        const std::int64_t nX = 14;
+        const std::int64_t nY = 15;
         std::atomic<int> n = 0;
 
-        parallel::parallelFor2D([&](const pbrt::Point2i) { ++n; },
-                                iterations);
+        parallel::parallelFor2D([&n](auto...) { ++n; }, nX, nY);
 
-        CHECK(n == iterations.x * iterations.y);
+        CHECK(n == nX * nY);
     }
 
     parallel::cleanup();

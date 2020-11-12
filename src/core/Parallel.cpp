@@ -1,5 +1,4 @@
 #include "core/Parallel.hpp"
-#include "core/Point2.hpp"
 #include "functional/Functional.hpp"
 
 #include <thread>
@@ -64,11 +63,11 @@ namespace idragnev::pbrt {
             , chunkSize(chunkSize)
             , func1D(std::move(f)) {}
 
-        ParallelForLoop(std::function<void(Point2i)> f,
-                        const Point2i& iterationsCount)
-            : lastIteration(static_cast<std::int64_t>(iterationsCount.x) *
-                            static_cast<std::int64_t>(iterationsCount.y))
-            , nX(iterationsCount.x)
+        ParallelForLoop(std::function<void(std::int64_t, std::int64_t)> f,
+                        const std::int64_t nX,
+                        const std::int64_t nY)
+            : lastIteration(nX * nY)
+            , nX(nX)
             , func2D(std::move(f)) {}
 
         bool isFinished() const {
@@ -93,10 +92,10 @@ namespace idragnev::pbrt {
         std::int64_t lastIteration = 0;
         std::int64_t nextIteration = 0;
         std::int64_t chunkSize = 1;
+        std::int64_t nX = -1;
         int activeWorkers = 0;
-        int nX = -1;
         std::function<void(std::int64_t)> func1D;
-        std::function<void(Point2i)> func2D;
+        std::function<void(std::int64_t, std::int64_t)> func2D;
     };
 
     namespace parallel {
@@ -158,22 +157,22 @@ namespace idragnev::pbrt {
             }
         }
 
-        void parallelFor2D(std::function<void(Point2i)> func,
-                           const Point2i& iterationsCount) {
+        void parallelFor2D(std::function<void(std::int64_t, std::int64_t)> func,
+                           const std::int64_t nX,
+                           const std::int64_t nY) {
             using statics::threads;
 
             assert(threads.size() > 0 || maxThreadIndex() == 1);
 
-            if (const auto tilesCount = iterationsCount.x * iterationsCount.y;
-                tilesCount > 1 && threads.size() > 0)
-            {
-                ParallelForLoop loop(std::move(func), iterationsCount);
+            if (const auto tilesCount = nX * nY;
+                tilesCount > 1 && threads.size() > 0) {
+                ParallelForLoop loop(std::move(func), nX, nY);
                 parallelFor(loop);
             }
             else {
-                for (auto y = 0; y < iterationsCount.y; ++y) {
-                    for (auto x = 0; x < iterationsCount.x; ++x) {
-                        func(Point2i(x, y));
+                for (std::int64_t y = 0; y < nY; ++y) {
+                    for (std::int64_t x = 0; x < nX; ++x) {
+                        func(x, y);
                     }
                 }
             }
@@ -249,8 +248,7 @@ namespace idragnev::pbrt {
             }
             else {
                 assert(loop.func2D);
-                loop.func2D(Point2i(static_cast<int>(i % loop.nX),
-                                    static_cast<int>(i / loop.nX)));
+                loop.func2D(i % loop.nX, i / loop.nX);
             }
         }
         lock.lock();
