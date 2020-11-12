@@ -6,6 +6,5 @@ add_executable(core_test
   matrix4x4.cpp
   transformation.cpp
   interval.cpp
-  parallel.cpp
 )
 target_link_libraries(core_test corelib doctest)

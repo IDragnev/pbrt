@@ -1,11 +1,9 @@
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
 
-#include "core/core.hpp"
-#include "core/Parallel.hpp"
-#include "core/Point2.hpp"
+#include "parallel/Parallel.hpp"
 
-namespace pbrt = idragnev::pbrt;
-namespace parallel = pbrt::parallel;
+namespace parallel = idragnev::pbrt::parallel;
 
 TEST_CASE("cleanup with no init is safe") {
     parallel::cleanup();

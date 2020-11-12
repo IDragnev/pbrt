@@ -1,5 +1,3 @@
-find_package(Threads)
-
 set(RAY_TRACER_CORE_SOURCE
   core.cpp
   Ray.cpp
@@ -13,7 +11,6 @@ set(RAY_TRACER_CORE_SOURCE
   SurfaceInteraction.cpp
   Shape.cpp
   EFloat.cpp
-  Parallel.cpp
 )
 
 set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/core)
@@ -51,7 +48,6 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/EFloat.hpp
   ${CORE_HEADERS_DIR}/AtomicFloat.hpp
   ${CORE_HEADERS_DIR}/Texture.hpp
-  ${CORE_HEADERS_DIR}/Parallel.hpp
 )
 
 add_library(
@@ -59,11 +55,6 @@ add_library(
   STATIC
   ${RAY_TRACER_CORE_SOURCE}
   ${RAY_TRACER_CORE_HEADERS}
-)
-target_link_libraries(
-  corelib
-  PRIVATE ${CMAKE_THREAD_LIBS_INIT}
-  PRIVATE functional
 )
 target_include_directories(corelib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_compile_features(corelib PUBLIC cxx_std_17)

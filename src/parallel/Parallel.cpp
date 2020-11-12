@@ -1,10 +1,10 @@
-#include "core/Parallel.hpp"
+#include "parallel/Parallel.hpp"
 #include "functional/Functional.hpp"
 
 #include <thread>
 #include <assert.h>
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::parallel {
     Barrier::Barrier(const int threadsCount) : threadsNotReached(threadsCount) {
         assert(threadsNotReached > 0);
     }
@@ -98,110 +98,106 @@ namespace idragnev::pbrt {
         std::function<void(std::int64_t, std::int64_t)> func2D;
     };
 
-    namespace parallel {
-        void init() {
-            assert(statics::threads.empty());
+    void init() {
+        assert(statics::threads.empty());
 
-            statics::thisThreadIndex = 0;
-            const auto threadsCount = maxThreadIndex();
+        statics::thisThreadIndex = 0;
+        const auto threadsCount = maxThreadIndex();
 
-            statics::threads = functional::mapIntegerRange<std::vector>(
-                0,
-                threadsCount,
-                [](const int i) {
-                    return std::thread{workerThread, i + 1};
-                });
+        statics::threads = functional::mapIntegerRange<std::vector>(
+            0,
+            threadsCount,
+            [](const int i) {
+                return std::thread{workerThread, i + 1};
+            });
+    }
+
+    void cleanup() {
+        using statics::threads, statics::shutdownThreads;
+        using statics::workListCondVar, statics::workListMutex;
+
+        if (threads.empty()) {
+            return;
         }
 
-        void cleanup() {
-            using statics::threads, statics::shutdownThreads;
-            using statics::workListCondVar, statics::workListMutex;
-
-            if (threads.empty()) {
-                return;
-            }
-
-            {
-                auto lock = std::lock_guard{workListMutex};
-                shutdownThreads = true;
-                workListCondVar.notify_all();
-            }
-
-            for (std::thread& t : threads) {
-                t.join();
-            }
-
-            threads.clear();
-            shutdownThreads = false;
-        }
-
-        void parallelFor(ParallelForLoop& loop);
-
-        void parallelFor(std::function<void(std::int64_t)> func,
-                         const std::int64_t iterationsCount,
-                         const std::int64_t chunkSize) {
-            using statics::threads;
-
-            assert(threads.size() > 0 || maxThreadIndex() == 1);
-
-            if (iterationsCount > chunkSize && threads.size() > 0) {
-                ParallelForLoop loop(std::move(func),
-                                     iterationsCount,
-                                     chunkSize);
-                parallelFor(loop);
-            }
-            else {
-                for (std::int64_t i = 0; i < iterationsCount; ++i) {
-                    func(i);
-                }
-            }
-        }
-
-        void parallelFor2D(std::function<void(std::int64_t, std::int64_t)> func,
-                           const std::int64_t nX,
-                           const std::int64_t nY) {
-            using statics::threads;
-
-            assert(threads.size() > 0 || maxThreadIndex() == 1);
-
-            if (const auto tilesCount = nX * nY;
-                tilesCount > 1 && threads.size() > 0) {
-                ParallelForLoop loop(std::move(func), nX, nY);
-                parallelFor(loop);
-            }
-            else {
-                for (std::int64_t y = 0; y < nY; ++y) {
-                    for (std::int64_t x = 0; x < nX; ++x) {
-                        func(x, y);
-                    }
-                }
-            }
-        }
-
-        void parallelFor(ParallelForLoop& loop) {
-            using statics::workListHead;
-            using statics::workListMutex, statics::workListCondVar;
-
-            {
-                const auto lock = std::lock_guard(workListMutex);
-                loop.next = workListHead;
-                workListHead = &loop;
-            }
-
-            auto lock = std::unique_lock(workListMutex);
+        {
+            auto lock = std::lock_guard{workListMutex};
+            shutdownThreads = true;
             workListCondVar.notify_all();
+        }
 
-            while (!loop.isFinished()) {
-                const auto chunk = loop.extractNextChunk();
+        for (std::thread& t : threads) {
+            t.join();
+        }
 
-                if (loop.hasNoIterationsLeft()) {
-                    workListHead = loop.next;
-                }
+        threads.clear();
+        shutdownThreads = false;
+    }
 
-                executeChunk(lock, loop, chunk);
+    void parallelFor(ParallelForLoop& loop);
+
+    void parallelFor(std::function<void(std::int64_t)> func,
+                     const std::int64_t iterationsCount,
+                     const std::int64_t chunkSize) {
+        using statics::threads;
+
+        assert(threads.size() > 0 || maxThreadIndex() == 1);
+
+        if (iterationsCount > chunkSize && threads.size() > 0) {
+            ParallelForLoop loop(std::move(func), iterationsCount, chunkSize);
+            parallelFor(loop);
+        }
+        else {
+            for (std::int64_t i = 0; i < iterationsCount; ++i) {
+                func(i);
             }
         }
-    } // namespace parallel
+    }
+
+    void parallelFor2D(std::function<void(std::int64_t, std::int64_t)> func,
+                       const std::int64_t nX,
+                       const std::int64_t nY) {
+        using statics::threads;
+
+        assert(threads.size() > 0 || maxThreadIndex() == 1);
+
+        if (const auto tilesCount = nX * nY;
+            tilesCount > 1 && threads.size() > 0) {
+            ParallelForLoop loop(std::move(func), nX, nY);
+            parallelFor(loop);
+        }
+        else {
+            for (std::int64_t y = 0; y < nY; ++y) {
+                for (std::int64_t x = 0; x < nX; ++x) {
+                    func(x, y);
+                }
+            }
+        }
+    }
+
+    void parallelFor(ParallelForLoop& loop) {
+        using statics::workListHead;
+        using statics::workListMutex, statics::workListCondVar;
+
+        {
+            const auto lock = std::lock_guard(workListMutex);
+            loop.next = workListHead;
+            workListHead = &loop;
+        }
+
+        auto lock = std::unique_lock(workListMutex);
+        workListCondVar.notify_all();
+
+        while (!loop.isFinished()) {
+            const auto chunk = loop.extractNextChunk();
+
+            if (loop.hasNoIterationsLeft()) {
+                workListHead = loop.next;
+            }
+
+            executeChunk(lock, loop, chunk);
+        }
+    }
 
     void workerThread(const int threadIndex) {
         using statics::workListCondVar, statics::workListMutex;
@@ -261,4 +257,4 @@ namespace idragnev::pbrt {
     int numberOfSystemCores() noexcept {
         return std::max(1u, std::thread::hardware_concurrency());
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::parallel
