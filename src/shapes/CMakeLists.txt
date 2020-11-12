@@ -25,5 +25,8 @@ add_library(
   ${RAY_TRACER_SHAPES_HEADERS}
 )
 target_include_directories(shapeslib PUBLIC ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(shapeslib PRIVATE corelib)
+target_link_libraries(shapeslib 
+  PRIVATE corelib
+  PRIVATE functional
+)
 target_compile_features(shapeslib PUBLIC cxx_std_17)

@@ -20,7 +20,6 @@ set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/core)
 
 set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/core.hpp
-  ${CORE_HEADERS_DIR}/Functional.hpp
   ${CORE_HEADERS_DIR}/Vector2.hpp
   ${CORE_HEADERS_DIR}/Vector2Impl.hpp
   ${CORE_HEADERS_DIR}/Vector3.hpp
@@ -63,6 +62,7 @@ add_library(
 target_link_libraries(
   corelib
   PRIVATE ${CMAKE_THREAD_LIBS_INIT}
+  PRIVATE functional
 )
 target_include_directories(corelib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_compile_features(corelib PUBLIC cxx_std_17)

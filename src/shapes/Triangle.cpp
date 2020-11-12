@@ -6,7 +6,7 @@
 #include "core/Point2.hpp"
 #include "core/Texture.hpp"
 #include "core/Normal3.hpp"
-#include "core/Functional.hpp"
+#include "functional/Functional.hpp"
 #include "core/Bounds3.hpp"
 
 namespace idragnev::pbrt::shapes {
@@ -24,13 +24,13 @@ namespace idragnev::pbrt::shapes {
         : trianglesCount(trianglesCount)
         , verticesCount(static_cast<unsigned>(vertexCoordinates.size()))
         , vertexIndices(vertexIndices)
-        , vertexWorldCoordinates(fmap(
+        , vertexWorldCoordinates(functional::fmap(
               vertexCoordinates,
               [&objectToWorld](const Point3f& p) { return objectToWorld(p); }))
-        , vertexNormalVectors(fmap(
+        , vertexNormalVectors(functional::fmap(
               vertexNormalVectors,
               [&objectToWorld](const Normal3f& n) { return objectToWorld(n); }))
-        , vertexTangentVectors(fmap(
+        , vertexTangentVectors(functional::fmap(
               vertexTangentVectors,
               [&objectToWorld](const Vector3f& v) { return objectToWorld(v); }))
         , vertexUVs(vertexUVs)
@@ -496,7 +496,7 @@ namespace idragnev::pbrt::shapes {
                                                          alphaMask,
                                                          shadowAlphaMask,
                                                          faceIndices);
-        return mapIntegerRange<std::vector>(
+        return functional::mapIntegerRange<std::vector>(
             0u,
             trianglesCount,
             [&](const unsigned i) -> std::shared_ptr<Shape> {

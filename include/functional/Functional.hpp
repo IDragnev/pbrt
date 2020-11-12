@@ -3,7 +3,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::functional {
     // Maps the elements of the given container with f,
     // returning a container of type C<G>, where G is the return type of f.
     template <template <typename...> typename C,
@@ -81,4 +81,4 @@ namespace idragnev::pbrt {
     private:
         Callable f;
     };
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::functional

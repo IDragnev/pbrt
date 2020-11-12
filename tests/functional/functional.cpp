@@ -1,10 +1,12 @@
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
-#include "core/Functional.hpp"
+
+#include "functional/Functional.hpp"
 
 #include <vector>
 #include <string>
 
-namespace pbrt = idragnev::pbrt;
+namespace funct = idragnev::pbrt::functional;
 
 TEST_CASE("fmap") {
     const auto square = [](const auto x) {
@@ -14,7 +16,7 @@ TEST_CASE("fmap") {
     SUBCASE("on empty container") {
         const std::vector<int> nums;
 
-        const auto result = pbrt::fmap(nums, square);
+        const auto result = funct::fmap(nums, square);
 
         CHECK(result.empty());
     }
@@ -22,7 +24,7 @@ TEST_CASE("fmap") {
     SUBCASE("on non-empty container") {
         const std::vector nums = {1, 2, 3};
 
-        const auto result = pbrt::fmap(nums, square);
+        const auto result = funct::fmap(nums, square);
 
         CHECK(result == std::vector{1, 4, 9});
     }
@@ -31,7 +33,7 @@ TEST_CASE("fmap") {
         const auto times2 = [](int&& x) {
             return 2 * x;
         };
-        const auto result = pbrt::fmap(std::vector{1, 2, 3}, times2);
+        const auto result = funct::fmap(std::vector{1, 2, 3}, times2);
 
         CHECK(result == std::vector{2, 4, 6});
     }
@@ -44,7 +46,7 @@ TEST_CASE("fmap") {
         };
         std::vector vec = {"a"s, "b"s};
 
-        const auto result = pbrt::fmap(std::move(vec), move);
+        const auto result = funct::fmap(std::move(vec), move);
 
         CHECK(vec == std::vector{""s, ""s});
         CHECK(result == std::vector{"a"s, "b"s});
@@ -54,7 +56,7 @@ TEST_CASE("fmap") {
         const std::vector nums = {1};
 
         const auto result =
-            pbrt::fmap(nums, [](const int) -> std::size_t { return 1; });
+            funct::fmap(nums, [](const int) -> std::size_t { return 1; });
 
         CHECK(result == std::vector<std::size_t>{1});
     }
@@ -66,13 +68,13 @@ TEST_CASE("mapIntegerRange") {
     };
 
     SUBCASE("with empty range") {
-        const auto result = pbrt::mapIntegerRange<std::vector>(1, 0, square);
+        const auto result = funct::mapIntegerRange<std::vector>(1, 0, square);
 
         CHECK(result.empty());
     }
 
     SUBCASE("with non-empty range") {
-        const auto result = pbrt::mapIntegerRange<std::vector>(0, 3, square);
+        const auto result = funct::mapIntegerRange<std::vector>(0, 3, square);
 
         CHECK(result == std::vector{0, 1, 4});
     }

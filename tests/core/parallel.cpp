@@ -2,7 +2,6 @@
 
 #include "core/core.hpp"
 #include "core/Parallel.hpp"
-#include "core/Functional.hpp"
 #include "core/Point2.hpp"
 
 namespace pbrt = idragnev::pbrt;
@@ -19,9 +18,6 @@ TEST_CASE("double cleanup is safe") {
 }
 
 TEST_CASE("parallelFor basics") {
-    [[maybe_unused]] const auto cleanup = pbrt::ScopedFn{[]() noexcept {
-        parallel::cleanup();
-    }};
     parallel::init();
 
     SUBCASE("with iterationsCount = 0") {
@@ -59,12 +55,11 @@ TEST_CASE("parallelFor basics") {
             CHECK(n == iterationsCount);
         }
     }
+
+    parallel::cleanup();
 }
 
 TEST_CASE("nested parallelFor") {
-    [[maybe_unused]] const auto cleanup = pbrt::ScopedFn{[]() noexcept {
-        parallel::cleanup();
-    }};
     parallel::init();
 
     const std::int64_t n = 3;
@@ -82,12 +77,11 @@ TEST_CASE("nested parallelFor") {
             REQUIRE(e == 1);
         }
     }
+
+    parallel::cleanup();
 }
 
 TEST_CASE("parallelFor2D") {
-    [[maybe_unused]] const auto cleanup = pbrt::ScopedFn{[]() noexcept {
-        parallel::cleanup();
-    }};
     parallel::init();
 
     SUBCASE("with iterationsCount = 0") {
@@ -108,4 +102,6 @@ TEST_CASE("parallelFor2D") {
 
         CHECK(n == iterations.x * iterations.y);
     }
+
+    parallel::cleanup();
 }

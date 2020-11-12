@@ -1,6 +1,6 @@
 #include "core/Parallel.hpp"
 #include "core/Point2.hpp"
-#include "core/Functional.hpp"
+#include "functional/Functional.hpp"
 
 #include <thread>
 #include <assert.h>
@@ -106,8 +106,10 @@ namespace idragnev::pbrt {
             statics::thisThreadIndex = 0;
             const auto threadsCount = maxThreadIndex();
 
-            statics::threads =
-                mapIntegerRange<std::vector>(0, threadsCount, [](const int i) {
+            statics::threads = functional::mapIntegerRange<std::vector>(
+                0,
+                threadsCount,
+                [](const int i) {
                     return std::thread{workerThread, i + 1};
                 });
         }

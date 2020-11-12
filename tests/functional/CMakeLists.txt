@@ -1,0 +1,2 @@
+add_executable(functional_test functional.cpp)
+target_link_libraries(functional_test functional doctest)
