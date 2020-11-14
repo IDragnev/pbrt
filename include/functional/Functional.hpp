@@ -50,10 +50,9 @@ namespace idragnev::pbrt::functional {
         static_assert(std::is_integral_v<T> && !std::is_same_v<T, bool>,
                       "A range can only be defined by integral ends");
 
-        const auto size = last - first;
         Result result;
 
-        if (size > 0) {
+        if (const auto size = last - first; size > 0) {
             result.reserve(size);
         }
 
