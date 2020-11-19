@@ -29,8 +29,8 @@ namespace idragnev::pbrt::memory {
 
     private:
         std::size_t toMultipleOfBlockExtent(const std::size_t n) const noexcept;
-        std::size_t blockNumber(const std::size_t n) const noexcept;
-        std::size_t blockOffset(const std::size_t n) const noexcept;
+        std::size_t blockCoordinate(const std::size_t n) const noexcept;
+        std::size_t blockElementCoordinate(const std::size_t n) const noexcept;
 
     private:
         T* data = nullptr;

@@ -73,23 +73,25 @@ namespace idragnev::pbrt::memory {
     template <typename T, unsigned LogBlockSize>
     const T& BlockedUVArray<T, LogBlockSize>::at(const std::size_t u,
                                                  const std::size_t v) const {
-        const std::size_t blockStart =
-            BLOCK_EXTENT * BLOCK_EXTENT *
-            (uBlocksCount * blockNumber(v) + blockNumber(u));
-        const std::size_t offset =
-            BLOCK_EXTENT * blockOffset(v) + blockOffset(u);
+        constexpr std::size_t blockSize = BLOCK_EXTENT * BLOCK_EXTENT;
+        const std::size_t blockNumber =
+            (uBlocksCount * blockCoordinate(v) + blockCoordinate(u));
+        const std::size_t blockOffset =
+            BLOCK_EXTENT * blockElementCoordinate(v) +
+            blockElementCoordinate(u);
+        const std::size_t index = blockNumber * blockSize + blockOffset;
 
-        return data[blockStart + offset];
+        return data[index];
     }
 
     template <typename T, unsigned LogBlockSize>
-    inline std::size_t BlockedUVArray<T, LogBlockSize>::blockNumber(
+    inline std::size_t BlockedUVArray<T, LogBlockSize>::blockCoordinate(
         const std::size_t n) const noexcept {
         return n >> LogBlockSize;
     }
 
     template <typename T, unsigned LogBlockSize>
-    inline std::size_t BlockedUVArray<T, LogBlockSize>::blockOffset(
+    inline std::size_t BlockedUVArray<T, LogBlockSize>::blockElementCoordinate(
         const std::size_t n) const noexcept {
         return (n & (BLOCK_EXTENT - 1));
     }
