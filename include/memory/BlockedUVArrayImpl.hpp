@@ -5,9 +5,7 @@ namespace idragnev::pbrt::memory {
     BlockedUVArray<T, LogBlockSize>::BlockedUVArray(const std::size_t uextent,
                                                     const std::size_t vextent,
                                                     const T* const init)
-        : data([this, uextent, vextent] {
-            const auto size = toMultipleOfBlockExtent(uextent) *
-                              toMultipleOfBlockExtent(vextent);
+        : data([size = allocationSize(uextent, vextent)] {
             T* const result = allocCacheAligned<T>(size);
             for (std::size_t i = 0; i < size; ++i) {
                 new (&result[i]) T{};
@@ -16,7 +14,7 @@ namespace idragnev::pbrt::memory {
         }())
         , uextent(uextent)
         , vextent(vextent)
-        , uBlocksCount(toMultipleOfBlockExtent(uextent) >> LogBlockSize) {
+        , uBlocksCount(blockCoordinate(toMultipleOfBlockExtent(uextent))) {
         if (init != nullptr) {
             for (std::size_t v = 0; v < vextent; ++v) {
                 for (std::size_t u = 0; u < uextent; ++u) {
@@ -27,14 +25,22 @@ namespace idragnev::pbrt::memory {
     }
 
     template <typename T, unsigned LogBlockSize>
+    inline std::size_t BlockedUVArray<T, LogBlockSize>::allocationSize(
+        const std::size_t uextent,
+        const std::size_t vextent) noexcept {
+        return toMultipleOfBlockExtent(uextent) *
+               toMultipleOfBlockExtent(vextent);
+    }
+
+    template <typename T, unsigned LogBlockSize>
     inline std::size_t BlockedUVArray<T, LogBlockSize>::toMultipleOfBlockExtent(
-        const std::size_t n) const noexcept {
+        const std::size_t n) noexcept {
         return alignUp(n, BLOCK_EXTENT);
     }
 
     template <typename T, unsigned LogBlockSize>
     BlockedUVArray<T, LogBlockSize>::~BlockedUVArray() {
-        const auto size = uextent * vextent;
+        const auto size = allocationSize(uextent, vextent);
         for (std::size_t i = 0; i < size; ++i) {
             data[i].~T();
         }
@@ -86,13 +92,13 @@ namespace idragnev::pbrt::memory {
 
     template <typename T, unsigned LogBlockSize>
     inline std::size_t BlockedUVArray<T, LogBlockSize>::blockCoordinate(
-        const std::size_t n) const noexcept {
+        const std::size_t n) noexcept {
         return n >> LogBlockSize;
     }
 
     template <typename T, unsigned LogBlockSize>
     inline std::size_t BlockedUVArray<T, LogBlockSize>::blockElementCoordinate(
-        const std::size_t n) const noexcept {
+        const std::size_t n) noexcept {
         return (n & (BLOCK_EXTENT - 1));
     }
 } // namespace idragnev::pbrt::memory

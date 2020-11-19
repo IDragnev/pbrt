@@ -21,8 +21,6 @@ TEST_CASE("zero initialization is used by default") {
     }
 }
 
-#include <iostream>
-
 TEST_CASE("at") {
     const int data[] = {1, 2, 3, 4};
     const std::size_t uExtent = 2;

@@ -28,9 +28,12 @@ namespace idragnev::pbrt::memory {
         void asLinearArray(T* dest) const;
 
     private:
-        std::size_t toMultipleOfBlockExtent(const std::size_t n) const noexcept;
-        std::size_t blockCoordinate(const std::size_t n) const noexcept;
-        std::size_t blockElementCoordinate(const std::size_t n) const noexcept;
+        static std::size_t allocationSize(const std::size_t uextent,
+                                          const std::size_t vextent) noexcept;
+        static std::size_t
+        toMultipleOfBlockExtent(const std::size_t n) noexcept;
+        static std::size_t blockCoordinate(const std::size_t n) noexcept;
+        static std::size_t blockElementCoordinate(const std::size_t n) noexcept;
 
     private:
         T* data = nullptr;
