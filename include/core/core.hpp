@@ -93,6 +93,16 @@ namespace idragnev::pbrt {
     class SurfaceInteraction;
 
     class Shape;
+    class Primitive;
+
+    class Light;
+    class AreaLight;
+
+    enum class TransportMode;
+    class Material;
+
+    class BSDF;
+    class BSSRDF;
 
     class EFloat;
     struct QuadraticRoots;

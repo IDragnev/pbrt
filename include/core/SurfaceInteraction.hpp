@@ -36,6 +36,9 @@ namespace idragnev::pbrt {
         Normal3f dndu;
         Normal3f dndv;
         const Shape* shape = nullptr;
+        const Primitive* primitive = nullptr;
+        BSDF* bsdf = nullptr;
+        BSSRDF* bssrdf = nullptr;
         std::size_t faceIndex = 0;
         struct
         {
