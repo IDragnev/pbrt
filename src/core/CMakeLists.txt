@@ -48,6 +48,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/EFloat.hpp
   ${CORE_HEADERS_DIR}/AtomicFloat.hpp
   ${CORE_HEADERS_DIR}/Texture.hpp
+  ${CORE_HEADERS_DIR}/Material.hpp
   ${CORE_HEADERS_DIR}/Primitive.hpp
 )
 
