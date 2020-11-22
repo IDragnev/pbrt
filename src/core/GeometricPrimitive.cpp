@@ -54,7 +54,7 @@ namespace idragnev::pbrt {
                                                   arena,
                                                   mode,
                                                   allowMultipleLobes);
-        assert(dot(interaction.n, interaction.shading.n) >= 0.);
+        assert(dot(interaction.n, interaction.shading.n) >= 0.f);
     }
 
     const AreaLight* GeometricPrimitive::areaLight() const {

@@ -18,8 +18,8 @@ namespace idragnev::pbrt::shapes {
             const std::vector<Vector3f>& vertexTangentVectors,
             const std::vector<Normal3f>& vertexNormalVectors,
             const std::vector<Point2f>& vertexUVs,
-            const std::shared_ptr<const Texture<Float>>& alphaMask,
-            const std::shared_ptr<const Texture<Float>>& shadowAlphaMask,
+            std::shared_ptr<const Texture<Float>> alphaMask,
+            std::shared_ptr<const Texture<Float>> shadowAlphaMask,
             const std::vector<std::size_t>& faceIndices);
 
         unsigned trianglesCount = 0;
@@ -55,7 +55,7 @@ namespace idragnev::pbrt::shapes {
         Triangle(const Transformation& objectToWorld,
                  const Transformation& worldToObject,
                  const bool reverseOrientaton,
-                 const std::shared_ptr<const TriangleMesh>& parentMesh,
+                 std::shared_ptr<const TriangleMesh> parentMesh,
                  const unsigned number);
 
         Bounds3f objectBound() const override;
@@ -116,7 +116,7 @@ namespace idragnev::pbrt::shapes {
         const std::vector<Vector3f>& vertexTangentVectors,
         const std::vector<Normal3f>& vertexNormalVectors,
         const std::vector<Point2f>& vertexUVs,
-        const std::shared_ptr<const Texture<Float>>& alphaMask,
-        const std::shared_ptr<const Texture<Float>>& shadowAlphaMask,
+        std::shared_ptr<const Texture<Float>> alphaMask,
+        std::shared_ptr<const Texture<Float>> shadowAlphaMask,
         const std::vector<std::size_t>& faceIndices);
 } // namespace idragnev::pbrt::shapes

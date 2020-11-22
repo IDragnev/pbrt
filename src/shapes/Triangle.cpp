@@ -18,8 +18,8 @@ namespace idragnev::pbrt::shapes {
         const std::vector<Vector3f>& vertexTangentVectors,
         const std::vector<Normal3f>& vertexNormalVectors,
         const std::vector<Point2f>& vertexUVs,
-        const std::shared_ptr<const Texture<Float>>& alphaMask,
-        const std::shared_ptr<const Texture<Float>>& shadowAlphaMask,
+        std::shared_ptr<const Texture<Float>> alphaMask,
+        std::shared_ptr<const Texture<Float>> shadowAlphaMask,
         const std::vector<std::size_t>& faceIndices)
         : trianglesCount(trianglesCount)
         , verticesCount(static_cast<unsigned>(vertexCoordinates.size()))
@@ -34,17 +34,17 @@ namespace idragnev::pbrt::shapes {
               vertexTangentVectors,
               [&objectToWorld](const Vector3f& v) { return objectToWorld(v); }))
         , vertexUVs(vertexUVs)
-        , alphaMask(alphaMask)
-        , shadowAlphaMask(shadowAlphaMask)
+        , alphaMask(std::move(alphaMask))
+        , shadowAlphaMask(std::move(shadowAlphaMask))
         , faceIndices(faceIndices) {}
 
     Triangle::Triangle(const Transformation& objectToWorld,
                        const Transformation& worldToObject,
                        const bool reverseOrientaton,
-                       const std::shared_ptr<const TriangleMesh>& parentMesh,
+                       std::shared_ptr<const TriangleMesh> parentMesh,
                        const unsigned number)
         : Shape(objectToWorld, worldToObject, reverseOrientaton)
-        , parentMesh(parentMesh)
+        , parentMesh(std::move(parentMesh))
         // unsafe: assumes that parentMesh->vertexIndices will not change
         // after construction
         , firstVertexIndexAddress(&parentMesh->vertexIndices[3ull * number])
@@ -473,29 +473,30 @@ namespace idragnev::pbrt::shapes {
         return 0.5f * cross(p1 - p0, p2 - p0).length();
     }
 
-    std::vector<std::shared_ptr<Shape>> createTriangleMesh(
-        const Transformation& objectToWorld,
-        const Transformation& worldToObject,
-        const bool reverseOrientation,
-        const unsigned trianglesCount,
-        const std::vector<std::size_t>& vertexIndices,
-        const std::vector<Point3f>& vertexCoordinates,
-        const std::vector<Vector3f>& vertexTangentVectors,
-        const std::vector<Normal3f>& vertexNormalVectors,
-        const std::vector<Point2f>& vertexUVs,
-        const std::shared_ptr<const Texture<Float>>& alphaMask,
-        const std::shared_ptr<const Texture<Float>>& shadowAlphaMask,
-        const std::vector<std::size_t>& faceIndices) {
-        const auto mesh = std::make_shared<TriangleMesh>(objectToWorld,
-                                                         trianglesCount,
-                                                         vertexIndices,
-                                                         vertexCoordinates,
-                                                         vertexTangentVectors,
-                                                         vertexNormalVectors,
-                                                         vertexUVs,
-                                                         alphaMask,
-                                                         shadowAlphaMask,
-                                                         faceIndices);
+    std::vector<std::shared_ptr<Shape>>
+    createTriangleMesh(const Transformation& objectToWorld,
+                       const Transformation& worldToObject,
+                       const bool reverseOrientation,
+                       const unsigned trianglesCount,
+                       const std::vector<std::size_t>& vertexIndices,
+                       const std::vector<Point3f>& vertexCoordinates,
+                       const std::vector<Vector3f>& vertexTangentVectors,
+                       const std::vector<Normal3f>& vertexNormalVectors,
+                       const std::vector<Point2f>& vertexUVs,
+                       std::shared_ptr<const Texture<Float>> alphaMask,
+                       std::shared_ptr<const Texture<Float>> shadowAlphaMask,
+                       const std::vector<std::size_t>& faceIndices) {
+        const auto mesh =
+            std::make_shared<TriangleMesh>(objectToWorld,
+                                           trianglesCount,
+                                           vertexIndices,
+                                           vertexCoordinates,
+                                           vertexTangentVectors,
+                                           vertexNormalVectors,
+                                           vertexUVs,
+                                           std::move(alphaMask),
+                                           std::move(shadowAlphaMask),
+                                           faceIndices);
         return functional::mapIntegerRange<std::vector>(
             0u,
             trianglesCount,
