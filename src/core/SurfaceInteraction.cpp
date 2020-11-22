@@ -17,7 +17,8 @@ namespace idragnev::pbrt {
                       Normal3f{normalize(cross(dpdu, dpdv))},
                       pError,
                       wo,
-                      time}
+                      time,
+                      nullptr}
         , uv{uv}
         , dpdu{dpdu}
         , dpdv{dpdv}

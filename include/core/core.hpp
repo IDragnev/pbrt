@@ -94,6 +94,7 @@ namespace idragnev::pbrt {
 
     class Shape;
     class Primitive;
+    class GeometricPrimitive;
 
     class Light;
     class AreaLight;
@@ -103,6 +104,9 @@ namespace idragnev::pbrt {
 
     class BSDF;
     class BSSRDF;
+
+    class Medium;
+    struct MediumInterface;
 
     class EFloat;
     struct QuadraticRoots;

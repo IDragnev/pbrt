@@ -11,6 +11,7 @@ set(RAY_TRACER_CORE_SOURCE
   SurfaceInteraction.cpp
   Shape.cpp
   EFloat.cpp
+  GeometricPrimitive.cpp
 )
 
 set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/core)
@@ -49,7 +50,9 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/AtomicFloat.hpp
   ${CORE_HEADERS_DIR}/Texture.hpp
   ${CORE_HEADERS_DIR}/Material.hpp
+  ${CORE_HEADERS_DIR}/Medium.hpp
   ${CORE_HEADERS_DIR}/Primitive.hpp
+  ${CORE_HEADERS_DIR}/GeometricPrimitive.hpp
 )
 
 add_library(

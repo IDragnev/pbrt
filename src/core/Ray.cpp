@@ -4,9 +4,11 @@ namespace idragnev::pbrt {
     Ray::Ray(const Point3f& o,
              const Vector3f& d,
              const Float tMax,
-             const Float time)
+             const Float time,
+             const Medium* medium)
         : o(o)
         , d(d)
         , tMax(tMax)
-        , time(time) {}
+        , time(time)
+        , medium(medium) {}
 } // namespace idragnev::pbrt

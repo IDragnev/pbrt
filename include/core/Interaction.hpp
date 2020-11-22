@@ -4,6 +4,7 @@
 #include "Point3.hpp"
 #include "Vector3.hpp"
 #include "Normal3.hpp"
+#include "Medium.hpp"
 
 namespace idragnev::pbrt {
     class Interaction
@@ -14,19 +15,30 @@ namespace idragnev::pbrt {
                     const Normal3f& n,
                     const Vector3f& pError,
                     const Vector3f& wo,
-                    const Float time)
+                    const Float time,
+                    const MediumInterface& mediumInterface)
             : time{time}
             , p{p}
             , pError{pError}
             , wo{wo}
-            , n{n} {}
+            , n{n}
+            , mediumInterface(mediumInterface) {}
 
-        Interaction(const Point3f& p, const Vector3f& wo, const Float time)
+        Interaction(const Point3f& p,
+                    const Vector3f& wo,
+                    const Float time,
+                    const MediumInterface& mediumInterface)
             : time{time}
             , p{p}
-            , wo{wo} {}
+            , wo{wo}
+            , mediumInterface(mediumInterface) {}
 
-        Interaction(const Point3f& p, const Float time) : time{time}, p{p} {}
+        Interaction(const Point3f& p,
+                    const Float time,
+                    const MediumInterface& mediumInterface)
+            : time{time}
+            , p{p}
+            , mediumInterface(mediumInterface) {}
 
         bool isSurfaceInteraction() const noexcept { return n != Normal3f{}; }
 
@@ -40,5 +52,6 @@ namespace idragnev::pbrt {
         Vector3f pError;
         Vector3f wo;
         Normal3f n;
+        MediumInterface mediumInterface;
     };
 } // namespace idragnev::pbrt

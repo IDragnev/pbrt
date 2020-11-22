@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Memory.hpp"
 
 #include <list>

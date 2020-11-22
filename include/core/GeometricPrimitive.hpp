@@ -1,0 +1,38 @@
+#pragma once
+
+#include "core.hpp"
+#include "Primitive.hpp"
+#include "Medium.hpp"
+
+#include <memory>
+
+namespace idragnev::pbrt {
+    class GeometricPrimitive : public Primitive
+    {
+    public:
+        GeometricPrimitive(std::shared_ptr<const Shape> shape,
+                           std::shared_ptr<const Material> material,
+                           std::shared_ptr<const AreaLight> areaLight,
+                           const MediumInterface& mediumInterface);
+
+        Bounds3f worldBound() const override;
+
+        std::optional<SurfaceInteraction>
+        intersect(const Ray& ray) const override;
+        bool intersectP(const Ray& ray) const override;
+
+        const AreaLight* areaLight() const override;
+        const Material* material() const override;
+        void computeScatteringFunctions(
+            SurfaceInteraction& interaction,
+            memory::MemoryArena& arena,
+            const TransportMode mode,
+            const bool allowMultipleLobes) const override;
+
+    private:
+        std::shared_ptr<const Shape> _shape = nullptr;
+        std::shared_ptr<const Material> _material = nullptr;
+        std::shared_ptr<const AreaLight> _areaLight = nullptr;
+        MediumInterface _mediumInterface{};
+    };
+} // namespace idragnev::pbrt

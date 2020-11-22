@@ -11,7 +11,7 @@ namespace idragnev::pbrt {
     public:
         virtual ~Primitive() = default;
 
-        virtual Bounds3f WorldBound() const = 0;
+        virtual Bounds3f worldBound() const = 0;
 
         virtual std::optional<SurfaceInteraction>
         intersect(const Ray& r) const = 0;
@@ -20,7 +20,7 @@ namespace idragnev::pbrt {
         virtual const AreaLight* areaLight() const = 0;
         virtual const Material* material() const = 0;
         virtual void
-        computeScatteringFunctions(SurfaceInteraction& interactiion,
+        computeScatteringFunctions(SurfaceInteraction& interaction,
                                    memory::MemoryArena& arena,
                                    const TransportMode mode,
                                    const bool allowMultipleLobes) const = 0;

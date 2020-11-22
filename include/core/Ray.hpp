@@ -12,9 +12,10 @@ namespace idragnev::pbrt {
         Ray(const Point3f& o,
             const Vector3f& d,
             const Float tMax = constants::Infinity,
-            const Float time = 0.f);
+            const Float time = 0.f,
+            const Medium* medium = nullptr);
 
-        Point3f operator()(Float t) const { return o + t * d; }
+        Point3f operator()(const Float t) const { return o + t * d; }
 
         bool hasNaNs() const {
             return (o.hasNaNs() || d.hasNaNs() || isNaN(tMax));
@@ -24,5 +25,6 @@ namespace idragnev::pbrt {
         Vector3f d;
         mutable Float tMax = constants::Infinity;
         Float time = 0.0f;
+        const Medium* medium = nullptr;
     };
 } // namespace idragnev::pbrt
