@@ -7,7 +7,7 @@ set(RAY_TRACER_SHAPES_SOURCE
   Triangle.cpp
 )
 
-set(SHAPES_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/shapes)
+set(SHAPES_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/shapes)
 
 set(RAY_TRACER_SHAPES_HEADERS
   ${SHAPES_HEADERS_DIR}/Sphere.hpp
@@ -24,7 +24,7 @@ add_library(
   ${RAY_TRACER_SHAPES_SOURCE}
   ${RAY_TRACER_SHAPES_HEADERS}
 )
-target_include_directories(shapeslib PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(shapeslib PUBLIC ${PROJECT_SOURCE_DIR}/include/pbrt)
 target_link_libraries(shapeslib 
   PRIVATE corelib
   PRIVATE functional

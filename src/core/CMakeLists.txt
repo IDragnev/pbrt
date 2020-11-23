@@ -14,7 +14,7 @@ set(RAY_TRACER_CORE_SOURCE
   TransformedPrimitive.cpp
 )
 
-set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/core)
+set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/core)
 
 set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/core.hpp
@@ -62,5 +62,5 @@ add_library(
   ${RAY_TRACER_CORE_SOURCE}
   ${RAY_TRACER_CORE_HEADERS}
 )
-target_include_directories(corelib PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(corelib PUBLIC ${PROJECT_SOURCE_DIR}/include/pbrt)
 target_compile_features(corelib PUBLIC cxx_std_17)

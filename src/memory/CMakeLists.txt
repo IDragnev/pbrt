@@ -27,7 +27,7 @@ set(PBRT_MEMORY_SOURCE_FILES
   MemoryArena.cpp
 )
 
-set(PBRT_MEMORY_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/memory)
+set(PBRT_MEMORY_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/memory)
 set(PBRT_MEMORY_HEADERS
   ${PBRT_MEMORY_HEADERS_DIR}/Memory.hpp
   ${PBRT_MEMORY_HEADERS_DIR}/MemoryArena.hpp
@@ -41,7 +41,7 @@ add_library(
   ${PBRT_MEMORY_SOURCE_FILES}
   ${PBRT_MEMORY_HEADERS}
 )
-target_include_directories(memory PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(memory PUBLIC ${PROJECT_SOURCE_DIR}/include/pbrt)
 target_compile_features(memory PUBLIC cxx_std_17)
 
 if(HAS_ALIGNED_MALLOC)
