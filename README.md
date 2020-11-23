@@ -14,13 +14,13 @@ so builds may fail because of a warning with other compiler versions.
 If this is the case, you can lower the warning level from [the main CMake file](https://github.com/IDragnev/pb-ray-tracer/blob/master/CMakeLists.txt).    
 
 CMake options:
- - RT_FLOAT_AS_DOUBLE - use 64-bit floats (off by default)
+ - PBRT_FLOAT_AS_DOUBLE - use 64-bit floats (off by default)
  
 Example (build with 64-bit floats):  
  ```
  $ git clone --recursive https://github.com/IDragnev/pb-ray-tracer.git  
  $ cd pb-ray-tracer  
  $ mkdir build && cd build  
- $ cmake -D RT_FLOAT_AS_DOUBLE=ON ..  
+ $ cmake -D PBRT_FLOAT_AS_DOUBLE=ON ..  
  $ cmake --build .  
  ```

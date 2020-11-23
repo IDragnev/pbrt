@@ -8,7 +8,7 @@ namespace idragnev::pbrt {
     class AtomicFloat
     {
     private:
-#ifdef RT_FLOAT_AS_DOUBLE
+#ifdef PBRT_FLOAT_AS_DOUBLE
         using UnderlyingType = std::uint64_t;
 #else
         using UnderlyingType = std::uint32_t;

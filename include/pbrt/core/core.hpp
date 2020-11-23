@@ -7,7 +7,7 @@
 
 namespace idragnev::pbrt {
 
-#ifdef RT_FLOAT_AS_DOUBLE
+#ifdef PBRT_FLOAT_AS_DOUBLE
     using Float = double;
 #else
     using Float = float;

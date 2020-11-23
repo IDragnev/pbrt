@@ -17,10 +17,10 @@ if(CMAKE_BUILD_TYPE MATCHES RELEASE)
   add_compile_definitions(NDEBUG)
 endif()
 
-option(RT_FLOAT_AS_DOUBLE "Use 64-bit floats" OFF)
+option(PBRT_FLOAT_AS_DOUBLE "Use 64-bit floats" OFF)
 
-if(RT_FLOAT_AS_DOUBLE)
-  add_compile_definitions(RT_FLOAT_AS_DOUBLE)
+if(PBRT_FLOAT_AS_DOUBLE)
+  add_compile_definitions(PBRT_FLOAT_AS_DOUBLE)
 endif()
 
 if (MSVC)
