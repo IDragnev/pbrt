@@ -11,6 +11,7 @@ set(RAY_TRACER_CORE_SOURCE
   Shape.cpp
   EFloat.cpp
   GeometricPrimitive.cpp
+  TransformedPrimitive.cpp
 )
 
 set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/core)
@@ -52,6 +53,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/Medium.hpp
   ${CORE_HEADERS_DIR}/Primitive.hpp
   ${CORE_HEADERS_DIR}/GeometricPrimitive.hpp
+  ${CORE_HEADERS_DIR}/TransformedPrimitive.hpp
 )
 
 add_library(
