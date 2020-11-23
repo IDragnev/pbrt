@@ -30,7 +30,7 @@ namespace idragnev::pbrt {
                 return std::make_optional(primitiveToWorldAtT(*optInteraction));
             }
             else {
-                return std::move(optInteraction);
+                return optInteraction;
             }
         }
 
@@ -60,10 +60,10 @@ namespace idragnev::pbrt {
     }
 
     void TransformedPrimitive::computeScatteringFunctions(
-        SurfaceInteraction& interaction,
-        memory::MemoryArena& arena,
-        const TransportMode mode,
-        const bool allowMultipleLobes) const {
+        SurfaceInteraction&,
+        memory::MemoryArena&,
+        const TransportMode,
+        const bool) const {
         assert(false);
     }
 } // namespace idragnev::pbrt
