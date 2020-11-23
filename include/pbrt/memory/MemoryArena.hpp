@@ -5,6 +5,11 @@
 #include <list>
 
 namespace idragnev::pbrt::memory {
+
+#ifdef _MSC_VER
+    #pragma warning(push)
+    #pragma warning(disable : 4324) // structure padding due to alignment specifier
+#endif
     class alignas(constants::L1_CACHE_LINE_SIZE) MemoryArena
     {
         struct Block
@@ -41,6 +46,9 @@ namespace idragnev::pbrt::memory {
         std::list<Block> usedBlocks;
         std::list<Block> availableBlocks;
     };
+#ifdef _MSC_VER
+    #pragma warning(pop)
+#endif
 
     template <typename T>
     T* MemoryArena::alloc(const std::size_t count, const bool zeroInitialize) {

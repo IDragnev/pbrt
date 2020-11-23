@@ -24,7 +24,7 @@ if(PBRT_FLOAT_AS_DOUBLE)
 endif()
 
 if (MSVC)
-  add_compile_options(/WX)
+  add_compile_options(/W4 /WX)
 else()
   add_compile_options(-Wall -Wextra -Werror -pedantic)
 endif()
