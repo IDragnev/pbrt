@@ -25,4 +25,17 @@ namespace idragnev::pbrt {
                                    const TransportMode mode,
                                    const bool allowMultipleLobes) const = 0;
     };
+
+    class Aggregate : public Primitive
+    {
+    public:
+        // must never be called
+        const AreaLight* areaLight() const override;
+        const Material* material() const override;
+        void computeScatteringFunctions(
+            SurfaceInteraction& interaction,
+            memory::MemoryArena& arena,
+            const TransportMode mode,
+            const bool allowMultipleLobes) const override;
+    };
 } // namespace idragnev::pbrt

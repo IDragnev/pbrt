@@ -95,6 +95,8 @@ namespace idragnev::pbrt {
     class Shape;
     class Primitive;
     class GeometricPrimitive;
+    class TransformedPrimitive;
+    class Aggregate;
 
     class Light;
     class AreaLight;

@@ -10,6 +10,7 @@ set(RAY_TRACER_CORE_SOURCE
   SurfaceInteraction.cpp
   Shape.cpp
   EFloat.cpp
+  Primitive.cpp
   GeometricPrimitive.cpp
   TransformedPrimitive.cpp
 )
