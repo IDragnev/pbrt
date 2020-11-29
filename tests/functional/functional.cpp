@@ -62,6 +62,63 @@ TEST_CASE("fmap") {
     }
 }
 
+TEST_CASE("fmapIndexed") {
+    SUBCASE("on empty container") {
+        const std::vector<int> nums;
+
+        const auto result =
+            funct::fmapIndexed(nums, [](auto, auto) { return 1; });
+
+        CHECK(result.empty());
+    }
+
+    SUBCASE("on non-empty container") {
+        const std::vector<std::size_t> nums = {1, 2, 3};
+
+        const auto result =
+            funct::fmapIndexed(nums, [](std::size_t x, std::size_t i) {
+                return x - i;
+            });
+
+        CHECK(result == std::vector<std::size_t>{1, 1, 1});
+    }
+
+    SUBCASE(
+        "on prvalue container calls the supplied function with moved values") {
+        const auto result = funct::fmapIndexed(
+            std::vector<std::size_t>{1, 2, 3},
+            [](std::size_t&& x, std::size_t i) { return x - i; });
+
+        CHECK(result == std::vector<std::size_t>{1, 1, 1});
+    }
+
+    SUBCASE(
+        "on xvalue container calls the supplied function with moved values") {
+        using namespace std::string_literals;
+
+        const auto move = [](std::string&& s, std::size_t) -> std::string {
+            return std::move(s);
+        };
+        std::vector vec = {"a"s, "b"s};
+
+        const auto result = funct::fmapIndexed(std::move(vec), move);
+
+        CHECK(vec == std::vector{""s, ""s});
+        CHECK(result == std::vector{"a"s, "b"s});
+    }
+
+    SUBCASE("with different inner result type") {
+        const std::vector nums = {1};
+
+        const auto result =
+            funct::fmapIndexed(nums, [](auto, auto) -> std::size_t {
+                return 1;
+            });
+
+        CHECK(result == std::vector<std::size_t>{1});
+    }
+}
+
 TEST_CASE("mapIntegerRange") {
     const auto square = [](const auto x) {
         return x * x;

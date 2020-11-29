@@ -4,39 +4,81 @@
 #include <utility>
 
 namespace idragnev::pbrt::functional {
-    // Maps the elements of the given container with f,
-    // returning a container of type C<G>, where G is the return type of f.
-    template <template <typename...> typename C,
-              typename T,
-              typename F,
-              typename R = C<std::invoke_result_t<F, T>>>
-    R fmap(const C<T>& c, F f) {
-        R result;
-        result.reserve(c.size());
+    namespace detail {
+        // Maps the elements of the given container with f,
+        // returning a container of type C<G>, where G is the return type of f.
+        template <bool Enumerate,
+                  template <typename...> typename C,
+                  typename T,
+                  typename F>
+        auto fmapImpl(const C<T>& c, F f) {
+            using G =
+                std::conditional_t<Enumerate,
+                                   std::invoke_result<F, const T&, std::size_t>,
+                                   std::invoke_result<F, const T&>>;
+            using R = C<typename G::type>;
 
-        for (const auto& e : c) {
-            result.push_back(f(e));
+            R result;
+            result.reserve(c.size());
+
+            if constexpr (Enumerate) {
+                std::size_t i = 0;
+                for (const auto& e : c) {
+                    result.push_back(f(e, i));
+                    ++i;
+                }
+            }
+            else {
+                for (const auto& e : c) {
+                    result.push_back(f(e));
+                }
+            }
+
+            return result;
         }
 
-        return result;
+        // Maps the elements of the given container with f,
+        // calling std::move on each element and then calling f with it.
+        // Returns a container of type C<G>, where G is the return type of f.
+        template <bool Enumerate,
+                  template <typename...> typename C,
+                  typename T,
+                  typename F>
+        auto fmapImpl(C<T>&& c, F f) {
+            using G =
+                std::conditional_t<Enumerate,
+                                   std::invoke_result<F, T&&, std::size_t>,
+                                   std::invoke_result<F, T&&>>;
+            using R = C<typename G::type>;
+
+            R result;
+            result.reserve(c.size());
+
+            if constexpr (Enumerate) {
+                std::size_t i = 0;
+                for (auto& e : c) {
+                    result.push_back(f(std::move(e), i));
+                    ++i;
+                }
+            }
+            else {
+                for (auto& e : c) {
+                    result.push_back(f(std::move(e)));
+                }
+            }
+
+            return result;
+        }
+    } // namespace detail
+
+    template <typename C, typename F>
+    inline auto fmap(C&& c, F f) {
+        return detail::fmapImpl<false>(std::forward<C>(c), f);
     }
 
-    // Maps the elements of the given container with f,
-    // calling std::move on each element and then calling f with it.
-    // Returns a container of type C<G>, where G is the return type of f.
-    template <template <typename...> typename C,
-              typename T,
-              typename F,
-              typename R = C<std::invoke_result_t<F, T&&>>>
-    R fmap(C<T>&& c, F f) {
-        R result;
-        result.reserve(c.size());
-
-        for (auto& e : c) {
-            result.push_back(f(std::move(e)));
-        }
-
-        return result;
+    template <typename C, typename F>
+    inline auto fmapIndexed(C&& c, F f) {
+        return detail::fmapImpl<true>(std::forward<C>(c), f);
     }
 
     // Maps the range of integers [first, last) to the container type
