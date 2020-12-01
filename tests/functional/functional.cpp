@@ -119,6 +119,20 @@ TEST_CASE("fmapIndexed") {
     }
 }
 
+TEST_CASE("IntegerRange") {
+    using funct::IntegerRange;
+
+    SUBCASE("default range is empty") { 
+        const auto r = IntegerRange<int>{}; 
+        CHECK(r.isEmpty());
+    }
+
+    SUBCASE("ranges with first > last are empty") {
+        const auto r = IntegerRange{10, 0};
+        CHECK(r.isEmpty());
+    }
+}
+
 TEST_CASE("fmap with IntegerRange") {
     const auto square = [](const auto x) {
         return x * x;

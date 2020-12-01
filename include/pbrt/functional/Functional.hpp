@@ -82,19 +82,34 @@ namespace idragnev::pbrt::functional {
     }
 
     // exclusive range: [first, last)
+    // first <= last always holds
     template <typename T>
-    struct IntegerRange
+    class IntegerRange
     {
-        static_assert(
-            std::is_integral_v<T> && !std::is_same_v<T, bool>,
-            "T must be an integral type");
-        
-        constexpr IntegerRange(const T f, const T l) noexcept
-            : first(f)
-            , last(l) {}
+        static_assert(std::is_integral_v<T> && !std::is_same_v<T, bool>,
+                      "T must be an integral type");
 
-        T first = 0;
-        T last = 0;
+    public:
+        IntegerRange() = default;
+        constexpr IntegerRange(const T f, const T l) noexcept
+            : _first(f)
+            , _last(l) {
+            if (f > l) {
+                *this = {};
+            }
+        }
+
+        constexpr T first() const noexcept { return _first; }
+        constexpr T last() const noexcept { return _last; }
+
+        constexpr std::size_t size() const noexcept {
+            return static_cast<std::size_t>(_last - _first);
+        }
+        constexpr bool isEmpty() const noexcept { return size() == 0u; }
+
+    private:
+        T _first = 0;
+        T _last = 0;
     };
 
     template <typename T>
@@ -110,11 +125,11 @@ namespace idragnev::pbrt::functional {
     Result fmap(const IntegerRange<T> range, F f) {
         Result result;
 
-        if (const auto size = range.last - range.first; size > 0) {
+        if (const auto size = range.size(); size > 0) {
             result.reserve(size);
         }
 
-        for (auto i = range.first; i < range.last; ++i) {
+        for (auto i = range.first(); i < range.last(); ++i) {
             result.push_back(f(i));
         }
 
@@ -125,7 +140,7 @@ namespace idragnev::pbrt::functional {
     R foldl(const IntegerRange<T> range, R acc, F f) {
         static_assert(std::is_invocable_r_v<R, F, R, T>,
                       "f must have the signature R(R, T)");
-        for (auto i = range.first; i < range.last; ++i) {
+        for (auto i = range.first(); i < range.last(); ++i) {
             acc = f(std::move(acc), i);
         }
 
