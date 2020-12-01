@@ -81,28 +81,55 @@ namespace idragnev::pbrt::functional {
         return detail::fmapImpl<true>(std::forward<C>(c), f);
     }
 
-    // Maps the range of integers [first, last) to the container type
+    // exclusive range: [first, last)
+    template <typename T>
+    struct IntegerRange
+    {
+        static_assert(
+            std::is_integral_v<T> && !std::is_same_v<T, bool>,
+            "T must be an integral type");
+        
+        constexpr IntegerRange(const T f, const T l) noexcept
+            : first(f)
+            , last(l) {}
+
+        T first = 0;
+        T last = 0;
+    };
+
+    template <typename T>
+    IntegerRange(T, T) -> IntegerRange<T>;
+
+    // Maps the range [first, last) to the container type
     // R<G>, where G is the return type of f,
     // producing the range [f(first), ... , f(last - 1)]
     template <template <typename...> typename R,
               typename T,
               typename F,
               typename Result = R<std::invoke_result_t<F, T>>>
-    Result mapIntegerRange(const T first, const T last, F f) {
-        static_assert(std::is_integral_v<T> && !std::is_same_v<T, bool>,
-                      "A range can only be defined by integral ends");
-
+    Result fmap(const IntegerRange<T> range, F f) {
         Result result;
 
-        if (const auto size = last - first; size > 0) {
+        if (const auto size = range.last - range.first; size > 0) {
             result.reserve(size);
         }
 
-        for (auto i = first; i < last; ++i) {
+        for (auto i = range.first; i < range.last; ++i) {
             result.push_back(f(i));
         }
 
         return result;
+    }
+
+    template <typename T, typename R, typename F>
+    R foldl(const IntegerRange<T> range, R acc, F f) {
+        static_assert(std::is_invocable_r_v<R, F, R, T>,
+                      "f must have the signature R(R, T)");
+        for (auto i = range.first; i < range.last; ++i) {
+            acc = f(std::move(acc), i);
+        }
+
+        return acc;
     }
 
     template <typename Callable>

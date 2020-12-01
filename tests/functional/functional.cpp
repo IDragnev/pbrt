@@ -119,20 +119,38 @@ TEST_CASE("fmapIndexed") {
     }
 }
 
-TEST_CASE("mapIntegerRange") {
+TEST_CASE("fmap with IntegerRange") {
     const auto square = [](const auto x) {
         return x * x;
     };
 
     SUBCASE("with empty range") {
-        const auto result = funct::mapIntegerRange<std::vector>(1, 0, square);
+        const auto result =
+            funct::fmap<std::vector>(funct::IntegerRange{1, 0}, square);
 
         CHECK(result.empty());
     }
 
     SUBCASE("with non-empty range") {
-        const auto result = funct::mapIntegerRange<std::vector>(0, 3, square);
+        const auto result =
+            funct::fmap<std::vector>(funct::IntegerRange{0, 3}, square);
 
         CHECK(result == std::vector{0, 1, 4});
+    }
+}
+
+TEST_CASE("foldl with IntegerRange") {
+    SUBCASE("with empty range") {
+        const auto n = funct::foldl(funct::IntegerRange{1, 0},
+                                    0,
+                                    [](auto, auto) { return 10; });
+        CHECK(n == 0);
+    }
+
+    SUBCASE("with non-empty range") {
+        const auto n = funct::foldl(funct::IntegerRange{2, 6},
+                                    1,
+                                    [](auto acc, auto x) { return acc * x; });
+        CHECK(n == 120);
     }
 }

@@ -101,12 +101,13 @@ namespace idragnev::pbrt::parallel {
     void init() {
         assert(statics::threads.empty());
 
+        using functional::IntegerRange;
+
         statics::thisThreadIndex = 0;
         const auto threadsCount = maxThreadIndex();
 
-        statics::threads = functional::mapIntegerRange<std::vector>(
-            0,
-            threadsCount,
+        statics::threads = functional::fmap<std::vector>(
+            IntegerRange{0, threadsCount},
             [](const int i) {
                 return std::thread{workerThread, i + 1};
             });
