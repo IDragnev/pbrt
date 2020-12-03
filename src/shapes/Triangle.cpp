@@ -486,6 +486,7 @@ namespace idragnev::pbrt::shapes {
                        std::shared_ptr<const Texture<Float>> alphaMask,
                        std::shared_ptr<const Texture<Float>> shadowAlphaMask,
                        const std::vector<std::size_t>& faceIndices) {
+        using functional::IntegerRange;
         const auto mesh =
             std::make_shared<TriangleMesh>(objectToWorld,
                                            trianglesCount,
@@ -497,9 +498,8 @@ namespace idragnev::pbrt::shapes {
                                            std::move(alphaMask),
                                            std::move(shadowAlphaMask),
                                            faceIndices);
-        return functional::mapIntegerRange<std::vector>(
-            0u,
-            trianglesCount,
+        return functional::fmap<std::vector>(
+            IntegerRange{0u, trianglesCount},
             [&](const unsigned i) -> std::shared_ptr<Shape> {
                 return std::make_shared<Triangle>(objectToWorld,
                                                   worldToObject,
