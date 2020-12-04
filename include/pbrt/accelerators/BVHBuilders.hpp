@@ -55,8 +55,6 @@ namespace idragnev::pbrt::accelerators::bvh {
         using IndicesRange = functional::IntegerRange<std::size_t>;
         using PrimsVec = std::vector<std::shared_ptr<const Primitive>>;
 
-        struct Subtrees;
-
     public:
         RecursiveBuilder() = default;
         RecursiveBuilder(const SplitMethod m) : splitMethod{m} {}
