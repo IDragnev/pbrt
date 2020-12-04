@@ -1,6 +1,5 @@
 #include "accelerators/BVHBuilders.hpp"
 #include "functional/Functional.hpp"
-#include "core/Bounds3.hpp"
 
 namespace idragnev::pbrt::accelerators::bvh {
     struct BuildNode
@@ -8,13 +7,10 @@ namespace idragnev::pbrt::accelerators::bvh {
         static BuildNode Leaf(const std::size_t firstPrimitiveIndex,
                               const std::size_t primitivesCount,
                               const Bounds3f& bounds) {
-            BuildNode result;
+            BuildNode result{};
             result.firstPrimitiveIndex = firstPrimitiveIndex;
             result.primitivesCount = primitivesCount;
             result.bounds = bounds;
-
-            result.children[0] = nullptr;
-            result.children[1] = nullptr;
 
             return result;
         }
@@ -22,22 +18,18 @@ namespace idragnev::pbrt::accelerators::bvh {
         static BuildNode Interior(const std::size_t splitAxis,
                                   BuildNode* const child0,
                                   BuildNode* const child1) {
-            BuildNode result;
-
+            BuildNode result{};
             result.children[0] = child0;
             result.children[1] = child1;
             result.splitAxis = splitAxis;
             result.bounds = unionOf(child0->bounds, child1->bounds);
-
-            result.primitivesCount = 0;
-            result.firstPrimitiveIndex = 0;
 
             return result;
         }
 
         Bounds3f bounds;
 
-        BuildNode* children[2];
+        BuildNode* children[2] = {nullptr, nullptr};
         std::size_t splitAxis = 0;
 
         std::size_t firstPrimitiveIndex = 0;
@@ -46,8 +38,15 @@ namespace idragnev::pbrt::accelerators::bvh {
 
     BuildResult RecursiveBuilder::operator()(memory::MemoryArena& arena,
                                              const PrimsVec& primitives) {
+        using functional::ScopedFn;
+        [[maybe_unused]] const auto cleanUp =
+            ScopedFn{[&builder = *this]() noexcept {
+                builder = {};
+            }};
+
+        BuildResult result{};
         if (primitives.empty()) {
-            return BuildResult{};
+            return result;
         }
 
         this->prims = &primitives;
@@ -57,12 +56,10 @@ namespace idragnev::pbrt::accelerators::bvh {
                 return PrimitiveInfo{i, primitive->worldBound()};
             });
 
-        BuildResult result;
+        result.orderedPrimitives.reserve(primitives.size());
         result.tree = buildSubtree(arena,
                                    IndicesRange{0, this->primitivesInfo.size()},
                                    result.orderedPrimitives);
-
-        *this = {};
 
         return result;
     }
@@ -71,7 +68,7 @@ namespace idragnev::pbrt::accelerators::bvh {
     RecursiveBuilder::buildSubtree(memory::MemoryArena& arena,
                                    const IndicesRange infoIndicesRange,
                                    PrimsVec& orderedPrims) {
-        BuildTree result;
+        BuildTree result{};
         result.root = arena.alloc<BuildNode>();
 
         const Bounds3f subtreeBounds = functional::foldl(
@@ -122,6 +119,8 @@ namespace idragnev::pbrt::accelerators::bvh {
     RecursiveBuilder::buildLeafNode(const Bounds3f& bounds,
                                     const IndicesRange infoIndicesRange,
                                     PrimsVec& orderedPrims) const {
+        const auto firstPrimIndex = orderedPrims.size();
+
         const auto& primitives = *(this->prims);
         for (auto i = infoIndicesRange.first(); i < infoIndicesRange.last();
              ++i) {
@@ -130,7 +129,6 @@ namespace idragnev::pbrt::accelerators::bvh {
         }
 
         const auto primitivesCount = infoIndicesRange.size();
-        const auto firstPrimIndex = orderedPrims.size();
 
         return BuildNode::Leaf(firstPrimIndex, primitivesCount, bounds);
     }
@@ -140,47 +138,10 @@ namespace idragnev::pbrt::accelerators::bvh {
         const Bounds3f& centroidBounds,
         const IndicesRange infoIndicesRange,
         PrimsVec& orderedPrims) {
-        const auto dim = centroidBounds.maximumExtent();
+        partitionPrimitivesInfo(centroidBounds, infoIndicesRange);
+
         const auto indicesMid =
             (infoIndicesRange.first() + infoIndicesRange.last()) / 2;
-        switch (this->splitMethod) {
-            case bvh::SplitMethod::middle: {
-                const Float boundsMid =
-                    (centroidBounds.min[dim] + centroidBounds.max[dim]) / 2;
-                const auto firstPrimPos =
-                    this->primitivesInfo.begin() + infoIndicesRange.first();
-                const auto lastPrimPos =
-                    this->primitivesInfo.begin() + infoIndicesRange.last();
-                const auto midPrimPos = std::partition(
-                    firstPrimPos,
-                    lastPrimPos,
-                    [dim, boundsMid](const bvh::PrimitiveInfo& info) {
-                        return info.centroid[dim] < boundsMid;
-                    });
-
-                // If the partition was successful, break the switch.
-                // Otherwise fall through to try with equalCounts.
-                if (midPrimPos != firstPrimPos && midPrimPos != lastPrimPos) {
-                    break;
-                }
-            }
-            [[fallthrough]];
-            case SplitMethod::equalCounts: {
-                std::nth_element(
-                    this->primitivesInfo.begin() + infoIndicesRange.first(),
-                    this->primitivesInfo.begin() + indicesMid,
-                    this->primitivesInfo.begin() + infoIndicesRange.last(),
-                    [dim](const PrimitiveInfo& a,
-                          const PrimitiveInfo& b) {
-                        return a.centroid[dim] < b.centroid[dim];
-                    });
-            } break;
-            case SplitMethod::SAH:
-            default: {
-                // TODO
-            }
-        }
-
         const auto left =
             buildSubtree(arena,
                          IndicesRange{infoIndicesRange.first(), indicesMid},
@@ -191,5 +152,51 @@ namespace idragnev::pbrt::accelerators::bvh {
                          orderedPrims);
 
         return std::make_pair(left, right);
+    }
+
+    void RecursiveBuilder::partitionPrimitivesInfo(
+        const Bounds3f& centroidBounds,
+        const IndicesRange infoIndicesRange) {
+        const auto dim = centroidBounds.maximumExtent();
+        const auto primsInfoBegin = this->primitivesInfo.begin();
+
+        switch (this->splitMethod) {
+            case SplitMethod::Middle: {
+                const Float boundsMid =
+                    (centroidBounds.min[dim] + centroidBounds.max[dim]) / 2.f;
+                const auto firstPrimPos =
+                    primsInfoBegin + infoIndicesRange.first();
+                const auto lastPrimPos =
+                    primsInfoBegin + infoIndicesRange.last();
+                const auto midPrimPos = std::partition(
+                    firstPrimPos,
+                    lastPrimPos,
+                    [dim, boundsMid](const PrimitiveInfo& info) {
+                        return info.centroid[dim] < boundsMid;
+                    });
+
+                // If the partition was successful, break the switch.
+                // Otherwise fall through to try with EqualCounts.
+                if (midPrimPos != firstPrimPos && midPrimPos != lastPrimPos) {
+                    break;
+                }
+            }
+                [[fallthrough]];
+            case SplitMethod::EqualCounts: {
+                const auto indicesMid =
+                    (infoIndicesRange.first() + infoIndicesRange.last()) / 2;
+                std::nth_element(
+                    primsInfoBegin + infoIndicesRange.first(),
+                    primsInfoBegin + indicesMid,
+                    primsInfoBegin + infoIndicesRange.last(),
+                    [dim](const PrimitiveInfo& a, const PrimitiveInfo& b) {
+                        return a.centroid[dim] < b.centroid[dim];
+                    });
+            } break;
+            case SplitMethod::SAH:
+            default: {
+                // TODO
+            } break;
+        }
     }
 } // namespace idragnev::pbrt::accelerators::bvh

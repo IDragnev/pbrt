@@ -45,8 +45,8 @@ namespace idragnev::pbrt::accelerators::bvh {
     {
         SAH,
         HLBVH,
-        middle,
-        equalCounts,
+        Middle,
+        EqualCounts,
     };
 
     class RecursiveBuilder
@@ -76,7 +76,8 @@ namespace idragnev::pbrt::accelerators::bvh {
                                   const Bounds3f& centroidBounds,
                                   const IndicesRange infoIndicesRange,
                                   PrimsVec& orderedPrims);
-
+        void partitionPrimitivesInfo(const Bounds3f& centroidBounds,
+                                     const IndicesRange infoIndicesRange);
     private:
         SplitMethod splitMethod = SplitMethod::SAH;
         const PrimsVec* prims = nullptr;

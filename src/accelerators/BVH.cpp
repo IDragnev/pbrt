@@ -11,7 +11,7 @@ namespace idragnev::pbrt::accelerators {
         if (this->primitives.empty() == false) {
             const bvh::BuildTree tree = buildBVHTree(splitMethod);
             this->nodes =
-                memory::allocCacheAligned<BVH::LinearBVHNode>(tree.nodesCount);
+                memory::allocCacheAligned<LinearBVHNode>(tree.nodesCount);
             // flattenBVHTree(tree.root);
         }
     }

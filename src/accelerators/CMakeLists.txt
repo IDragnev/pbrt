@@ -17,6 +17,7 @@ add_library(
   ${ACCELERATORS_HEADER_FILES}
 )
 target_link_libraries(acceleratorslib 
+  PRIVATE memory
   PRIVATE corelib
   PRIVATE functional
 )
