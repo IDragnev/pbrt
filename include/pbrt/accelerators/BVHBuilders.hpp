@@ -76,6 +76,7 @@ namespace idragnev::pbrt::accelerators::bvh {
                                   PrimsVec& orderedPrims);
         void partitionPrimitivesInfo(const Bounds3f& centroidBounds,
                                      const IndicesRange infoIndicesRange);
+
     private:
         SplitMethod splitMethod = SplitMethod::SAH;
         const PrimsVec* prims = nullptr;

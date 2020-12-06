@@ -1,9 +1,16 @@
 #pragma once
 
 #include "core/Primitive.hpp"
-#include "BVHBuilders.hpp"
+
+#include <vector>
+#include <memory>
 
 namespace idragnev::pbrt::accelerators {
+    namespace bvh {
+        struct BuildTree;
+        enum class SplitMethod;
+    } // namespace bvh
+
     class BVH : public Aggregate
     {
         struct LinearBVHNode
@@ -12,8 +19,8 @@ namespace idragnev::pbrt::accelerators {
 
     public:
         BVH(std::vector<std::shared_ptr<const Primitive>> primitives,
-            const std::uint32_t maxPrimitivesInNode = 1,
-            const bvh::SplitMethod m = bvh::SplitMethod::SAH);
+            const bvh::SplitMethod m,
+            const std::uint32_t maxPrimitivesInNode = 1);
         ~BVH();
 
         Bounds3f worldBound() const override;

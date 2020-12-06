@@ -1,11 +1,12 @@
 #include "accelerators/BVH.hpp"
+#include "accelerators/BVHBuilders.hpp"
 #include "core/SurfaceInteraction.hpp"
 #include "memory/Memory.hpp"
 
 namespace idragnev::pbrt::accelerators {
     BVH::BVH(std::vector<std::shared_ptr<const Primitive>> prims,
-             const std::uint32_t maxPrimitivesInNode,
-             const bvh::SplitMethod splitMethod)
+             const bvh::SplitMethod splitMethod,
+             const std::uint32_t maxPrimitivesInNode)
         : maxPrimitivesInNode(std::min(maxPrimitivesInNode, 255u))
         , primitives(std::move(prims)) {
         if (this->primitives.empty() == false) {
