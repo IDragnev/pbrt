@@ -2,6 +2,12 @@
 #include "functional/Functional.hpp"
 
 namespace idragnev::pbrt::accelerators::bvh {
+    struct RecursiveBuilder::SAHBucket
+    {
+        std::uint32_t primitivesCount = 0;
+        Bounds3f bounds;
+    };
+
     struct BuildNode
     {
         static BuildNode Leaf(const std::size_t firstPrimitiveIndex,
@@ -71,7 +77,7 @@ namespace idragnev::pbrt::accelerators::bvh {
         BuildTree result{};
         result.root = arena.alloc<BuildNode>();
 
-        const Bounds3f subtreeBounds = functional::foldl(
+        const Bounds3f rangeBounds = functional::foldl(
             infoIndicesRange,
             Bounds3f{},
             [this](const Bounds3f& acc, const std::size_t i) {
@@ -82,33 +88,44 @@ namespace idragnev::pbrt::accelerators::bvh {
             primitivesCount == 1)
         {
             result.nodesCount = primitivesCount;
-            *result.root = buildLeafNode(subtreeBounds, infoIndicesRange, orderedPrims);
+            *result.root = buildLeafNode(rangeBounds, infoIndicesRange, orderedPrims);
         }
         else {
-            const Bounds3f centroidBounds = functional::foldl(
+            const Bounds3f rangeCentroidBounds = functional::foldl(
                 infoIndicesRange,
                 Bounds3f{},
                 [this](const Bounds3f& acc, const std::size_t i) {
                     return unionOf(acc, this->primitivesInfo[i].centroid);
                 });
-            const auto dim = centroidBounds.maximumExtent();
+            const auto splitAxis = rangeCentroidBounds.maximumExtent();
 
-            if (centroidBounds.max[dim] == centroidBounds.min[dim]) {
+            if (rangeCentroidBounds.max[splitAxis] ==
+                rangeCentroidBounds.min[splitAxis]) {
                 result.nodesCount = primitivesCount;
-                *result.root = buildLeafNode(subtreeBounds,
+                *result.root = buildLeafNode(rangeBounds,
                                              infoIndicesRange,
                                              orderedPrims);
             }
             else {
-                const auto [left, right] =
+                const auto subtrees = 
                     buildInternalNodeChildren(arena,
-                                              centroidBounds,
+                                              rangeBounds,
+                                              rangeCentroidBounds,
                                               infoIndicesRange,
                                               orderedPrims);
-                const auto axis = dim;
+                if (subtrees.has_value()) {
+                    const auto [left, right] = subtrees.value();
 
-                result.nodesCount = left.nodesCount + right.nodesCount;
-                *result.root = BuildNode::Interior(axis, left.root, right.root);
+                    result.nodesCount = left.nodesCount + right.nodesCount;
+                    *result.root =
+                        BuildNode::Interior(splitAxis, left.root, right.root);
+                }
+                else { // failed to split the primitives into two subtrees
+                    result.nodesCount = primitivesCount;
+                    *result.root = buildLeafNode(rangeBounds,
+                                                 infoIndicesRange,
+                                                 orderedPrims);
+                }
             }
         }
 
@@ -133,70 +150,227 @@ namespace idragnev::pbrt::accelerators::bvh {
         return BuildNode::Leaf(firstPrimIndex, primitivesCount, bounds);
     }
 
-    std::pair<BuildTree, BuildTree> RecursiveBuilder::buildInternalNodeChildren(
+    std::optional<std::pair<BuildTree, BuildTree>>
+    RecursiveBuilder::buildInternalNodeChildren(
         memory::MemoryArena& arena,
-        const Bounds3f& centroidBounds,
+        const Bounds3f& rangeBounds,
+        const Bounds3f& rangeCentroidBounds,
         const IndicesRange infoIndicesRange,
         PrimsVec& orderedPrims) {
-        partitionPrimitivesInfo(centroidBounds, infoIndicesRange);
+        // FIX ME WHEN A PROPER OPTIONAL IS USED
+        const auto splitPos = partitionPrimitivesInfo(rangeBounds,
+                                                      rangeCentroidBounds,
+                                                      infoIndicesRange);
+        if (!splitPos.has_value()) {
+            return std::nullopt;
+        }
 
-        const auto indicesMid =
-            (infoIndicesRange.first() + infoIndicesRange.last()) / 2;
-        const auto left =
+        const std::size_t splitPosition = splitPos.value();
+        const BuildTree left =
             buildSubtree(arena,
-                         IndicesRange{infoIndicesRange.first(), indicesMid},
+                         IndicesRange{infoIndicesRange.first(), splitPosition},
                          orderedPrims);
-        const auto right =
+        const BuildTree right =
             buildSubtree(arena,
-                         IndicesRange{indicesMid, infoIndicesRange.last()},
+                         IndicesRange{splitPosition, infoIndicesRange.last()},
                          orderedPrims);
 
         return std::make_pair(left, right);
     }
 
-    void RecursiveBuilder::partitionPrimitivesInfo(
-        const Bounds3f& centroidBounds,
+    std::optional<std::size_t> RecursiveBuilder::partitionPrimitivesInfo(
+        const Bounds3f& rangeBounds,
+        const Bounds3f& rangeCentroidBounds,
         const IndicesRange infoIndicesRange) {
-        const auto dim = centroidBounds.maximumExtent();
-        const auto primsInfoBegin = this->primitivesInfo.begin();
-
         switch (this->splitMethod) {
             case SplitMethod::Middle: {
-                const Float boundsMid =
-                    (centroidBounds.min[dim] + centroidBounds.max[dim]) / 2.f;
-                const auto firstPrimPos =
-                    primsInfoBegin + infoIndicesRange.first();
-                const auto lastPrimPos =
-                    primsInfoBegin + infoIndicesRange.last();
-                const auto midPrimPos = std::partition(
-                    firstPrimPos,
-                    lastPrimPos,
-                    [dim, boundsMid](const PrimitiveInfo& info) {
-                        return info.centroid[dim] < boundsMid;
-                    });
-
-                // If the partition was successful, break the switch.
-                // Otherwise fall through to try with EqualCounts.
-                if (midPrimPos != firstPrimPos && midPrimPos != lastPrimPos) {
-                    break;
+                const auto splitPos =
+                    partitionPrimitivesInfoAtAxisMiddle(rangeCentroidBounds,
+                                                        infoIndicesRange);
+                if (splitPos.has_value()) {
+                    return splitPos;
                 }
+                // If the split was unsuccessful, try EqualCounts.
             }
                 [[fallthrough]];
             case SplitMethod::EqualCounts: {
-                const auto indicesMid =
-                    (infoIndicesRange.first() + infoIndicesRange.last()) / 2;
-                std::nth_element(
-                    primsInfoBegin + infoIndicesRange.first(),
-                    primsInfoBegin + indicesMid,
-                    primsInfoBegin + infoIndicesRange.last(),
-                    [dim](const PrimitiveInfo& a, const PrimitiveInfo& b) {
-                        return a.centroid[dim] < b.centroid[dim];
-                    });
+                const auto splitAxis = rangeCentroidBounds.maximumExtent();
+                const auto splitPosition =
+                    partitionPrimitivesInfoInEqualSubsets(splitAxis,
+                                                          infoIndicesRange);
+                return std::make_optional(splitPosition);
             } break;
             case SplitMethod::SAH:
             default: {
-                // TODO
+                return partitionPrimitivesInfoBySAH(rangeBounds,
+                                                    rangeCentroidBounds,
+                                                    infoIndicesRange);
             } break;
         }
+    }
+
+    // Partially sort the primitivesInfo subrange according to their
+    // position relative to the specified axis' middle, producing
+    // two equally sized subsets.
+    std::size_t RecursiveBuilder::partitionPrimitivesInfoInEqualSubsets(
+        const std::size_t splitAxis,
+        const IndicesRange infoIndicesRange) {
+        const auto primsInfoBegin = this->primitivesInfo.begin();
+        const auto indicesMid =
+            (infoIndicesRange.first() + infoIndicesRange.last()) / 2;
+
+        std::nth_element(
+            primsInfoBegin + infoIndicesRange.first(),
+            primsInfoBegin + indicesMid,
+            primsInfoBegin + infoIndicesRange.last(),
+            [dim = splitAxis](const PrimitiveInfo& a, const PrimitiveInfo& b) {
+                return a.centroid[dim] < b.centroid[dim];
+            });
+
+        return indicesMid;
+    }
+
+    // Partition the primitiveInfo subrange according to 
+    // the primitives' positions relative to the middle of 
+    // the range's controid bounds' maximum extent
+    std::optional<std::size_t>
+    RecursiveBuilder::partitionPrimitivesInfoAtAxisMiddle(
+        const Bounds3f& rangeCentroidBounds,
+        const IndicesRange infoIndicesRange) {
+        const auto dim = rangeCentroidBounds.maximumExtent();
+        const Float boundsMid =
+            (rangeCentroidBounds.min[dim] + rangeCentroidBounds.max[dim]) / 2.f;
+
+        const auto primsInfoBegin = this->primitivesInfo.begin();
+        const auto firstPrimPos = primsInfoBegin + infoIndicesRange.first();
+        const auto lastPrimPos = primsInfoBegin + infoIndicesRange.last();
+        const auto midPrimPos =
+            std::partition(firstPrimPos,
+                           lastPrimPos,
+                           [dim, boundsMid](const PrimitiveInfo& info) {
+                               return info.centroid[dim] < boundsMid;
+                           });
+
+        if (midPrimPos != firstPrimPos && midPrimPos != lastPrimPos) {
+            const auto splitPosition = midPrimPos - primsInfoBegin;
+            return std::make_optional(static_cast<std::size_t>(splitPosition));
+        }
+
+        return std::nullopt;
+    }
+
+    // Partition the primitiveInfo subrange using the 
+    // Surface Area Heuristic (SAH)
+    std::optional<std::size_t>
+    bvh::RecursiveBuilder::partitionPrimitivesInfoBySAH(
+        const Bounds3f& rangeBounds,
+        const Bounds3f& rangeCentroidBounds,
+        const IndicesRange infoIndicesRange) {
+        constexpr std::size_t N_PRIMITIVES_LOWER_BOUND = 5;
+
+        const std::size_t splitAxis = rangeCentroidBounds.maximumExtent();
+        const std::size_t primitivesCount = infoIndicesRange.size();
+
+        if (primitivesCount < N_PRIMITIVES_LOWER_BOUND) {
+            const std::size_t splitPosition =
+                partitionPrimitivesInfoInEqualSubsets(splitAxis,
+                                                      infoIndicesRange);
+            return std::make_optional(splitPosition);
+        }
+        else {
+            const auto buckets = splitToSAHBuckets(splitAxis,
+                                                   rangeCentroidBounds,
+                                                   infoIndicesRange);
+            const auto splitCosts = computeSplitCosts(rangeBounds, buckets);
+            const auto minCostPosition =
+                std::min_element(splitCosts.cbegin(), splitCosts.cend());
+            const Float minCost =
+                minCostPosition != splitCosts.cend() ? (*minCostPosition) : 0.f;
+            const std::size_t minCostSplitBucketIndex =
+                minCostPosition != splitCosts.cend()
+                    ? static_cast<std::size_t>(minCostPosition -
+                                               splitCosts.cbegin())
+                    : 0;
+
+            const Float leafCost = static_cast<Float>(primitivesCount);
+            if (primitivesCount > this->maxPrimitivesInNode ||
+                minCost < leafCost) {
+                const auto primsInfoBegin = this->primitivesInfo.begin();
+                const auto pmid = std::partition(
+                    primsInfoBegin + infoIndicesRange.first(),
+                    primsInfoBegin + infoIndicesRange.last(),
+                    [&rangeCentroidBounds,
+                     dim = splitAxis,
+                     &buckets,
+                     minCostSplitBucketIndex](const PrimitiveInfo& info) {
+                        const Vector3f centroidOffset =
+                            rangeCentroidBounds.offset(info.centroid);
+                        auto bucketIndex = static_cast<std::size_t>(
+                            centroidOffset[dim] *
+                            static_cast<Float>(buckets.size()));
+                        bucketIndex = clamp(bucketIndex, 0u, buckets.size() - 1u);
+
+                        return bucketIndex <= minCostSplitBucketIndex;
+                    });
+
+                const auto splitPosition = pmid - primsInfoBegin;
+                return std::make_optional(static_cast<std::size_t>(splitPosition));
+            }
+        }
+
+        return std::nullopt;
+    }
+
+    auto RecursiveBuilder::splitToSAHBuckets(
+        const std::size_t dim,
+        const Bounds3f& rangeCentroidBounds,
+        const IndicesRange infoIndicesRange) const -> SAHBucketsArray {
+        SAHBucketsArray buckets{};
+
+        std::for_each(
+            this->primitivesInfo.begin() + infoIndicesRange.first(),
+            this->primitivesInfo.begin() + infoIndicesRange.last(),
+            [&rangeCentroidBounds, &buckets, dim](const PrimitiveInfo& info) {
+                const Vector3f centroidOffset =
+                    rangeCentroidBounds.offset(info.centroid);
+                auto index = static_cast<std::size_t>(
+                    centroidOffset[dim] * static_cast<Float>(buckets.size()));
+                index = clamp(index, 0u, buckets.size() - 1u);
+
+                buckets[index].primitivesCount++;
+                buckets[index].bounds =
+                    unionOf(buckets[index].bounds, info.bounds);
+            });
+
+        return buckets;
+    }
+
+    RecursiveBuilder::SAHSplitCostsArray
+    RecursiveBuilder::computeSplitCosts(const Bounds3f& rangeBounds,
+                                        const SAHBucketsArray& buckets) const {
+        SAHSplitCostsArray splitCosts;
+        for (std::size_t i = 0; i < splitCosts.size(); ++i) {
+            Bounds3f b0;
+            Bounds3f b1;
+            std::size_t count0 = 0;
+            std::size_t count1 = 0;
+
+            for (std::size_t j = 0; j <= i; ++j) {
+                b0 = unionOf(b0, buckets[j].bounds);
+                count0 += buckets[j].primitivesCount;
+            }
+
+            for (std::size_t j = i + 1; j < SAH_BUCKETS_COUNT; ++j) {
+                b1 = unionOf(b1, buckets[j].bounds);
+                count1 += buckets[j].primitivesCount;
+            }
+
+            splitCosts[i] =
+                1 + (count0 * b0.surfaceArea() + count1 * b1.surfaceArea()) /
+                        rangeBounds.surfaceArea();
+
+        }
+
+        return splitCosts;
     }
 } // namespace idragnev::pbrt::accelerators::bvh
