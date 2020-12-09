@@ -348,27 +348,30 @@ namespace idragnev::pbrt::accelerators::bvh {
     RecursiveBuilder::SAHSplitCostsArray
     RecursiveBuilder::computeSplitCosts(const Bounds3f& rangeBounds,
                                         const SAHBucketsArray& buckets) const {
-        SAHSplitCostsArray splitCosts;
+        struct PrimitiveSet
+        {
+            Bounds3f bounds;
+            std::size_t size = 0;
+        };
+        const auto makeSetFromBuckets = [&buckets](const std::size_t from,
+                                                   const std::size_t to) {
+            PrimitiveSet set{};
+            for (auto i = from; i < to; ++i) {
+                set.bounds = unionOf(set.bounds, buckets[i].bounds);
+                set.size += buckets[i].primitivesCount;
+            }
+            return set;
+        };
+
+        SAHSplitCostsArray splitCosts{};
+        const Float rangeBoundsSurfaceArea = rangeBounds.surfaceArea();
         for (std::size_t i = 0; i < splitCosts.size(); ++i) {
-            Bounds3f b0;
-            Bounds3f b1;
-            std::size_t count0 = 0;
-            std::size_t count1 = 0;
+            const PrimitiveSet set1 = makeSetFromBuckets(0u, i + 1);
+            const PrimitiveSet set2 = makeSetFromBuckets(i + 1, buckets.size());
 
-            for (std::size_t j = 0; j <= i; ++j) {
-                b0 = unionOf(b0, buckets[j].bounds);
-                count0 += buckets[j].primitivesCount;
-            }
-
-            for (std::size_t j = i + 1; j < SAH_BUCKETS_COUNT; ++j) {
-                b1 = unionOf(b1, buckets[j].bounds);
-                count1 += buckets[j].primitivesCount;
-            }
-
-            splitCosts[i] =
-                1 + (count0 * b0.surfaceArea() + count1 * b1.surfaceArea()) /
-                        rangeBounds.surfaceArea();
-
+            splitCosts[i] = 1 + (set1.size * set1.bounds.surfaceArea() +
+                                 set2.size * set2.bounds.surfaceArea()) /
+                                    rangeBoundsSurfaceArea;
         }
 
         return splitCosts;
