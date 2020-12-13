@@ -300,17 +300,16 @@ namespace idragnev::pbrt::accelerators::bvh {
                     primsInfoBegin + infoIndicesRange.first(),
                     primsInfoBegin + infoIndicesRange.last(),
                     [&rangeCentroidBounds,
-                     dim = splitAxis,
+                     splitAxis,
                      &buckets,
                      minCostSplitBucketIndex](const PrimitiveInfo& info) {
-                        const Vector3f centroidOffset =
-                            rangeCentroidBounds.offset(info.centroid);
-                        auto bucketIndex = static_cast<std::size_t>(
-                            centroidOffset[dim] *
-                            static_cast<Float>(buckets.size()));
-                        bucketIndex = clamp(bucketIndex, 0u, buckets.size() - 1u);
+                        const std::size_t index =
+                            bucketIndex(info,
+                                        rangeCentroidBounds,
+                                        buckets,
+                                        splitAxis);
 
-                        return bucketIndex <= minCostSplitBucketIndex;
+                        return index <= minCostSplitBucketIndex;
                     });
 
                 const auto splitPosition = pmid - primsInfoBegin;
@@ -322,7 +321,7 @@ namespace idragnev::pbrt::accelerators::bvh {
     }
 
     auto RecursiveBuilder::splitToSAHBuckets(
-        const std::size_t dim,
+        const std::size_t splitAxis,
         const Bounds3f& rangeCentroidBounds,
         const IndicesRange infoIndicesRange) const -> SAHBucketsArray {
         SAHBucketsArray buckets{};
@@ -330,12 +329,10 @@ namespace idragnev::pbrt::accelerators::bvh {
         std::for_each(
             this->primitivesInfo.begin() + infoIndicesRange.first(),
             this->primitivesInfo.begin() + infoIndicesRange.last(),
-            [&rangeCentroidBounds, &buckets, dim](const PrimitiveInfo& info) {
-                const Vector3f centroidOffset =
-                    rangeCentroidBounds.offset(info.centroid);
-                auto index = static_cast<std::size_t>(
-                    centroidOffset[dim] * static_cast<Float>(buckets.size()));
-                index = clamp(index, 0u, buckets.size() - 1u);
+            [&rangeCentroidBounds, &buckets, splitAxis](
+                const PrimitiveInfo& info) {
+                const std::size_t index =
+                    bucketIndex(info, rangeCentroidBounds, buckets, splitAxis);
 
                 buckets[index].primitivesCount++;
                 buckets[index].bounds =
@@ -375,5 +372,19 @@ namespace idragnev::pbrt::accelerators::bvh {
         }
 
         return splitCosts;
+    }
+
+    std::size_t
+    RecursiveBuilder::bucketIndex(const PrimitiveInfo& info,
+                                  const Bounds3f& rangeCentroidBounds,
+                                  const SAHBucketsArray& buckets,
+                                  const std::size_t splitAxis) {
+        const Vector3f centroidOffset =
+            rangeCentroidBounds.offset(info.centroid);
+        auto index = static_cast<std::size_t>(
+            centroidOffset[splitAxis] * static_cast<Float>(buckets.size()));
+        index = clamp(index, 0u, buckets.size() - 1u);
+
+        return index;
     }
 } // namespace idragnev::pbrt::accelerators::bvh

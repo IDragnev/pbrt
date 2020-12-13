@@ -106,6 +106,11 @@ namespace idragnev::pbrt::accelerators::bvh {
         computeSplitCosts(const Bounds3f& rangeBounds,
                           const SAHBucketsArray& buckets) const;
 
+        static std::size_t bucketIndex(const PrimitiveInfo& info,
+                                       const Bounds3f& rangeCentroidBounds,
+                                       const SAHBucketsArray& buckets,
+                                       const std::size_t splitAxis);
+
     private:
         SplitMethod splitMethod = SplitMethod::SAH;
         std::size_t maxPrimitivesInNode = 1;
