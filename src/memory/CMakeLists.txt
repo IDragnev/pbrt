@@ -43,6 +43,9 @@ add_library(
 )
 target_include_directories(memory PUBLIC ${PROJECT_SOURCE_DIR}/include/pbrt)
 target_compile_features(memory PUBLIC cxx_std_17)
+target_compile_options(memory
+ PRIVATE ${PBRT_TARGET_WARNING_FLAGS}
+)
 
 if(HAS_ALIGNED_MALLOC)
   target_compile_definitions(memory PRIVATE PBRT_HAS_ALIGNED_MALLOC)

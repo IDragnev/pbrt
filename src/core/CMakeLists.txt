@@ -65,3 +65,6 @@ add_library(
 )
 target_include_directories(corelib PUBLIC ${PROJECT_SOURCE_DIR}/include/pbrt)
 target_compile_features(corelib PUBLIC cxx_std_17)
+target_compile_options(corelib
+ PRIVATE ${PBRT_TARGET_WARNING_FLAGS}
+)

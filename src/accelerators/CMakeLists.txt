@@ -23,3 +23,6 @@ target_link_libraries(acceleratorslib
 )
 target_include_directories(acceleratorslib PUBLIC ${PROJECT_SOURCE_DIR}/include/pbrt)
 target_compile_features(acceleratorslib PUBLIC cxx_std_17)
+target_compile_options(acceleratorslib
+ PRIVATE ${PBRT_TARGET_WARNING_FLAGS}
+)

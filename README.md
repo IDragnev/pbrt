@@ -11,7 +11,6 @@ The project is regularly built with:
 
 Note that **the warning level is set to Error for CMake builds**,  
 so builds may fail because of a warning with other compiler versions.  
-If this is the case, you can lower the warning level from [the main CMake file](https://github.com/IDragnev/pb-ray-tracer/blob/master/CMakeLists.txt).    
 
 CMake options:
  - PBRT_FLOAT_AS_DOUBLE - use 64-bit floats (off by default)

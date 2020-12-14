@@ -8,3 +8,6 @@ add_executable(core_test
   interval.cpp
 )
 target_link_libraries(core_test corelib doctest)
+target_compile_options(core_test
+ PRIVATE ${PBRT_TARGET_WARNING_FLAGS}
+)

@@ -5,3 +5,6 @@ add_executable(memory_test
   blockedUVArray.cpp
 )
 target_link_libraries(memory_test memory doctest)
+target_compile_options(memory_test
+ PRIVATE ${PBRT_TARGET_WARNING_FLAGS}
+)

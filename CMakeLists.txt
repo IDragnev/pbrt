@@ -23,10 +23,10 @@ if(PBRT_FLOAT_AS_DOUBLE)
   add_compile_definitions(PBRT_FLOAT_AS_DOUBLE)
 endif()
 
-if (MSVC)
-  add_compile_options(/W4 /WX)
+if(MSVC)
+  set(PBRT_TARGET_WARNING_FLAGS "/W4" "/WX")
 else()
-  add_compile_options(-Wall -Wextra -Werror -pedantic)
+  set(PBRT_TARGET_WARNING_FLAGS "-Wall" "-Wextra" "-Werror" "-pedantic")
 endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
