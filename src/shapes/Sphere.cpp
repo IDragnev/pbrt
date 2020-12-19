@@ -24,13 +24,13 @@ namespace idragnev::pbrt::shapes {
                         Point3f{radius, radius, zMax}};
     }
 
-    std::optional<HitRecord> Sphere::intersect(const Ray& rayInWorldSpace,
+    Optional<HitRecord> Sphere::intersect(const Ray& rayInWorldSpace,
                                                const bool) const {
-        return intersectImpl<std::optional<HitRecord>>(
+        return intersectImpl<Optional<HitRecord>>(
             rayInWorldSpace,
-            std::nullopt,
+            pbrt::nullopt,
             [this](const auto&... args) {
-                return std::make_optional(makeHitRecord(args...));
+                return pbrt::make_optional(makeHitRecord(args...));
             });
     }
 
@@ -90,7 +90,7 @@ namespace idragnev::pbrt::shapes {
         return success(ray, hitPoint, tShapeHit, phi);
     }
 
-    std::optional<QuadraticRoots>
+    Optional<QuadraticRoots>
     Sphere::findIntersectionParams(const Ray& ray,
                                    const Vector3f& oErr,
                                    const Vector3f& dErr) const {

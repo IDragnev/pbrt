@@ -17,7 +17,7 @@ namespace idragnev::pbrt {
 
         Bounds3f worldBound() const override;
 
-        std::optional<SurfaceInteraction>
+        Optional<SurfaceInteraction>
         intersect(const Ray& ray) const override;
         bool intersectP(const Ray& ray) const override;
 

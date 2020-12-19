@@ -2,8 +2,7 @@
 
 #include "core.hpp"
 #include "SurfaceInteraction.hpp"
-
-#include <optional>
+#include "Optional.hpp"
 
 namespace idragnev::pbrt {
     struct HitRecord
@@ -23,7 +22,7 @@ namespace idragnev::pbrt {
         virtual Bounds3f objectBound() const = 0;
         virtual Bounds3f worldBound() const;
 
-        virtual std::optional<HitRecord>
+        virtual Optional<HitRecord>
         intersect(const Ray& ray, const bool testAlphaTexture = true) const = 0;
 
         virtual bool intersectP(const Ray& ray,

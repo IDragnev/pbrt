@@ -55,6 +55,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/Primitive.hpp
   ${CORE_HEADERS_DIR}/GeometricPrimitive.hpp
   ${CORE_HEADERS_DIR}/TransformedPrimitive.hpp
+  ${CORE_HEADERS_DIR}/Optional.hpp
 )
 
 add_library(

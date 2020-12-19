@@ -25,7 +25,7 @@ namespace idragnev::pbrt {
         return _shape->intersectP(ray);
     }
 
-    std::optional<SurfaceInteraction>
+    Optional<SurfaceInteraction>
     GeometricPrimitive::intersect(const Ray& ray) const {
         // FIX ME WHEN A PROPER OPTIONAL IS USED
         if (auto hitRecord = _shape->intersect(ray); hitRecord.has_value()) {
@@ -37,10 +37,10 @@ namespace idragnev::pbrt {
                                               ? _mediumInterface
                                               : MediumInterface{ray.medium};
 
-            return std::make_optional(std::move(interaction));
+            return pbrt::make_optional(std::move(interaction));
         }
         else {
-            return std::nullopt;
+            return pbrt::nullopt;
         }
     }
 

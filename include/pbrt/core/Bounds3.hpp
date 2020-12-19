@@ -3,8 +3,7 @@
 #include "core.hpp"
 #include "Point3.hpp"
 #include "BoundingSphere.hpp"
-
-#include <optional>
+#include "Optional.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
@@ -23,7 +22,7 @@ namespace idragnev::pbrt {
         template <typename U>
         explicit operator Bounds3<U>() const;
 
-        std::optional<Intervalf> intersectP(const Ray& ray) const noexcept;
+        Optional<Intervalf> intersectP(const Ray& ray) const noexcept;
         bool intersectP(const Ray& ray,
                         const Vector3f& invDir,
                         const std::size_t dirIsNeg[3]) const noexcept;

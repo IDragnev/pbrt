@@ -61,7 +61,7 @@ namespace idragnev::pbrt::shapes {
         Bounds3f objectBound() const override;
         Bounds3f worldBound() const override;
 
-        std::optional<HitRecord>
+        Optional<HitRecord>
         intersect(const Ray& ray, const bool testAlphaTexture) const override;
 
         bool intersectP(const Ray& ray,
@@ -76,7 +76,7 @@ namespace idragnev::pbrt::shapes {
                         F failure,
                         S success) const;
 
-        std::optional<PartialDerivatives> computePartialDerivatives() const;
+        Optional<PartialDerivatives> computePartialDerivatives() const;
 
         HitRecord makeHitRecord(const Ray& ray,
                                 const Float t,

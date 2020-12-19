@@ -160,12 +160,12 @@ namespace idragnev::pbrt {
         }
     }
 
-    std::optional<QuadraticRoots>
+    Optional<QuadraticRoots>
     solveQuadratic(const EFloat& a, const EFloat& b, const EFloat& c) {
         const auto D = static_cast<double>(b) * static_cast<double>(b) -
                        4. * static_cast<double>(a) * static_cast<double>(c);
         if (D < 0.) {
-            return std::nullopt;
+            return pbrt::nullopt;
         }
 
         const auto sqrtD = [D] {
@@ -179,7 +179,7 @@ namespace idragnev::pbrt {
         const auto t0 = q / a;
         const auto t1 = c / q;
 
-        return std::make_optional(static_cast<float>(t0) >
+        return pbrt::make_optional(static_cast<float>(t0) >
                                           static_cast<float>(t1)
                                       ? QuadraticRoots{t1, t0}
                                       : QuadraticRoots{t0, t1});

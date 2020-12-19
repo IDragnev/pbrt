@@ -48,7 +48,7 @@ TEST_CASE("solve quadratic with no roots") {
 
     const auto result = pbrt::solveQuadratic(a, b, c);
 
-    CHECK(result == std::nullopt);
+    CHECK(result == pbrt::nullopt);
 }
 
 TEST_CASE("solve quadratic with two different roots") {

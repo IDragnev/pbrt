@@ -36,8 +36,8 @@ namespace idragnev::pbrt::accelerators {
 
     Bounds3f BVH::worldBound() const { return Bounds3f{}; }
 
-    std::optional<SurfaceInteraction> BVH::intersect(const Ray&) const {
-        return std::nullopt;
+    Optional<SurfaceInteraction> BVH::intersect(const Ray&) const {
+        return pbrt::nullopt;
     }
 
     bool BVH::intersectP(const Ray&) const { return false; }

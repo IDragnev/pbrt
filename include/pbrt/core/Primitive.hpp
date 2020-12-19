@@ -1,9 +1,9 @@
 #pragma once
 
 #include "core.hpp"
-#include "memory/MemoryArena.hpp"
+#include "Optional.hpp"
 
-#include <optional>
+#include "memory/MemoryArena.hpp"
 
 namespace idragnev::pbrt {
     class Primitive
@@ -13,7 +13,7 @@ namespace idragnev::pbrt {
 
         virtual Bounds3f worldBound() const = 0;
 
-        virtual std::optional<SurfaceInteraction>
+        virtual Optional<SurfaceInteraction>
         intersect(const Ray& r) const = 0;
         virtual bool intersectP(const Ray& r) const = 0;
 

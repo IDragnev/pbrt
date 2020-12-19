@@ -3,13 +3,13 @@
 #include "core/Primitive.hpp"
 #include "core/Bounds3.hpp"
 #include "core/Point3.hpp"
+#include "core/Optional.hpp"
 
 #include "memory/MemoryArena.hpp"
 
 #include <vector>
 #include <memory>
 #include <array>
-#include <optional>
 
 namespace idragnev::pbrt::functional {
     template <typename T>
@@ -78,23 +78,23 @@ namespace idragnev::pbrt::accelerators::bvh {
         BuildNode buildLeafNode(const Bounds3f& bounds,
                                 const IndicesRange infoIndicesRange,
                                 PrimsVec& orderedPrims) const;
-        std::optional<std::pair<BuildTree, BuildTree>>
+        Optional<std::pair<BuildTree, BuildTree>>
         buildInternalNodeChildren(memory::MemoryArena& arena,
                                   const Bounds3f& rangeBounds,
                                   const Bounds3f& rangeCentroidBounds,
                                   const IndicesRange infoIndicesRange,
                                   PrimsVec& orderedPrims);
-        std::optional<std::size_t>
+        Optional<std::size_t>
         partitionPrimitivesInfo(const Bounds3f& rangeBounds,
                                 const Bounds3f& rangeCentroidBounds,
                                 const IndicesRange infoIndicesRange);
         std::size_t partitionPrimitivesInfoInEqualSubsets(
             const std::size_t splitAxis,
             const IndicesRange infoIndicesRange);
-        std::optional<std::size_t> partitionPrimitivesInfoAtAxisMiddle(
+        Optional<std::size_t> partitionPrimitivesInfoAtAxisMiddle(
             const Bounds3f& rangeCentroidBounds,
             const IndicesRange infoIndicesRange);
-        std::optional<std::size_t> partitionPrimitivesInfoBySAH(
+        Optional<std::size_t> partitionPrimitivesInfoBySAH(
             const Bounds3f& rangeBounds,
             const Bounds3f& rangeCentroidBounds,
             const IndicesRange infoIndicesRange);

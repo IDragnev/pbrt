@@ -20,12 +20,12 @@ namespace idragnev::pbrt::shapes {
                         Point3f{radius, radius, height}};
     }
 
-    std::optional<HitRecord> Cone::intersect(const Ray& ray, const bool) const {
-        return intersectImpl<std::optional<HitRecord>>(
+    Optional<HitRecord> Cone::intersect(const Ray& ray, const bool) const {
+        return intersectImpl<Optional<HitRecord>>(
             ray,
-            std::nullopt,
+            pbrt::nullopt,
             [this](const auto&... args) {
-                return std::make_optional(makeHitRecord(args...));
+                return pbrt::make_optional(makeHitRecord(args...));
             });
     }
 
@@ -81,7 +81,7 @@ namespace idragnev::pbrt::shapes {
         return success(rayWithErrBound, hitPoint, tHit, phi);
     }
 
-    std::optional<QuadraticRoots>
+    Optional<QuadraticRoots>
     Cone::findIntersectionParams(const Ray& ray,
                                  const Vector3f& oErr,
                                  const Vector3f& dErr) const {

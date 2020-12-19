@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Primitive.hpp"
+#include "core/Optional.hpp"
 
 #include <vector>
 #include <memory>
@@ -25,7 +26,7 @@ namespace idragnev::pbrt::accelerators {
 
         Bounds3f worldBound() const override;
 
-        std::optional<SurfaceInteraction>
+        Optional<SurfaceInteraction>
         intersect(const Ray& ray) const override;
         bool intersectP(const Ray& ray) const override;
 

@@ -12,7 +12,7 @@ namespace idragnev::pbrt {
         : primitive(std::move(primitive))
         , primitiveToWorldTransform(primitiveToWorld) {}
 
-    std::optional<SurfaceInteraction>
+    Optional<SurfaceInteraction>
     TransformedPrimitive::intersect(const Ray& ray) const {
         const Transformation primitiveToWorldAtT =
             this->primitiveToWorldTransform.interpolate(ray.time);
@@ -27,14 +27,14 @@ namespace idragnev::pbrt {
             ray.tMax = rayInPrimitiveSpace.tMax;
 
             if (!primitiveToWorldAtT.isIdentity()) {
-                return std::make_optional(primitiveToWorldAtT(*optInteraction));
+                return pbrt::make_optional(primitiveToWorldAtT(*optInteraction));
             }
             else {
                 return optInteraction;
             }
         }
 
-        return std::nullopt;
+        return pbrt::nullopt;
     }
 
     bool TransformedPrimitive::intersectP(const Ray& ray) const {

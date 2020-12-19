@@ -22,12 +22,12 @@ namespace idragnev::pbrt::shapes {
                         Point3f{radius, radius, height}};
     }
 
-    std::optional<HitRecord> Disk::intersect(const Ray& ray, const bool) const {
-        return intersectImpl<std::optional<HitRecord>>(
+    Optional<HitRecord> Disk::intersect(const Ray& ray, const bool) const {
+        return intersectImpl<Optional<HitRecord>>(
             ray,
-            std::nullopt,
+            pbrt::nullopt,
             [this](const auto&... args) {
-                return std::make_optional(makeHitRecord(args...));
+                return pbrt::make_optional(makeHitRecord(args...));
             });
     }
 

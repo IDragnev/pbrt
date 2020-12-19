@@ -150,7 +150,7 @@ namespace idragnev::pbrt::accelerators::bvh {
         return BuildNode::Leaf(firstPrimIndex, primitivesCount, bounds);
     }
 
-    std::optional<std::pair<BuildTree, BuildTree>>
+    Optional<std::pair<BuildTree, BuildTree>>
     RecursiveBuilder::buildInternalNodeChildren(
         memory::MemoryArena& arena,
         const Bounds3f& rangeBounds,
@@ -162,7 +162,7 @@ namespace idragnev::pbrt::accelerators::bvh {
                                                       rangeCentroidBounds,
                                                       infoIndicesRange);
         if (!splitPos.has_value()) {
-            return std::nullopt;
+            return pbrt::nullopt;
         }
 
         const std::size_t splitPosition = splitPos.value();
@@ -178,7 +178,7 @@ namespace idragnev::pbrt::accelerators::bvh {
         return std::make_pair(left, right);
     }
 
-    std::optional<std::size_t> RecursiveBuilder::partitionPrimitivesInfo(
+    Optional<std::size_t> RecursiveBuilder::partitionPrimitivesInfo(
         const Bounds3f& rangeBounds,
         const Bounds3f& rangeCentroidBounds,
         const IndicesRange infoIndicesRange) {
@@ -198,7 +198,7 @@ namespace idragnev::pbrt::accelerators::bvh {
                 const auto splitPosition =
                     partitionPrimitivesInfoInEqualSubsets(splitAxis,
                                                           infoIndicesRange);
-                return std::make_optional(splitPosition);
+                return pbrt::make_optional(splitPosition);
             } break;
             case SplitMethod::SAH:
             default: {
@@ -233,7 +233,7 @@ namespace idragnev::pbrt::accelerators::bvh {
     // Partition the primitiveInfo subrange according to 
     // the primitives' positions relative to the middle of 
     // the range's controid bounds' maximum extent
-    std::optional<std::size_t>
+    Optional<std::size_t>
     RecursiveBuilder::partitionPrimitivesInfoAtAxisMiddle(
         const Bounds3f& rangeCentroidBounds,
         const IndicesRange infoIndicesRange) {
@@ -253,15 +253,15 @@ namespace idragnev::pbrt::accelerators::bvh {
 
         if (midPrimPos != firstPrimPos && midPrimPos != lastPrimPos) {
             const auto splitPosition = midPrimPos - primsInfoBegin;
-            return std::make_optional(static_cast<std::size_t>(splitPosition));
+            return pbrt::make_optional(static_cast<std::size_t>(splitPosition));
         }
 
-        return std::nullopt;
+        return pbrt::nullopt;
     }
 
     // Partition the primitiveInfo subrange using the 
     // Surface Area Heuristic (SAH)
-    std::optional<std::size_t>
+    Optional<std::size_t>
     bvh::RecursiveBuilder::partitionPrimitivesInfoBySAH(
         const Bounds3f& rangeBounds,
         const Bounds3f& rangeCentroidBounds,
@@ -275,7 +275,7 @@ namespace idragnev::pbrt::accelerators::bvh {
             const std::size_t splitPosition =
                 partitionPrimitivesInfoInEqualSubsets(splitAxis,
                                                       infoIndicesRange);
-            return std::make_optional(splitPosition);
+            return pbrt::make_optional(splitPosition);
         }
         else {
             const auto buckets = splitToSAHBuckets(splitAxis,
@@ -313,11 +313,11 @@ namespace idragnev::pbrt::accelerators::bvh {
                     });
 
                 const auto splitPosition = pmid - primsInfoBegin;
-                return std::make_optional(static_cast<std::size_t>(splitPosition));
+                return pbrt::make_optional(static_cast<std::size_t>(splitPosition));
             }
         }
 
-        return std::nullopt;
+        return pbrt::nullopt;
     }
 
     auto RecursiveBuilder::splitToSAHBuckets(

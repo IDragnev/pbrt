@@ -2,8 +2,7 @@
 
 #include "core.hpp"
 #include "Interval.hpp"
-
-#include <optional>
+#include "Optional.hpp"
 
 namespace idragnev::pbrt {
     class EFloat
@@ -86,6 +85,6 @@ namespace idragnev::pbrt {
         EFloat t1;
     };
 
-    std::optional<QuadraticRoots>
+    Optional<QuadraticRoots>
     solveQuadratic(const EFloat& a, const EFloat& b, const EFloat& c);
 } // namespace idragnev::pbrt

@@ -17,7 +17,7 @@ namespace idragnev::pbrt::shapes {
 
         Bounds3f objectBound() const override;
 
-        std::optional<HitRecord>
+        Optional<HitRecord>
         intersect(const Ray& ray, const bool testAlphaTexture) const override;
 
         bool intersectP(const Ray& ray,

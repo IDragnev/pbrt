@@ -16,7 +16,7 @@ namespace idragnev::pbrt::shapes {
 
         Bounds3f objectBound() const override;
 
-        std::optional<HitRecord>
+        Optional<HitRecord>
         intersect(const Ray& ray, const bool testAlphaTexture) const override;
 
         bool intersectP(const Ray& ray,
@@ -33,7 +33,7 @@ namespace idragnev::pbrt::shapes {
                                 const EFloat& t,
                                 const Float phi) const;
 
-        std::optional<QuadraticRoots>
+        Optional<QuadraticRoots>
         findIntersectionParams(const Ray& ray,
                                const Vector3f& oErr,
                                const Vector3f& dErr) const;

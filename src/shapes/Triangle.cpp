@@ -89,14 +89,14 @@ namespace idragnev::pbrt::shapes {
         }
     }
 
-    std::optional<HitRecord>
+    Optional<HitRecord>
     Triangle::intersect(const Ray& ray, const bool testAlphaTexture) const {
-        return intersectImpl<std::optional<HitRecord>>(
+        return intersectImpl<Optional<HitRecord>>(
             ray,
             testAlphaTexture,
-            std::nullopt,
+            pbrt::nullopt,
             [this](const auto&... args) {
-                return std::make_optional(makeHitRecord(args...));
+                return pbrt::make_optional(makeHitRecord(args...));
             });
     }
 
@@ -289,7 +289,7 @@ namespace idragnev::pbrt::shapes {
         return {e0, e1, e2};
     }
 
-    std::optional<Triangle::PartialDerivatives>
+    Optional<Triangle::PartialDerivatives>
     Triangle::computePartialDerivatives() const {
         const auto [p0, p1, p2] = verticesCoordinates();
         const std::array<Point2f, 3> uv = verticesUVs();
@@ -313,7 +313,7 @@ namespace idragnev::pbrt::shapes {
             if (ng.lengthSquared() == 0.f) {
                 // The triangle is actually degenerate.
                 // The intersection is bogus.
-                return std::nullopt;
+                return pbrt::nullopt;
             }
 
             const auto [_u, v, w] = coordinateSystem(normalize(ng));
@@ -321,7 +321,7 @@ namespace idragnev::pbrt::shapes {
             dpdv = w;
         }
 
-        return std::make_optional(PartialDerivatives{dpdu, dpdv});
+        return pbrt::make_optional(PartialDerivatives{dpdu, dpdv});
     }
 
     HitRecord

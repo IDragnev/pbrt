@@ -164,7 +164,7 @@ TEST_CASE("ray outside the bounds does not intersect it") {
     const auto ray =
         pbrt::Ray{pbrt::Point3f{0.f, 0.f, 0.f}, pbrt::Vector3f{-1.f, 1.f, 1.f}};
 
-    CHECK(bounds.intersectP(ray) == std::nullopt);
+    CHECK(bounds.intersectP(ray) == pbrt::nullopt);
 }
 
 TEST_CASE("ray parallel to the bounds does not intersect it") {
@@ -177,7 +177,7 @@ TEST_CASE("ray parallel to the bounds does not intersect it") {
         pbrt::Vector3f{0.f, 1.f, 1.f},
     };
 
-    CHECK(bounds.intersectP(ray) == std::nullopt);
+    CHECK(bounds.intersectP(ray) == pbrt::nullopt);
 }
 
 TEST_CASE("ray through the bounds intersects it") {
@@ -190,7 +190,7 @@ TEST_CASE("ray through the bounds intersects it") {
         pbrt::Vector3f{1.f, 1.f, 1.f},
     };
 
-    CHECK(bounds.intersectP(ray) != std::nullopt);
+    CHECK(bounds.intersectP(ray) != pbrt::nullopt);
 }
 
 TEST_CASE("ray with origin inside the bounds intersects it") {
@@ -203,7 +203,7 @@ TEST_CASE("ray with origin inside the bounds intersects it") {
         pbrt::Vector3f{0.f, 1.f, 0.f},
     };
 
-    CHECK(bounds.intersectP(ray) != std::nullopt);
+    CHECK(bounds.intersectP(ray) != pbrt::nullopt);
 }
 
 TEST_CASE("ray with origin on a bounds wall and passing through the bounds "
@@ -217,7 +217,7 @@ TEST_CASE("ray with origin on a bounds wall and passing through the bounds "
         pbrt::Vector3f{0.f, 1.f, 0.f},
     };
 
-    CHECK(bounds.intersectP(ray) != std::nullopt);
+    CHECK(bounds.intersectP(ray) != pbrt::nullopt);
 }
 
 TEST_CASE("optimised intersection") {
