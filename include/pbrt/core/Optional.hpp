@@ -1,11 +1,11 @@
 #pragma once
 
-#include <optional>
+#include <tl/optional.hpp>
 
 namespace idragnev::pbrt {
     template <typename T>
-    using Optional = std::optional<T>;
+    using Optional = tl::optional<T>;
 
-    using std::make_optional;
-    using std::nullopt;
+    using tl::make_optional;
+    using tl::nullopt;
 } // namespace idragnev::pbrt

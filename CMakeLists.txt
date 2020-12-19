@@ -4,6 +4,8 @@ project(ray-tracer
   LANGUAGES CXX
 )
 
+include(FetchContent)
+
 set(default_build_type "Release")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
@@ -31,6 +33,19 @@ endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+# DEPENDENCIES 
+FetchContent_Declare(tl_optional
+  GIT_REPOSITORY https://github.com/TartanLlama/optional.git
+)
+FetchContent_GetProperties(tl_optional)
+if(NOT tl_optional_POPULATED)
+  FetchContent_Populate(tl_optional)
+  option(OPTIONAL_BUILD_PACKAGE "" OFF)
+  set(BUILD_TESTING false)
+  add_subdirectory(${tl_optional_SOURCE_DIR} ${tl_optional_BINARY_DIR})
+endif()
+
+# PBRT targets
 add_subdirectory(src/functional)
 add_subdirectory(src/parallel)
 add_subdirectory(src/core)
