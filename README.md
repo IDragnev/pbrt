@@ -9,15 +9,17 @@ The project is regularly built with:
  - GCC 10.2
  - GCC 9.3 (less often)  
 
+**CMake 3.14 or higher**.  
 Note that **the warning level is set to Error for CMake builds**,  
 so builds may fail because of a warning with other compiler versions.  
 
 CMake options:
  - PBRT_FLOAT_AS_DOUBLE - use 64-bit floats (off by default)
- 
-Example (build with 64-bit floats):  
+
+Example:  
  ```
- $ git clone --recursive https://github.com/IDragnev/pb-ray-tracer.git  
+ # build with 64-bit floats
+ $ git clone https://github.com/IDragnev/pb-ray-tracer.git  
  $ cd pb-ray-tracer  
  $ mkdir build && cd build  
  $ cmake -D PBRT_FLOAT_AS_DOUBLE=ON ..  

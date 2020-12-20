@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12.4)
+cmake_minimum_required(VERSION 3.14)
 
 project(ray-tracer
   LANGUAGES CXX
@@ -45,6 +45,12 @@ if(NOT tl_optional_POPULATED)
   add_subdirectory(${tl_optional_SOURCE_DIR} ${tl_optional_BINARY_DIR})
 endif()
 
+FetchContent_Declare(doctest
+  GIT_REPOSITORY https://github.com/onqtam/doctest.git
+  GIT_TAG        2.4.3
+)
+FetchContent_MakeAvailable(doctest)
+
 # PBRT targets
 add_subdirectory(src/functional)
 add_subdirectory(src/parallel)
@@ -53,7 +59,6 @@ add_subdirectory(src/memory)
 add_subdirectory(src/shapes)
 add_subdirectory(src/accelerators)
 add_subdirectory(app)
-add_subdirectory(external/doctest)
 add_subdirectory(tests/core)
 add_subdirectory(tests/memory)
 add_subdirectory(tests/functional)
