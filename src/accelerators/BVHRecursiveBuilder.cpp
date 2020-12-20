@@ -157,25 +157,24 @@ namespace idragnev::pbrt::accelerators::bvh {
         const Bounds3f& rangeCentroidBounds,
         const IndicesRange infoIndicesRange,
         PrimsVec& orderedPrims) {
-        // FIX ME WHEN A PROPER OPTIONAL IS USED
-        const auto splitPos = partitionPrimitivesInfo(rangeBounds,
-                                                      rangeCentroidBounds,
-                                                      infoIndicesRange);
-        if (!splitPos.has_value()) {
-            return pbrt::nullopt;
-        }
+        const auto splitPosition = partitionPrimitivesInfo(rangeBounds,
+                                                           rangeCentroidBounds,
+                                                           infoIndicesRange);
+        return splitPosition.map([this,
+                                  &orderedPrims,
+                                  &infoIndicesRange,
+                                  &arena](const std::size_t splitPos) {
+            const BuildTree left =
+                buildSubtree(arena,
+                             IndicesRange{infoIndicesRange.first(), splitPos},
+                             orderedPrims);
+            const BuildTree right =
+                buildSubtree(arena,
+                             IndicesRange{splitPos, infoIndicesRange.last()},
+                             orderedPrims);
 
-        const std::size_t splitPosition = splitPos.value();
-        const BuildTree left =
-            buildSubtree(arena,
-                         IndicesRange{infoIndicesRange.first(), splitPosition},
-                         orderedPrims);
-        const BuildTree right =
-            buildSubtree(arena,
-                         IndicesRange{splitPosition, infoIndicesRange.last()},
-                         orderedPrims);
-
-        return std::make_pair(left, right);
+            return std::make_pair(left, right);
+        });
     }
 
     Optional<std::size_t> RecursiveBuilder::partitionPrimitivesInfo(

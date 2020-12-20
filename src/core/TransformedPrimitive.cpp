@@ -20,21 +20,15 @@ namespace idragnev::pbrt {
 
         const Ray rayInPrimitiveSpace = worldToPrimitiveAtT(ray);
 
-        // FIX ME WHEN A PROPER OPTIONAL IS USED
-        if (auto optInteraction = primitive->intersect(rayInPrimitiveSpace);
-            optInteraction.has_value())
-        {
-            ray.tMax = rayInPrimitiveSpace.tMax;
+        return this->primitive->intersect(rayInPrimitiveSpace)
+            .map([&ray, &rayInPrimitiveSpace, &primitiveToWorldAtT](
+                     SurfaceInteraction&& interaction) -> SurfaceInteraction {
+                ray.tMax = rayInPrimitiveSpace.tMax;
 
-            if (!primitiveToWorldAtT.isIdentity()) {
-                return pbrt::make_optional(primitiveToWorldAtT(*optInteraction));
-            }
-            else {
-                return optInteraction;
-            }
-        }
-
-        return pbrt::nullopt;
+                return primitiveToWorldAtT.isIdentity() == false
+                           ? primitiveToWorldAtT(interaction)
+                           : std::move(interaction);
+            });
     }
 
     bool TransformedPrimitive::intersectP(const Ray& ray) const {

@@ -27,21 +27,19 @@ namespace idragnev::pbrt {
 
     Optional<SurfaceInteraction>
     GeometricPrimitive::intersect(const Ray& ray) const {
-        // FIX ME WHEN A PROPER OPTIONAL IS USED
-        if (auto hitRecord = _shape->intersect(ray); hitRecord.has_value()) {
-            ray.tMax = hitRecord->t;
+        return _shape->intersect(ray).map(
+            [&ray, this](HitRecord&& hitRecord) -> SurfaceInteraction {
+                ray.tMax = hitRecord.t;
 
-            auto& interaction = hitRecord->interaction;
-            interaction.primitive = this;
-            interaction.mediumInterface = _mediumInterface.isMediumTransition()
-                                              ? _mediumInterface
-                                              : MediumInterface{ray.medium};
+                auto& interaction = hitRecord.interaction;
+                interaction.primitive = this;
+                interaction.mediumInterface =
+                    _mediumInterface.isMediumTransition()
+                        ? _mediumInterface
+                        : MediumInterface{ray.medium};
 
-            return pbrt::make_optional(std::move(interaction));
-        }
-        else {
-            return pbrt::nullopt;
-        }
+                return std::move(interaction);
+            });
     }
 
     void GeometricPrimitive::computeScatteringFunctions(
