@@ -1,5 +1,5 @@
 #include "doctest/doctest.h"
-#include "memory/MemoryArena.hpp"
+#include "pbrt/memory/MemoryArena.hpp"
 
 #include <algorithm>
 

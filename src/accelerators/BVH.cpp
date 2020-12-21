@@ -1,7 +1,7 @@
-#include "accelerators/BVH.hpp"
-#include "accelerators/BVHBuilders.hpp"
-#include "core/SurfaceInteraction.hpp"
-#include "memory/Memory.hpp"
+#include "pbrt/accelerators/BVH.hpp"
+#include "pbrt/accelerators/BVHBuilders.hpp"
+#include "pbrt/core/SurfaceInteraction.hpp"
+#include "pbrt/memory/Memory.hpp"
 
 namespace idragnev::pbrt::accelerators {
     BVH::BVH(std::vector<std::shared_ptr<const Primitive>> prims,

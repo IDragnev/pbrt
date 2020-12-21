@@ -1,10 +1,10 @@
-#include "core/AnimatedTransformation.hpp"
-#include "core/Transformation.hpp"
-#include "core/TRS.hpp"
-#include "core/Ray.hpp"
-#include "core/RayDifferential.hpp"
-#include "core/Bounds3.hpp"
-#include "core/Interval.hpp"
+#include "pbrt/core/AnimatedTransformation.hpp"
+#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/TRS.hpp"
+#include "pbrt/core/Ray.hpp"
+#include "pbrt/core/RayDifferential.hpp"
+#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/Interval.hpp"
 
 namespace idragnev::pbrt {
     AnimatedTransformation::AnimatedTransformation(

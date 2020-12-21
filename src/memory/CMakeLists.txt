@@ -41,7 +41,7 @@ add_library(
   ${PBRT_MEMORY_SOURCE_FILES}
   ${PBRT_MEMORY_HEADERS}
 )
-target_include_directories(memory PUBLIC ${PROJECT_SOURCE_DIR}/include/pbrt)
+target_include_directories(memory PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_compile_features(memory PUBLIC cxx_std_17)
 target_compile_options(memory
  PRIVATE ${PBRT_TARGET_WARNING_FLAGS}

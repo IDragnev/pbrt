@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core.hpp"
-#include "memory/MemoryArena.hpp"
+#include "pbrt/memory/MemoryArena.hpp"
 
 namespace idragnev::pbrt {
     enum class TransportMode

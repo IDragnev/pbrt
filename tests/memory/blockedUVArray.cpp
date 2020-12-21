@@ -1,5 +1,5 @@
 #include "doctest/doctest.h"
-#include "memory/BlockedUVArray.hpp"
+#include "pbrt/memory/BlockedUVArray.hpp"
 
 #include <algorithm>
 

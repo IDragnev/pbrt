@@ -1,4 +1,4 @@
-#include "memory/Memory.hpp"
+#include "pbrt/memory/Memory.hpp"
 
 #ifndef PBRT_HAS_ALIGNED_MALLOC
     #include <stdlib.h>

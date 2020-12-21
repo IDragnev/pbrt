@@ -1,6 +1,6 @@
-#include "core/Quaternion.hpp"
-#include "core/Transformation.hpp"
-#include "core/Matrix4x4.hpp"
+#include "pbrt/core/Quaternion.hpp"
+#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/Matrix4x4.hpp"
 
 namespace idragnev::pbrt {
     Quaternion::Quaternion(const Transformation& t) {

@@ -1,4 +1,4 @@
-#include "core/Interval.hpp"
+#include "pbrt/core/Interval.hpp"
 
 #include <algorithm>
 #include <assert.h>

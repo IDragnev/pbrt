@@ -1,4 +1,4 @@
-#include "core/EFloat.hpp"
+#include "pbrt/core/EFloat.hpp"
 
 #include <assert.h>
 #include <algorithm>

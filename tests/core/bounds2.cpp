@@ -1,5 +1,5 @@
 #include "doctest/doctest.h"
-#include "core/Bounds2.hpp"
+#include "pbrt/core/Bounds2.hpp"
 
 #include <vector>
 

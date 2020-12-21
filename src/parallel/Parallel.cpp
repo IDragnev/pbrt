@@ -1,5 +1,5 @@
-#include "parallel/Parallel.hpp"
-#include "functional/Functional.hpp"
+#include "pbrt/parallel/Parallel.hpp"
+#include "pbrt/functional/Functional.hpp"
 
 #include <thread>
 #include <assert.h>

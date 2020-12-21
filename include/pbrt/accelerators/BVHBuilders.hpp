@@ -1,11 +1,11 @@
 #pragma once
 
-#include "core/Primitive.hpp"
-#include "core/Bounds3.hpp"
-#include "core/Point3.hpp"
-#include "core/Optional.hpp"
+#include "pbrt/core/Primitive.hpp"
+#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/Point3.hpp"
+#include "pbrt/core/Optional.hpp"
 
-#include "memory/MemoryArena.hpp"
+#include "pbrt/memory/MemoryArena.hpp"
 
 #include <vector>
 #include <memory>

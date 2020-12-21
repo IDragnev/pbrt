@@ -1,7 +1,7 @@
-#include "shapes/Cone.hpp"
-#include "core/Bounds3.hpp"
-#include "core/Transformation.hpp"
-#include "core/EFloat.hpp"
+#include "pbrt/shapes/Cone.hpp"
+#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/EFloat.hpp"
 
 namespace idragnev::pbrt::shapes {
     Cone::Cone(const Transformation& objectToWorld,

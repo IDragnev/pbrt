@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/Primitive.hpp"
-#include "core/Optional.hpp"
+#include "pbrt/core/Primitive.hpp"
+#include "pbrt/core/Optional.hpp"
 
 #include <vector>
 #include <memory>

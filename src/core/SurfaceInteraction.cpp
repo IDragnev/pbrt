@@ -1,5 +1,5 @@
-#include "core/SurfaceInteraction.hpp"
-#include "core/Shape.hpp"
+#include "pbrt/core/SurfaceInteraction.hpp"
+#include "pbrt/core/Shape.hpp"
 
 namespace idragnev::pbrt {
     SurfaceInteraction::SurfaceInteraction(const Point3f& p,

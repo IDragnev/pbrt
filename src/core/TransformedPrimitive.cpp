@@ -1,7 +1,7 @@
-#include "core/TransformedPrimitive.hpp"
-#include "core/Transformation.hpp"
-#include "core/SurfaceInteraction.hpp"
-#include "core/Bounds3.hpp"
+#include "pbrt/core/TransformedPrimitive.hpp"
+#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/SurfaceInteraction.hpp"
+#include "pbrt/core/Bounds3.hpp"
 
 #include <assert.h>
 

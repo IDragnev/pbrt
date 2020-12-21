@@ -102,4 +102,4 @@ namespace idragnev::pbrt {
                           const Vector3f& up) noexcept;
 } // namespace idragnev::pbrt
 
-#include "core/TransformationImpl.hpp"
+#include "pbrt/core/TransformationImpl.hpp"

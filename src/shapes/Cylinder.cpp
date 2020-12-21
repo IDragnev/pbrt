@@ -1,7 +1,7 @@
-#include "shapes/Cylinder.hpp"
-#include "core/Bounds3.hpp"
-#include "core/Transformation.hpp"
-#include "core/EFloat.hpp"
+#include "pbrt/shapes/Cylinder.hpp"
+#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/EFloat.hpp"
 
 namespace idragnev::pbrt::shapes {
     Cylinder::Cylinder(const Transformation& objectToWorld,

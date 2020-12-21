@@ -1,7 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
 
-#include "functional/Functional.hpp"
+#include "pbrt/functional/Functional.hpp"
 
 #include <vector>
 #include <string>

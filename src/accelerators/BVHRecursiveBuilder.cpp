@@ -1,5 +1,5 @@
-#include "accelerators/BVHBuilders.hpp"
-#include "functional/Functional.hpp"
+#include "pbrt/accelerators/BVHBuilders.hpp"
+#include "pbrt/functional/Functional.hpp"
 
 namespace idragnev::pbrt::accelerators::bvh {
     struct RecursiveBuilder::SAHBucket

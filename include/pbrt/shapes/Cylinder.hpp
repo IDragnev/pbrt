@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/core.hpp"
-#include "core/Shape.hpp"
+#include "pbrt/core/core.hpp"
+#include "pbrt/core/Shape.hpp"
 
 namespace idragnev::pbrt::shapes {
     class Cylinder : public Shape

@@ -1,7 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
 
-#include "parallel/Parallel.hpp"
+#include "pbrt/parallel/Parallel.hpp"
 
 namespace parallel = idragnev::pbrt::parallel;
 

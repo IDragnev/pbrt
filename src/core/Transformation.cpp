@@ -1,8 +1,8 @@
-#include "core/Transformation.hpp"
-#include "core/Vector3.hpp"
-#include "core/Point3.hpp"
-#include "core/Bounds3.hpp"
-#include "core/SurfaceInteraction.hpp"
+#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/Vector3.hpp"
+#include "pbrt/core/Point3.hpp"
+#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/SurfaceInteraction.hpp"
 
 namespace idragnev::pbrt {
     bool Transformation::hasScale() const noexcept {

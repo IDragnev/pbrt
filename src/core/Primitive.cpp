@@ -1,4 +1,4 @@
-#include "core/Primitive.hpp"
+#include "pbrt/core/Primitive.hpp"
 
 #include <assert.h>
 

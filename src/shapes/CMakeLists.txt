@@ -24,7 +24,7 @@ add_library(
   ${RAY_TRACER_SHAPES_SOURCE}
   ${RAY_TRACER_SHAPES_HEADERS}
 )
-target_include_directories(shapeslib PUBLIC ${PROJECT_SOURCE_DIR}/include/pbrt)
+target_include_directories(shapeslib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(shapeslib 
   PRIVATE corelib
   PRIVATE functional

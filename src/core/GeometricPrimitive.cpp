@@ -1,8 +1,8 @@
-#include "core/GeometricPrimitive.hpp"
-#include "core/Shape.hpp"
-#include "core/Bounds3.hpp"
-#include "core/SurfaceInteraction.hpp"
-#include "core/Material.hpp"
+#include "pbrt/core/GeometricPrimitive.hpp"
+#include "pbrt/core/Shape.hpp"
+#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/SurfaceInteraction.hpp"
+#include "pbrt/core/Material.hpp"
 
 #include <assert.h>
 

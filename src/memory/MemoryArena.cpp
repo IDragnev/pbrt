@@ -1,4 +1,4 @@
-#include "memory/MemoryArena.hpp"
+#include "pbrt/memory/MemoryArena.hpp"
 
 #include <algorithm>
 

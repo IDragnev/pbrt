@@ -1,4 +1,4 @@
-#include "memory/Memory.hpp"
+#include "pbrt/memory/Memory.hpp"
 
 namespace mem = idragnev::pbrt::memory;
 

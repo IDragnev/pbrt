@@ -1,5 +1,5 @@
 #include "doctest/doctest.h"
-#include "core/Interval.hpp"
+#include "pbrt/core/Interval.hpp"
 
 namespace pbrt = idragnev::pbrt;
 

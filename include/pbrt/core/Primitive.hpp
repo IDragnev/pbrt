@@ -3,7 +3,7 @@
 #include "core.hpp"
 #include "Optional.hpp"
 
-#include "memory/MemoryArena.hpp"
+#include "pbrt/memory/MemoryArena.hpp"
 
 namespace idragnev::pbrt {
     class Primitive

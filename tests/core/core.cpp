@@ -1,8 +1,8 @@
 #include "doctest/doctest.h"
 
-#include "core/Vector3.hpp"
-#include "core/Normal3.hpp"
-#include "core/EFloat.hpp"
+#include "pbrt/core/Vector3.hpp"
+#include "pbrt/core/Normal3.hpp"
+#include "pbrt/core/EFloat.hpp"
 
 namespace pbrt = idragnev::pbrt;
 

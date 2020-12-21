@@ -20,7 +20,7 @@ target_link_libraries(
   PRIVATE ${CMAKE_THREAD_LIBS_INIT}
   PRIVATE functional
 )
-target_include_directories(parallel PUBLIC ${PROJECT_SOURCE_DIR}/include/pbrt)
+target_include_directories(parallel PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_compile_features(parallel PUBLIC cxx_std_17)
 target_compile_options(parallel
  PRIVATE ${PBRT_TARGET_WARNING_FLAGS}
