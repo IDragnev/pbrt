@@ -117,4 +117,14 @@ namespace idragnev::pbrt::accelerators::bvh {
         const PrimsVec* prims = nullptr;
         std::vector<PrimitiveInfo> primitivesInfo;
     };
+
+    class HLBVHBuilder
+    {
+    private:
+        using PrimsVec = std::vector<std::shared_ptr<const Primitive>>;
+        using IndicesRange = functional::IntegerRange<std::size_t>;
+
+    public:
+        BuildResult operator()(const PrimsVec& prims) const;
+    };
 } // namespace idragnev::pbrt::bvh

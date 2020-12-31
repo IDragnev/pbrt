@@ -8,6 +8,7 @@ set(ACCELERATORS_HEADER_FILES
 set(ACCELERATORS_SOURCE_FILES
   BVH.cpp
   BVHRecursiveBuilder.cpp
+  HLBVHBuilder.cpp
 )
 
 add_library(
@@ -20,6 +21,7 @@ target_link_libraries(acceleratorslib
   PRIVATE memory
   PRIVATE corelib
   PRIVATE functional
+  PRIVATE parallel
 )
 target_include_directories(acceleratorslib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_compile_features(acceleratorslib PUBLIC cxx_std_17)
