@@ -54,7 +54,7 @@ namespace idragnev::pbrt::accelerators::bvh {
         if (const auto primitivesCount = infoIndicesRange.size();
             primitivesCount == 1)
         {
-            result.nodesCount = primitivesCount;
+            result.nodesCount = 1;
             *result.root = buildLeafNode(rangeBounds, infoIndicesRange, orderedPrims);
         }
         else {
@@ -68,7 +68,7 @@ namespace idragnev::pbrt::accelerators::bvh {
 
             if (rangeCentroidBounds.max[splitAxis] ==
                 rangeCentroidBounds.min[splitAxis]) {
-                result.nodesCount = primitivesCount;
+                result.nodesCount = 1;
                 *result.root = buildLeafNode(rangeBounds,
                                              infoIndicesRange,
                                              orderedPrims);
@@ -83,12 +83,12 @@ namespace idragnev::pbrt::accelerators::bvh {
                 if (subtrees.has_value()) {
                     const auto [left, right] = subtrees.value();
 
-                    result.nodesCount = left.nodesCount + right.nodesCount;
+                    result.nodesCount = left.nodesCount + right.nodesCount + 1;
                     *result.root =
                         BuildNode::Interior(splitAxis, left.root, right.root);
                 }
                 else { // failed to split the primitives into two subtrees
-                    result.nodesCount = primitivesCount;
+                    result.nodesCount = 1;
                     *result.root = buildLeafNode(rangeBounds,
                                                  infoIndicesRange,
                                                  orderedPrims);
