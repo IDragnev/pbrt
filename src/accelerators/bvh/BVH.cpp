@@ -1,5 +1,5 @@
-#include "pbrt/accelerators/BVH.hpp"
-#include "pbrt/accelerators/BVHBuilders.hpp"
+#include "pbrt/accelerators/bvh/BVH.hpp"
+#include "pbrt/accelerators/bvh/RecursiveBuilder.hpp"
 #include "pbrt/core/SurfaceInteraction.hpp"
 #include "pbrt/memory/Memory.hpp"
 

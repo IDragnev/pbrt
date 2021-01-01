@@ -1,4 +1,4 @@
-#include "pbrt/accelerators/BVHBuilders.hpp"
+#include "pbrt/accelerators/bvh/RecursiveBuilder.hpp"
 #include "pbrt/functional/Functional.hpp"
 
 namespace idragnev::pbrt::accelerators::bvh {
@@ -6,40 +6,6 @@ namespace idragnev::pbrt::accelerators::bvh {
     {
         std::uint32_t primitivesCount = 0;
         Bounds3f bounds;
-    };
-
-    struct BuildNode
-    {
-        static BuildNode Leaf(const std::size_t firstPrimitiveIndex,
-                              const std::size_t primitivesCount,
-                              const Bounds3f& bounds) {
-            BuildNode result{};
-            result.firstPrimitiveIndex = firstPrimitiveIndex;
-            result.primitivesCount = primitivesCount;
-            result.bounds = bounds;
-
-            return result;
-        }
-
-        static BuildNode Interior(const std::size_t splitAxis,
-                                  BuildNode* const child0,
-                                  BuildNode* const child1) {
-            BuildNode result{};
-            result.children[0] = child0;
-            result.children[1] = child1;
-            result.splitAxis = splitAxis;
-            result.bounds = unionOf(child0->bounds, child1->bounds);
-
-            return result;
-        }
-
-        Bounds3f bounds;
-
-        BuildNode* children[2] = {nullptr, nullptr};
-        std::size_t splitAxis = 0;
-
-        std::size_t firstPrimitiveIndex = 0;
-        std::size_t primitivesCount = 0;
     };
 
     BuildResult RecursiveBuilder::operator()(memory::MemoryArena& arena,
