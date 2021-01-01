@@ -9,7 +9,7 @@ set(ACCELERATORS_HEADER_FILES
 
 set(ACCELERATORS_SOURCE_FILES
   bvh/BVH.cpp
-  bvh/BVHRecursiveBuilder.cpp
+  bvh/RecursiveBuilder.cpp
   bvh/HLBVHBuilder.cpp
 )
 
