@@ -40,8 +40,9 @@ namespace idragnev::pbrt::accelerators::bvh {
     RecursiveBuilder::buildSubtree(memory::MemoryArena& arena,
                                    const IndicesRange infoIndicesRange,
                                    PrimsVec& orderedPrims) {
-        BuildTree result{};
-        result.root = arena.alloc<BuildNode>();
+        BuildTree result{
+            .root = arena.alloc<BuildNode>(),
+        };
 
         const Bounds3f rangeBounds = functional::foldl(
             infoIndicesRange,

@@ -25,24 +25,21 @@ namespace idragnev::pbrt::accelerators::bvh {
         static BuildNode Leaf(const std::size_t firstPrimitiveIndex,
                               const std::size_t primitivesCount,
                               const Bounds3f& bounds) {
-            BuildNode result{};
-            result.firstPrimitiveIndex = firstPrimitiveIndex;
-            result.primitivesCount = primitivesCount;
-            result.bounds = bounds;
-
-            return result;
+            return BuildNode{
+                .bounds = bounds,
+                .firstPrimitiveIndex = firstPrimitiveIndex,
+                .primitivesCount = primitivesCount,
+            };
         }
 
         static BuildNode Interior(const std::size_t splitAxis,
                                   BuildNode* const child0,
                                   BuildNode* const child1) {
-            BuildNode result{};
-            result.children[0] = child0;
-            result.children[1] = child1;
-            result.splitAxis = splitAxis;
-            result.bounds = unionOf(child0->bounds, child1->bounds);
-
-            return result;
+            return BuildNode{
+                .bounds = unionOf(child0->bounds, child1->bounds),
+                .children = {child0, child1},
+                .splitAxis = splitAxis,
+            };
         }
 
         Bounds3f bounds;
