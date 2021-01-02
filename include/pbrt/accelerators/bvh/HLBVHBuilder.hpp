@@ -16,19 +16,27 @@ namespace idragnev::pbrt::accelerators::bvh {
         using PrimsVec = std::vector<std::shared_ptr<const Primitive>>;
 
     public:
+        HLBVHBuilder() = default;
+        HLBVHBuilder(const std::size_t maxPrimsInNode) noexcept
+            : maxPrimitivesInNode(maxPrimsInNode) {}
+
         BuildResult operator()(memory::MemoryArena& arena,
-                               const PrimsVec& primitives) const;
+                               const PrimsVec& primitives);
 
     private:
         BuildTree emitLBVH(BuildNode*& buildNodes,
-                           std::span<const MortonPrimitive> primsSubrange,
+                           const std::span<const MortonPrimitive> primsSubrange,
                            PrimsVec& orderedPrims,
                            std::atomic<std::size_t>& orderedPrimsFreePosition,
                            const int bitIndex) const;
+        BuildNode
+        makeLeafNode(const std::span<const MortonPrimitive> primsRange,
+                     const std::size_t firstPrimIndex,
+                     PrimsVec& orderedPrims) const;
 
     private:
         std::size_t maxPrimitivesInNode = 1;
         const PrimsVec* prims = nullptr;
         std::vector<PrimitiveInfo> primitivesInfo;
     };
-}
+} // namespace idragnev::pbrt::accelerators::bvh

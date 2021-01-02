@@ -79,4 +79,4 @@ namespace idragnev::pbrt::accelerators::bvh {
         const PrimsVec* prims = nullptr;
         std::vector<PrimitiveInfo> primitivesInfo;
     };
-}
+} // namespace idragnev::pbrt::accelerators::bvh

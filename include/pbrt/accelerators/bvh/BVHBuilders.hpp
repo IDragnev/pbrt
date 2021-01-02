@@ -70,4 +70,4 @@ namespace idragnev::pbrt::accelerators::bvh {
         Middle,
         EqualCounts,
     };
-} // namespace idragnev::pbrt::bvh
+} // namespace idragnev::pbrt::accelerators::bvh

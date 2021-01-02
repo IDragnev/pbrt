@@ -3,11 +3,8 @@
 #include "pbrt/parallel/Parallel.hpp"
 
 #include <numeric>
-#include <span>
 
 namespace idragnev::pbrt::accelerators::bvh {
-    using PrimsVec = std::vector<std::shared_ptr<const Primitive>>;
-
     namespace constants {
         constexpr std::uint32_t MORTON_CODE_BITS = 30;
         constexpr std::uint32_t MORTON_DIMENSION_BITS = MORTON_CODE_BITS / 3;
@@ -29,6 +26,10 @@ namespace idragnev::pbrt::accelerators::bvh {
     [[nodiscard]] std::vector<MortonPrimitive>
     radixSort(std::vector<MortonPrimitive> vec);
 
+    Optional<std::size_t>
+    findSplitPosition(const std::span<const MortonPrimitive> prims,
+                      const std::uint32_t splitMask);
+
     struct LBVHTreelet
     {
         std::size_t firstPrimitiveIndex = 0;
@@ -40,66 +41,39 @@ namespace idragnev::pbrt::accelerators::bvh {
     splitToTreelets(const std::vector<MortonPrimitive>& prims,
                     memory::MemoryArena& arena,
                     const bool initializeAllocatedNodes);
-   /* BuildResult emitLBVH(BuildNode*& nodes,
-                         const std::vector<PrimitiveInfo>& primitiveInfo,
-                         const MortonPrimitive* const mortonPrims,
-                         const std::size_t primitivesCount,
-                         PrimsVec& orderedPrims,
-                         std::atomic<int>* orderedPrimsFreePos,
-                         int bitIndex);*/
 
     BuildResult HLBVHBuilder::operator()(memory::MemoryArena& arena,
-                                         const PrimsVec& primitives) const {
+                                         const PrimsVec& primitives) {
+        [[maybe_unused]] const auto cleanUp =
+            functional::ScopedFn{[&b = *this]() noexcept {
+                b = {};
+            }};
+
         BuildResult result{};
         if (primitives.empty()) {
             return result;
         }
 
-        const auto primsInfo = functional::fmapIndexed(
+        this->primitivesInfo = functional::fmapIndexed(
             primitives,
             [](const auto& primitive, const std::size_t i) {
                 return PrimitiveInfo{i, primitive->worldBound()};
             });
-        const Bounds3f centroidBounds = std::accumulate(
-            primsInfo.cbegin(),
-            primsInfo.cend(),
-            Bounds3f{},
-            [](const Bounds3f& acc, const PrimitiveInfo& info) {
-                return unionOf(acc, info.centroid);
-            });
-
+        const Bounds3f centroidBounds =
+            std::accumulate(this->primitivesInfo.cbegin(),
+                            this->primitivesInfo.cend(),
+                            Bounds3f{},
+                            [](const Bounds3f& acc, const PrimitiveInfo& info) {
+                                return unionOf(acc, info.centroid);
+                            });
         const std::vector<MortonPrimitive> mortonPrims =
-            radixSort(toMortonPrimitives(primsInfo, centroidBounds));
+            radixSort(toMortonPrimitives(this->primitivesInfo, centroidBounds));
 
         std::vector<LBVHTreelet> treeletsToBuild =
             splitToTreelets(mortonPrims, arena, false);
 
         // ---------------------
         result.orderedPrimitives = {primitives.size(), nullptr};
-        //std::atomic<std::size_t> atomicTotal = 0;
-        //std::atomic<std::size_t> orderedPrimsFreePos = 0;
-        /*parallel::parallelFor(
-            [&](const std::int64_t i) {
-                LBVHTreelet& treelet =
-                    treeletsToBuild[static_cast<std::size_t>(i)];
-
-                std::size_t nodesCreated = 0;
-                const std::size_t firstBitIndex = 29 - 12;
-                const BuildResult buildTree =
-                    emitLBVH(treelet.nodes,
-                             primsInfo,
-                             &mortonPrims[treelet.firstPrimitiveIndex],
-                             treelet.primitivesCount,
-                             result.orderedPrimitives,
-                             &orderedPrimsFreePos,
-                             firstBitIndex);
-                treelet.nodes = buildTree.tree.root;
-
-                atomicTotal += nodesCreated;
-            },
-            treeletsToBuild.size());
-
-        *totalNodes = atomicTotal;*/
         
         //...
 
@@ -178,7 +152,7 @@ namespace idragnev::pbrt::accelerators::bvh {
         constexpr std::size_t BUCKETS_COUNT = 1 << BITS_PER_PASS;
 
         const auto bucketIndex = [](const std::uint32_t mortonCode,
-                                     const std::size_t lowBit) {
+                                    const std::size_t lowBit) {
             constexpr std::size_t mask = (1 << BITS_PER_PASS) - 1;
             const auto result = (mortonCode >> lowBit) & mask;
 
@@ -223,6 +197,13 @@ namespace idragnev::pbrt::accelerators::bvh {
         }
     }
 
+    // Generates a vector of `LBVHTreelet`s -
+    // one treelet for each chunk of primitives with matching
+    // morton code bits for the selected bit mask.
+    // Conditionally zero-initializes the nodes allocated with `arena`.
+    //
+    // (!) Assumes  that `mortonPrims` are sorted by
+    // MortonPrimitive::mortonCode. (!)
     std::vector<LBVHTreelet>
     splitToTreelets(const std::vector<MortonPrimitive>& mortonPrims,
                     memory::MemoryArena& arena,
@@ -256,88 +237,123 @@ namespace idragnev::pbrt::accelerators::bvh {
         return result;
     }
 
+    // Recursively builds a BVH on the allocated `buildNodes`
+    // using the range of morton primitives `primsRange`.
+    // Writes the corresponding primitives in the `orderedPrims` subrange
+    // [orderedPrimsFreePos .. orderedPrimsFreePos + primsRange.size)
+    // Splits the primitives based on the `splitBit` of their morton code.
+    // `buildNodes` is advanced each time a node is used,
+    // leaving the pointer pointing to an uninitialized node.
+    //
+    // (!) Assumes `primsRange` is sorted on MortonPrimitive::mortonCode (!)
     BuildTree
     HLBVHBuilder::emitLBVH(BuildNode*& buildNodes,
-                           std::span<const MortonPrimitive> primsRange,
+                           const std::span<const MortonPrimitive> primsRange,
                            PrimsVec& orderedPrims,
                            std::atomic<std::size_t>& orderedPrimsFreePos,
-                           const int bitIndex) const {
-        BuildTree result{};
-
-        if (bitIndex == -1 || primsRange.size() < this->maxPrimitivesInNode) {
-            result.root = buildNodes++;
-
-            const PrimsVec& primitives = *(this->prims);
+                           const int splitBit) const {
+        if (splitBit < 0 || primsRange.size() < this->maxPrimitivesInNode) {
             const std::size_t firstPrimIndex =
                 orderedPrimsFreePos.fetch_add(primsRange.size());
-            Bounds3f bounds;
-            for (std::size_t offset = 0; const auto& mortonPrim : primsRange) {
-                const auto index = mortonPrim.index;
+            BuildNode* const node = buildNodes++;
+            *node = makeLeafNode(primsRange, firstPrimIndex, orderedPrims);
 
-                bounds = unionOf(bounds, this->primitivesInfo[index].bounds);
-
-                orderedPrims[firstPrimIndex + offset] = primitives[index];
-                ++offset;
-            }
-
-            *result.root =
-                BuildNode::Leaf(firstPrimIndex, primsRange.size(), bounds);
-            result.nodesCount = 1;
+            return BuildTree{
+                .root = node,
+                .nodesCount = 1,
+            };
         }
-        else { // recurse
-            const std::uint32_t mask = 1 << bitIndex;
-
-            // Advance to next subtree level if there's no LBVH split for this
-            // bit
-            if ((primsRange.front().mortonCode & mask) ==
-                (primsRange.back().mortonCode & mask))
+        else {
+            const std::uint32_t splitMask = 1 << splitBit;
+            if ((primsRange.front().mortonCode & splitMask) ==
+                (primsRange.back().mortonCode & splitMask))
             {
+                // prims are sorted -> they all match in this bit
                 return emitLBVH(buildNodes,
                                 primsRange,
                                 orderedPrims,
                                 orderedPrimsFreePos,
-                                bitIndex - 1);
+                                splitBit - 1);
             }
 
-            // Find LBVH split point for this dimension
-            std::size_t searchStart = 0;
-            std::size_t searchEnd = primsRange.size() - 1;
-            while (searchStart + 1 != searchEnd) {
-                const auto mid = (searchStart + searchEnd) / 2;
-                if ((primsRange[searchStart].mortonCode & mask) ==
-                    (primsRange[mid].mortonCode & mask))
-                {
-                    searchStart = mid;
-                }
-                else {
-                    searchEnd = mid;
-                }
-            }
-            const auto splitOffset = searchEnd;
-            assert(splitOffset < primsRange.size());
-            assert((primsRange[splitOffset - 1].mortonCode & mask) !=
-                   (primsRange[splitOffset].mortonCode & mask));
+            const auto splitPos = findSplitPosition(primsRange, splitMask)
+                                      .or_else([] {
+                                          assert(false);
+                                          return 0;
+                                      })
+                                      .value();
 
-            result.root = buildNodes++;
-
-            auto const left = emitLBVH(buildNodes,
-                                       primsRange.first(splitOffset),
+            BuildNode* const node = buildNodes++;
+            const auto left = emitLBVH(buildNodes,
+                                       primsRange.first(splitPos),
                                        orderedPrims,
                                        orderedPrimsFreePos,
-                                       bitIndex - 1);
-            auto const right = emitLBVH(buildNodes,
-                                        primsRange.subspan(splitOffset),
+                                       splitBit - 1);
+            const auto right = emitLBVH(buildNodes,
+                                        primsRange.subspan(splitPos),
                                         orderedPrims,
                                         orderedPrimsFreePos,
-                                        bitIndex - 1);
-            const std::size_t splitAxis = bitIndex % 3;
+                                        splitBit - 1);
+            const std::size_t splitAxis = splitBit % 3;
+            *node = BuildNode::Interior(splitAxis, left.root, right.root);
 
-            *result.root = BuildNode::Interior(splitAxis, left.root, right.root);
-            result.nodesCount = left.nodesCount + right.nodesCount + 1;
-
+            return BuildTree{
+                .root = node,
+                .nodesCount = left.nodesCount + right.nodesCount + 1,
+            };
         }
-
-        return result;
     }
 
+    BuildNode HLBVHBuilder::makeLeafNode(
+        const std::span<const MortonPrimitive> primsRange,
+        const std::size_t firstPrimIndex,
+        PrimsVec& orderedPrims) const {
+        const PrimsVec& primitives = *(this->prims);
+
+        Bounds3f bounds;
+        for (std::size_t offset = 0; const auto& mortonPrim : primsRange) {
+            const auto index = mortonPrim.index;
+
+            bounds = unionOf(bounds, this->primitivesInfo[index].bounds);
+
+            orderedPrims[firstPrimIndex + offset] = primitives[index];
+            ++offset;
+        }
+
+        return BuildNode::Leaf(firstPrimIndex, primsRange.size(), bounds);
+    }
+
+    // Finds the position of the first primitive in `prims`
+    // which differs from its predecessor in the `splitMask` bits
+    // of its morton code.
+    // (!) Assumes that `prims` are sorted by their morton code. (!)
+    Optional<std::size_t>
+    findSplitPosition(const std::span<const MortonPrimitive> prims,
+                      const std::uint32_t splitMask) {
+        std::size_t left = 0;
+        std::size_t right = prims.size() - 1;
+
+        while (left + 1 != right) {
+            const auto mid = (left + right) / 2;
+
+            if ((prims[left].mortonCode & splitMask) ==
+                (prims[mid].mortonCode & splitMask)) {
+                // since the prims are sorted, this indicates
+                // that prims[left .. mid] match in those bits
+                left = mid;
+            }
+            else {
+                right = mid;
+            }
+        }
+
+        if ((prims[left].mortonCode & splitMask) !=
+            (prims[right].mortonCode & splitMask))
+        {
+            return pbrt::make_optional(right);
+        }
+        else {
+            return pbrt::nullopt;
+        }
+    }
 } // namespace idragnev::pbrt::accelerators::bvh
