@@ -28,7 +28,7 @@ namespace idragnev::pbrt::accelerators::bvh {
 
     Optional<std::size_t>
     findSplitPosition(const std::span<const MortonPrimitive> prims,
-                      const std::uint32_t splitMask);
+                      const std::uint32_t splitMask) noexcept;
 
     struct LBVHTreelet
     {
@@ -237,17 +237,17 @@ namespace idragnev::pbrt::accelerators::bvh {
         return result;
     }
 
-    // Recursively builds a BVH on the allocated `buildNodes`
+    // Recursively builds a BVH on the allocated `unusedNodes`
     // using the range of morton primitives `primsRange`.
     // Writes the corresponding primitives in the `orderedPrims` subrange
     // [orderedPrimsFreePos .. orderedPrimsFreePos + primsRange.size)
     // Splits the primitives based on the `splitBit` of their morton code.
-    // `buildNodes` is advanced each time a node is used,
+    // `unusedNodes` is advanced each time a node is used,
     // leaving the pointer pointing to an uninitialized node.
     //
     // (!) Assumes `primsRange` is sorted on MortonPrimitive::mortonCode (!)
     BuildTree
-    HLBVHBuilder::emitLBVH(BuildNode*& buildNodes,
+    HLBVHBuilder::emitLBVH(BuildNode*& unusedNodes,
                            const std::span<const MortonPrimitive> primsRange,
                            PrimsVec& orderedPrims,
                            std::atomic<std::size_t>& orderedPrimsFreePos,
@@ -255,7 +255,7 @@ namespace idragnev::pbrt::accelerators::bvh {
         if (splitBit < 0 || primsRange.size() < this->maxPrimitivesInNode) {
             const std::size_t firstPrimIndex =
                 orderedPrimsFreePos.fetch_add(primsRange.size());
-            BuildNode* const node = buildNodes++;
+            BuildNode* const node = unusedNodes++;
             *node = makeLeafNode(primsRange, firstPrimIndex, orderedPrims);
 
             return BuildTree{
@@ -269,7 +269,7 @@ namespace idragnev::pbrt::accelerators::bvh {
                 (primsRange.back().mortonCode & splitMask))
             {
                 // prims are sorted -> they all match in this bit
-                return emitLBVH(buildNodes,
+                return emitLBVH(unusedNodes,
                                 primsRange,
                                 orderedPrims,
                                 orderedPrimsFreePos,
@@ -283,13 +283,13 @@ namespace idragnev::pbrt::accelerators::bvh {
                                       })
                                       .value();
 
-            BuildNode* const node = buildNodes++;
-            const auto left = emitLBVH(buildNodes,
+            BuildNode* const node = unusedNodes++;
+            const auto left = emitLBVH(unusedNodes,
                                        primsRange.first(splitPos),
                                        orderedPrims,
                                        orderedPrimsFreePos,
                                        splitBit - 1);
-            const auto right = emitLBVH(buildNodes,
+            const auto right = emitLBVH(unusedNodes,
                                         primsRange.subspan(splitPos),
                                         orderedPrims,
                                         orderedPrimsFreePos,
@@ -311,13 +311,13 @@ namespace idragnev::pbrt::accelerators::bvh {
         const PrimsVec& primitives = *(this->prims);
 
         Bounds3f bounds;
-        for (std::size_t offset = 0; const auto& mortonPrim : primsRange) {
-            const auto index = mortonPrim.index;
+        for (std::size_t writePos = firstPrimIndex;
+             const MortonPrimitive& mp : primsRange)
+        {
+            bounds = unionOf(bounds, this->primitivesInfo[mp.index].bounds);
 
-            bounds = unionOf(bounds, this->primitivesInfo[index].bounds);
-
-            orderedPrims[firstPrimIndex + offset] = primitives[index];
-            ++offset;
+            orderedPrims[writePos] = primitives[mp.index];
+            ++writePos;
         }
 
         return BuildNode::Leaf(firstPrimIndex, primsRange.size(), bounds);
@@ -326,10 +326,15 @@ namespace idragnev::pbrt::accelerators::bvh {
     // Finds the position of the first primitive in `prims`
     // which differs from its predecessor in the `splitMask` bits
     // of its morton code.
-    // (!) Assumes that `prims` are sorted by their morton code. (!)
+    //
+    // (!) Assumes that `prims` is sorted by MortonPrimitive::mortonCode. (!)
     Optional<std::size_t>
     findSplitPosition(const std::span<const MortonPrimitive> prims,
-                      const std::uint32_t splitMask) {
+                      const std::uint32_t splitMask) noexcept {
+        if (prims.empty()) {
+            return pbrt::nullopt;
+        }
+
         std::size_t left = 0;
         std::size_t right = prims.size() - 1;
 

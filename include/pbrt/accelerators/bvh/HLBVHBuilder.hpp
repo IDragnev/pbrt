@@ -24,11 +24,11 @@ namespace idragnev::pbrt::accelerators::bvh {
                                const PrimsVec& primitives);
 
     private:
-        BuildTree emitLBVH(BuildNode*& buildNodes,
+        BuildTree emitLBVH(BuildNode*& unusedNodes,
                            const std::span<const MortonPrimitive> primsSubrange,
                            PrimsVec& orderedPrims,
                            std::atomic<std::size_t>& orderedPrimsFreePosition,
-                           const int bitIndex) const;
+                           const int splitBit) const;
         BuildNode
         makeLeafNode(const std::span<const MortonPrimitive> primsRange,
                      const std::size_t firstPrimIndex,
