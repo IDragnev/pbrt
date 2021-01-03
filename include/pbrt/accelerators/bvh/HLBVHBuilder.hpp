@@ -9,11 +9,19 @@
 
 namespace idragnev::pbrt::accelerators::bvh {
     struct MortonPrimitive;
+    struct LBVHTreelet;
 
     class HLBVHBuilder
     {
     private:
         using PrimsVec = std::vector<std::shared_ptr<const Primitive>>;
+
+        struct LowerLevels
+        {
+            std::vector<BuildNode*> roots;
+            std::size_t nodesCount = 0;
+            PrimsVec orderedPrimitives;
+        };
 
     public:
         HLBVHBuilder() = default;
@@ -24,7 +32,10 @@ namespace idragnev::pbrt::accelerators::bvh {
                                const PrimsVec& primitives);
 
     private:
-        BuildTree emitLBVH(BuildNode*& unusedNodes,
+        BuildResult buildBVH(memory::MemoryArena& arena,
+                             LowerLevels&& lowerLevels) const;
+        LowerLevels buildLowerLevels(std::vector<LBVHTreelet>&& treelets) const;
+        BuildTree emitLBVH(BuildNode*& buildNodes,
                            const std::span<const MortonPrimitive> primsSubrange,
                            PrimsVec& orderedPrims,
                            std::atomic<std::size_t>& orderedPrimsFreePosition,
@@ -38,5 +49,6 @@ namespace idragnev::pbrt::accelerators::bvh {
         std::size_t maxPrimitivesInNode = 1;
         const PrimsVec* prims = nullptr;
         std::vector<PrimitiveInfo> primitivesInfo;
+        std::vector<MortonPrimitive> mortonPrimInfos;
     };
 } // namespace idragnev::pbrt::accelerators::bvh
