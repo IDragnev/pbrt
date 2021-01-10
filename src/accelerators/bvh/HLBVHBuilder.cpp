@@ -243,6 +243,47 @@ namespace idragnev::pbrt::accelerators::bvh {
         return result;
     }
 
+    HLBVHBuilder::LowerLevels
+    HLBVHBuilder::buildLowerLevels(std::vector<LBVHTreelet>&& treelets) const {
+        // start with the highest morton code bit which is not guaranteed
+        // to be the same for each primitive in the cluster
+        constexpr std::size_t splitBit = (constants::MORTON_CODE_BITS - 1) -
+                                         constants::MORTON_CODE_CLUSTER_BITS;
+
+        std::atomic<std::size_t> nodesCount = 0;
+        std::atomic<std::size_t> orderedPrimsFreePosition = 0;
+        PrimsVec orderedPrimitives = {this->prims->size(), nullptr};
+
+        parallel::parallelFor(
+            [&treelets,
+             &nodesCount,
+             &orderedPrimsFreePosition,
+             &orderedPrimitives,
+             this](const std::int64_t i) {
+                LBVHTreelet& treelet = treelets[static_cast<std::size_t>(i)];
+
+                const auto lbvh = emitLBVH(
+                    treelet.nodes,
+                    std::span<const MortonPrimitive>{
+                        &this->mortonPrimInfos[treelet.firstPrimitiveIndex],
+                        treelet.primitivesCount},
+                    orderedPrimitives,
+                    orderedPrimsFreePosition,
+                    splitBit);
+
+                treelet.nodes = lbvh.root;
+                nodesCount += lbvh.nodesCount;
+            },
+            treelets.size());
+
+        return LowerLevels{
+            .roots =
+                functional::fmap(treelets, [](auto& t) { return t.nodes; }),
+            .nodesCount = nodesCount,
+            .orderedPrimitives = std::move(orderedPrimitives),
+        };
+    }
+
     // Recursively builds a BVH on the allocated `buildNodes`
     // using the range of morton primitives `primsRange`.
     // Writes the corresponding primitives in the `orderedPrims` subrange
@@ -366,44 +407,5 @@ namespace idragnev::pbrt::accelerators::bvh {
         else {
             return pbrt::nullopt;
         }
-    }
-
-    HLBVHBuilder::LowerLevels
-    HLBVHBuilder::buildLowerLevels(std::vector<LBVHTreelet>&& treelets) const {
-        constexpr std::size_t splitBit = (constants::MORTON_CODE_BITS - 1) -
-                                         constants::MORTON_CODE_CLUSTER_BITS;
-
-        std::atomic<std::size_t> nodesCount = 0;
-        std::atomic<std::size_t> orderedPrimsFreePosition = 0;
-        PrimsVec orderedPrimitives = {this->prims->size(), nullptr};
-
-        parallel::parallelFor(
-            [&treelets,
-             &nodesCount,
-             &orderedPrimsFreePosition,
-             &orderedPrimitives,
-             this](const std::int64_t i) {
-                LBVHTreelet& treelet = treelets[static_cast<std::size_t>(i)];
-
-                const auto lbvh = emitLBVH(
-                    treelet.nodes,
-                    std::span<const MortonPrimitive>{
-                        &this->mortonPrimInfos[treelet.firstPrimitiveIndex],
-                        treelet.primitivesCount},
-                    orderedPrimitives,
-                    orderedPrimsFreePosition,
-                    splitBit);
-
-                treelet.nodes = lbvh.root;
-                nodesCount += lbvh.nodesCount;
-            },
-            treelets.size());
-
-        return LowerLevels{
-            .roots =
-                functional::fmap(treelets, [](auto& t) { return t.nodes; }),
-            .nodesCount = nodesCount,
-            .orderedPrimitives = std::move(orderedPrimitives),
-        };
     }
 } // namespace idragnev::pbrt::accelerators::bvh
