@@ -72,6 +72,9 @@ namespace idragnev::pbrt::accelerators::bvh {
         EqualCounts,
     };
 
+    Bounds3f bounds(const std::span<const PrimitiveInfo> range);
+    Bounds3f centroidBounds(const std::span<const PrimitiveInfo> range);
+
     // Uses the Surface Area Heuristic (SAH)
     // to find the minimum cost split position `p`.
     // Partitions the primitives at `p` only if:
@@ -87,4 +90,14 @@ namespace idragnev::pbrt::accelerators::bvh {
                    const Bounds3f& primitivesBounds,
                    const Bounds3f& primitivesCentroidBounds,
                    const std::size_t maxPrimitivesInNode);
+
+    // Uses the Surface Area Heuristic (SAH)
+    // to find the minimum cost split position `p`.
+    //
+    // Returns `p` if the primitives were partitioned.
+    Optional<std::size_t>
+    partitionBySAH(const std::size_t splitAxis,
+                   const std::span<PrimitiveInfo> primitives,
+                   const Bounds3f& primitivesBounds,
+                   const Bounds3f& primitivesCentroidBounds);
 } // namespace idragnev::pbrt::accelerators::bvh

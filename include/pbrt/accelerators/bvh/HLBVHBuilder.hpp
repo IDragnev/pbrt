@@ -23,6 +23,12 @@ namespace idragnev::pbrt::accelerators::bvh {
             PrimsVec orderedPrimitives;
         };
 
+        struct UpperLevelTree
+        {
+            BuildNode* root = nullptr;
+            std::size_t allocatedNodesCount = 0;
+        };
+
     public:
         HLBVHBuilder() = default;
         HLBVHBuilder(const std::size_t maxPrimsInNode) noexcept
@@ -34,6 +40,10 @@ namespace idragnev::pbrt::accelerators::bvh {
     private:
         BuildResult buildBVH(memory::MemoryArena& arena,
                              LowerLevels&& lowerLevels) const;
+        UpperLevelTree buildUpperLevelTree(
+            memory::MemoryArena& arena,
+            const std::span<PrimitiveInfo> treeletRootsInfosRange,
+            const std::vector<BuildNode*>& treeletRoots) const;
         LowerLevels buildLowerLevels(std::vector<LBVHTreelet>&& treelets) const;
         BuildTree emitLBVH(BuildNode*& buildNodes,
                            const std::span<const MortonPrimitive> primsSubrange,

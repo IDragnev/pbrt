@@ -33,17 +33,30 @@ namespace idragnev::pbrt::accelerators::bvh {
                             const std::size_t splitAxis);
 
     Optional<std::size_t>
-    partitionBySAH(const std::size_t splitAxis,
-                   const std::span<PrimitiveInfo> primitives,
-                   const Bounds3f& primitivesBounds,
-                   const Bounds3f& primitivesCentroidBounds,
-                   const std::size_t maxPrimitivesInNode) {
+    partitionBySAHImpl(const std::size_t splitAxis,
+                       const std::span<PrimitiveInfo> primitives,
+                       const Bounds3f& primitivesBounds,
+                       const Bounds3f& primitivesCentroidBounds,
+                       Optional<std::size_t> maxPrimitivesInNode) {
+        if (primitives.empty()) {
+            return pbrt::nullopt;
+        }
+
         const auto buckets =
             splitToBuckets(splitAxis, primitivesCentroidBounds, primitives);
         const auto split = findBestSplit(primitivesBounds, buckets);
 
-        const Float leafCost = static_cast<Float>(primitives.size());
-        if (primitives.size() > maxPrimitivesInNode || split.cost < leafCost) {
+        const bool shouldPartition =
+            maxPrimitivesInNode
+                .map([&](const std::size_t maxPrimsInNode) {
+                    Float leafCost = static_cast<Float>(primitives.size());
+
+                    return primitives.size() > maxPrimsInNode ||
+                           split.cost < leafCost;
+                })
+                .value_or(true);
+
+        if (shouldPartition) {
             const auto splitPos = std::partition(
                 primitives.begin(),
                 primitives.end(),
@@ -138,5 +151,30 @@ namespace idragnev::pbrt::accelerators::bvh {
         index = clamp(index, 0u, buckets.size() - 1u);
 
         return index;
+    }
+
+    Optional<std::size_t>
+    partitionBySAH(const std::size_t splitAxis,
+                   const std::span<PrimitiveInfo> primitives,
+                   const Bounds3f& primitivesBounds,
+                   const Bounds3f& primitivesCentroidBounds,
+                   const std::size_t maxPrimitivesInNode) {
+        return partitionBySAHImpl(splitAxis,
+                                  primitives,
+                                  primitivesBounds,
+                                  primitivesCentroidBounds,
+                                  pbrt::make_optional(maxPrimitivesInNode));
+    }
+
+    Optional<std::size_t>
+    partitionBySAH(const std::size_t splitAxis,
+                   const std::span<PrimitiveInfo> primitives,
+                   const Bounds3f& primitivesBounds,
+                   const Bounds3f& primitivesCentroidBounds) {
+        return partitionBySAHImpl(splitAxis,
+                                  primitives,
+                                  primitivesBounds,
+                                  primitivesCentroidBounds,
+                                  pbrt::nullopt);
     }
 } // namespace idragnev::pbrt::accelerators::bvh

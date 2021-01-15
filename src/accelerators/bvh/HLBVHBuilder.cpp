@@ -408,4 +408,75 @@ namespace idragnev::pbrt::accelerators::bvh {
             return pbrt::nullopt;
         }
     }
+
+    BuildResult HLBVHBuilder::buildBVH(memory::MemoryArena& arena,
+                                       LowerLevels&& lowerLevels) const {
+        std::vector<PrimitiveInfo> treeletRootsInfos =
+            functional::fmapIndexed(
+                lowerLevels.roots,
+                [](const BuildNode* root, const std::size_t i) {
+                    return PrimitiveInfo{i, root->bounds};
+                });
+
+        const UpperLevelTree lbvhTree = buildUpperLevelTree(
+            arena,
+            std::span<PrimitiveInfo>{treeletRootsInfos.begin(),
+                                     treeletRootsInfos.size()},
+            lowerLevels.roots);
+
+        return BuildResult{
+            .tree =
+                BuildTree{
+                    .root = lbvhTree.root,
+                    .nodesCount =
+                        lowerLevels.nodesCount + lbvhTree.allocatedNodesCount,
+                },
+            .orderedPrimitives = std::move(lowerLevels.orderedPrimitives),
+        };
+    }
+
+    HLBVHBuilder::UpperLevelTree HLBVHBuilder::buildUpperLevelTree(
+        memory::MemoryArena& arena,
+        const std::span<PrimitiveInfo> treeletRootsInfosRange,
+        const std::vector<BuildNode*>& treeletRoots) const {
+        assert(treeletRootsInfosRange.size() > 0);
+
+        if (treeletRootsInfosRange.size() == 1) {
+            const auto index = treeletRootsInfosRange[0].index;
+
+            return UpperLevelTree{
+                .root = treeletRoots[index],
+                .allocatedNodesCount = 0,
+            };
+        }
+
+        const Bounds3f rangeCentroidBounds =
+            centroidBounds(treeletRootsInfosRange);
+        const std::size_t splitAxis = rangeCentroidBounds.maximumExtent();
+
+        assert(rangeCentroidBounds.min[splitAxis] !=
+               rangeCentroidBounds.max[splitAxis]);
+
+        const auto splitPos = partitionBySAH(splitAxis,
+                                             treeletRootsInfosRange,
+                                             bounds(treeletRootsInfosRange),
+                                             rangeCentroidBounds);
+        const auto left =
+            buildUpperLevelTree(arena,
+                                treeletRootsInfosRange.first(*splitPos),
+                                treeletRoots);
+        const auto right =
+            buildUpperLevelTree(arena,
+                                treeletRootsInfosRange.subspan(*splitPos),
+                                treeletRoots);
+
+        BuildNode* const root = arena.alloc<BuildNode>();
+        *root = BuildNode::Interior(splitAxis, left.root, right.root);
+
+        return UpperLevelTree{
+            .root = root,
+            .allocatedNodesCount =
+                left.allocatedNodesCount + right.allocatedNodesCount + 1,
+        };
+    }
 } // namespace idragnev::pbrt::accelerators::bvh
