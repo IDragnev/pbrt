@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <memory>
+#include <span>
 
 namespace idragnev::pbrt::accelerators::bvh {
     struct PrimitiveInfo
@@ -70,4 +71,20 @@ namespace idragnev::pbrt::accelerators::bvh {
         Middle,
         EqualCounts,
     };
+
+    // Uses the Surface Area Heuristic (SAH)
+    // to find the minimum cost split position `p`.
+    // Partitions the primitives at `p` only if:
+    //   - primitives.size > `maxPrimitivesInNode` or
+    //   - the cost of splitting at `p` < leafCost
+    // where `leafCost` is the estimated SAH cost
+    // for the leaf node containing this primitives.
+    //
+    // Returns `p` if the primitives were partitioned.
+    Optional<std::size_t>
+    partitionBySAH(const std::size_t splitAxis,
+                   const std::span<PrimitiveInfo> primitives,
+                   const Bounds3f& primitivesBounds,
+                   const Bounds3f& primitivesCentroidBounds,
+                   const std::size_t maxPrimitivesInNode);
 } // namespace idragnev::pbrt::accelerators::bvh
