@@ -83,25 +83,21 @@ namespace idragnev::pbrt::accelerators::bvh {
     toMortonPrimitives(const std::vector<PrimitiveInfo>& primsInfo) {
         std::vector<MortonPrimitive> result{primsInfo.size()};
 
-        const Bounds3f centroidBounds =
-            std::accumulate(primsInfo.cbegin(),
-                            primsInfo.cend(),
-                            Bounds3f{},
-                            [](const Bounds3f& acc, const PrimitiveInfo& info) {
-                                return unionOf(acc, info.centroid);
-                            });
+        const Bounds3f primsCentroidBounds =
+            centroidBounds(std::span{primsInfo.cbegin(), primsInfo.size()});
 
         constexpr std::int64_t CHUNK_SIZE = 512;
         const auto iterationsCount =
             static_cast<std::int64_t>(primsInfo.size());
 
         parallel::parallelFor(
-            [&result, &primsInfo, &centroidBounds](const std::int64_t i) {
+            [&result, &primsInfo, &primsCentroidBounds](const std::int64_t i) {
                 const auto& info = primsInfo[static_cast<std::size_t>(i)];
                 auto& primitive = result[static_cast<std::size_t>(i)];
 
                 const Vector3f centroidOffset =
-                    centroidBounds.offset(info.centroid);
+                    primsCentroidBounds.offset(info.centroid);
+
                 primitive.index = info.index;
                 primitive.mortonCode = encodeMorton3(
                     constants::MORTON_DIMENSION_MAX * centroidOffset);

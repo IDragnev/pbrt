@@ -1,5 +1,6 @@
 #include "pbrt/accelerators/bvh/BVH.hpp"
 #include "pbrt/accelerators/bvh/RecursiveBuilder.hpp"
+#include "pbrt/accelerators/bvh/HLBVHBuilder.hpp"
 #include "pbrt/core/SurfaceInteraction.hpp"
 #include "pbrt/memory/Memory.hpp"
 
@@ -22,9 +23,11 @@ namespace idragnev::pbrt::accelerators {
 
         auto recursiveBuilder =
             bvh::RecursiveBuilder{splitMethod, this->maxPrimitivesInNode};
+        auto hlbvhBuilder = bvh::HLBVHBuilder{this->maxPrimitivesInNode};
+
         bvh::BuildResult result =
             splitMethod == bvh::SplitMethod::HLBVH
-                ? bvh::BuildResult{}
+                ? hlbvhBuilder(arena, this->primitives)
                 : recursiveBuilder(arena, this->primitives);
 
         this->primitives = std::move(result.orderedPrimitives);
