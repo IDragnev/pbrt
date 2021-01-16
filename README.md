@@ -7,7 +7,6 @@ The project is regularly built with:
  - MSVC 19.28
  - Clang 10.0
  - GCC 10.2
- - GCC 9.3 (less often)  
 
 **CMake 3.14 or higher**.  
 Note that **the warning level is set to Error for CMake builds**,  
