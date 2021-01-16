@@ -19,7 +19,7 @@ Example:
  ```
  # build with 64-bit floats
  $ git clone https://github.com/IDragnev/pbrt.git  
- $ cd pb-ray-tracer  
+ $ cd pbrt  
  $ mkdir build && cd build  
  $ cmake -D PBRT_FLOAT_AS_DOUBLE=ON ..  
  $ cmake --build .  
