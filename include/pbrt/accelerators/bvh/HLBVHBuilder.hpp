@@ -44,7 +44,9 @@ namespace idragnev::pbrt::accelerators::bvh {
             memory::MemoryArena& arena,
             const std::span<PrimitiveInfo> treeletRootsInfosRange,
             const std::vector<BuildNode*>& treeletRoots) const;
-        LowerLevels buildLowerLevels(std::vector<LBVHTreelet>&& treelets) const;
+        LowerLevels buildLowerLevels(
+            std::vector<LBVHTreelet>&& treelets,
+            const std::vector<MortonPrimitive>& mortonPrimInfos) const;
         BuildTree emitLBVH(BuildNode*& buildNodes,
                            const std::span<const MortonPrimitive> primsSubrange,
                            PrimsVec& orderedPrims,
@@ -59,6 +61,5 @@ namespace idragnev::pbrt::accelerators::bvh {
         std::size_t maxPrimitivesInNode = 1;
         const PrimsVec* prims = nullptr;
         std::vector<PrimitiveInfo> primitivesInfo;
-        std::vector<MortonPrimitive> mortonPrimInfos;
     };
 } // namespace idragnev::pbrt::accelerators::bvh

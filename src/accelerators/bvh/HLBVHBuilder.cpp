@@ -68,12 +68,13 @@ namespace idragnev::pbrt::accelerators::bvh {
             [](const auto& primitive, const std::size_t i) {
                 return PrimitiveInfo{i, primitive->worldBound()};
             });
-        this->mortonPrimInfos =
-            radixSort(toMortonPrimitives(this->primitivesInfo));
 
+        const std::vector<MortonPrimitive> mortonPrimInfos =
+            radixSort(toMortonPrimitives(this->primitivesInfo));
         std::vector<LBVHTreelet> treelets =
-            splitToTreelets(this->mortonPrimInfos, arena, false);
-        LowerLevels lls = buildLowerLevels(std::move(treelets));
+            splitToTreelets(mortonPrimInfos, arena, false);
+        LowerLevels lls =
+            buildLowerLevels(std::move(treelets), mortonPrimInfos);
 
         return buildBVH(arena, std::move(lls));
     }
@@ -243,8 +244,9 @@ namespace idragnev::pbrt::accelerators::bvh {
         return result;
     }
 
-    HLBVHBuilder::LowerLevels
-    HLBVHBuilder::buildLowerLevels(std::vector<LBVHTreelet>&& treelets) const {
+    HLBVHBuilder::LowerLevels HLBVHBuilder::buildLowerLevels(
+        std::vector<LBVHTreelet>&& treelets,
+        const std::vector<MortonPrimitive>& mortonPrimInfos) const {
         // start with the highest morton code bit which is not guaranteed
         // to be the same for each primitive in the cluster
         constexpr std::size_t splitBit = (constants::MORTON_CODE_BITS - 1) -
@@ -259,13 +261,14 @@ namespace idragnev::pbrt::accelerators::bvh {
              &nodesCount,
              &orderedPrimsFreePosition,
              &orderedPrimitives,
+             &mortonPrimInfos,
              this](const std::int64_t i) {
                 LBVHTreelet& treelet = treelets[static_cast<std::size_t>(i)];
 
                 const auto lbvh = emitLBVH(
                     treelet.nodes,
                     std::span<const MortonPrimitive>{
-                        &this->mortonPrimInfos[treelet.firstPrimitiveIndex],
+                        mortonPrimInfos.cbegin() + treelet.firstPrimitiveIndex,
                         treelet.primitivesCount},
                     orderedPrimitives,
                     orderedPrimsFreePosition,
