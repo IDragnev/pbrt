@@ -21,7 +21,7 @@ namespace idragnev::pbrt::accelerators {
     bvh::BuildTree BVH::buildBVHTree(const bvh::SplitMethod splitMethod) {
         memory::MemoryArena arena{1024 * 1024};
 
-        auto recursiveBuilder =
+        const auto recursiveBuilder =
             bvh::RecursiveBuilder{splitMethod, this->maxPrimitivesInNode};
         auto hlbvhBuilder = bvh::HLBVHBuilder{this->maxPrimitivesInNode};
 

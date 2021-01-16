@@ -2,19 +2,12 @@
 
 #include "BVHBuilders.hpp"
 
-#include "pbrt/core/Optional.hpp"
 #include "pbrt/memory/MemoryArena.hpp"
-
-namespace idragnev::pbrt::functional {
-    template <typename T>
-    class IntegerRange;
-}
 
 namespace idragnev::pbrt::accelerators::bvh {
     class RecursiveBuilder
     {
     private:
-        using IndicesRange = functional::IntegerRange<std::size_t>;
         using PrimsVec = std::vector<std::shared_ptr<const Primitive>>;
 
     public:
@@ -24,39 +17,31 @@ namespace idragnev::pbrt::accelerators::bvh {
             , maxPrimitivesInNode{maxPrimsInNode} {}
 
         BuildResult operator()(memory::MemoryArena& arena,
-                               const PrimsVec& prims);
+                               const PrimsVec& prims) const;
 
     private:
         BuildTree buildSubtree(memory::MemoryArena& arena,
-                               const IndicesRange infoIndicesRange,
-                               PrimsVec& orderedPrims);
+                               const std::span<PrimitiveInfo> primsInfoRange,
+                               const PrimsVec& primitives,
+                               PrimsVec& orderedPrims) const;
         BuildNode buildLeafNode(const Bounds3f& bounds,
-                                const IndicesRange infoIndicesRange,
+                                const std::span<PrimitiveInfo> primsInfoRange,
+                                const PrimsVec& primitives,
                                 PrimsVec& orderedPrims) const;
         Optional<std::pair<BuildTree, BuildTree>>
         buildInternalNodeChildren(memory::MemoryArena& arena,
                                   const Bounds3f& rangeBounds,
                                   const Bounds3f& rangeCentroidBounds,
-                                  const IndicesRange infoIndicesRange,
-                                  PrimsVec& orderedPrims);
-        Optional<std::size_t>
-        partitionPrimitivesInfo(const Bounds3f& rangeBounds,
-                                const Bounds3f& rangeCentroidBounds,
-                                const IndicesRange infoIndicesRange);
-        std::size_t partitionPrimitivesInfoInEqualSubsets(
-            const std::size_t splitAxis,
-            const IndicesRange infoIndicesRange);
-        Optional<std::size_t> partitionPrimitivesInfoAtAxisMiddle(
+                                  const std::span<PrimitiveInfo> primsInfoRange,
+                                  const PrimsVec& primitives,
+                                  PrimsVec& orderedPrims) const;
+        Optional<std::size_t> partitionPrimitivesInfo(
+            const Bounds3f& rangeBounds,
             const Bounds3f& rangeCentroidBounds,
-            const IndicesRange infoIndicesRange);
-        Optional<std::size_t>
-        partitionPrimitivesInfoBySAH(const Bounds3f& rangeBounds,
-                                     const Bounds3f& rangeCentroidBounds,
-                                     const IndicesRange infoIndicesRange);
+            const std::span<PrimitiveInfo> primsInfoRange) const;
+
     private:
         SplitMethod splitMethod = SplitMethod::SAH;
         std::size_t maxPrimitivesInNode = 1;
-        const PrimsVec* prims = nullptr;
-        std::vector<PrimitiveInfo> primitivesInfo;
     };
 } // namespace idragnev::pbrt::accelerators::bvh
