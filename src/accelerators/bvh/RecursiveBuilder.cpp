@@ -1,47 +1,7 @@
-#include "pbrt/accelerators/BVHBuilders.hpp"
+#include "pbrt/accelerators/bvh/RecursiveBuilder.hpp"
 #include "pbrt/functional/Functional.hpp"
 
 namespace idragnev::pbrt::accelerators::bvh {
-    struct RecursiveBuilder::SAHBucket
-    {
-        std::uint32_t primitivesCount = 0;
-        Bounds3f bounds;
-    };
-
-    struct BuildNode
-    {
-        static BuildNode Leaf(const std::size_t firstPrimitiveIndex,
-                              const std::size_t primitivesCount,
-                              const Bounds3f& bounds) {
-            BuildNode result{};
-            result.firstPrimitiveIndex = firstPrimitiveIndex;
-            result.primitivesCount = primitivesCount;
-            result.bounds = bounds;
-
-            return result;
-        }
-
-        static BuildNode Interior(const std::size_t splitAxis,
-                                  BuildNode* const child0,
-                                  BuildNode* const child1) {
-            BuildNode result{};
-            result.children[0] = child0;
-            result.children[1] = child1;
-            result.splitAxis = splitAxis;
-            result.bounds = unionOf(child0->bounds, child1->bounds);
-
-            return result;
-        }
-
-        Bounds3f bounds;
-
-        BuildNode* children[2] = {nullptr, nullptr};
-        std::size_t splitAxis = 0;
-
-        std::size_t firstPrimitiveIndex = 0;
-        std::size_t primitivesCount = 0;
-    };
-
     BuildResult RecursiveBuilder::operator()(memory::MemoryArena& arena,
                                              const PrimsVec& primitives) {
         using functional::ScopedFn;
@@ -74,8 +34,9 @@ namespace idragnev::pbrt::accelerators::bvh {
     RecursiveBuilder::buildSubtree(memory::MemoryArena& arena,
                                    const IndicesRange infoIndicesRange,
                                    PrimsVec& orderedPrims) {
-        BuildTree result{};
-        result.root = arena.alloc<BuildNode>();
+        BuildTree result{
+            .root = arena.alloc<BuildNode>(),
+        };
 
         const Bounds3f rangeBounds = functional::foldl(
             infoIndicesRange,
@@ -87,7 +48,7 @@ namespace idragnev::pbrt::accelerators::bvh {
         if (const auto primitivesCount = infoIndicesRange.size();
             primitivesCount == 1)
         {
-            result.nodesCount = primitivesCount;
+            result.nodesCount = 1;
             *result.root = buildLeafNode(rangeBounds, infoIndicesRange, orderedPrims);
         }
         else {
@@ -101,7 +62,7 @@ namespace idragnev::pbrt::accelerators::bvh {
 
             if (rangeCentroidBounds.max[splitAxis] ==
                 rangeCentroidBounds.min[splitAxis]) {
-                result.nodesCount = primitivesCount;
+                result.nodesCount = 1;
                 *result.root = buildLeafNode(rangeBounds,
                                              infoIndicesRange,
                                              orderedPrims);
@@ -116,12 +77,12 @@ namespace idragnev::pbrt::accelerators::bvh {
                 if (subtrees.has_value()) {
                     const auto [left, right] = subtrees.value();
 
-                    result.nodesCount = left.nodesCount + right.nodesCount;
+                    result.nodesCount = left.nodesCount + right.nodesCount + 1;
                     *result.root =
                         BuildNode::Interior(splitAxis, left.root, right.root);
                 }
                 else { // failed to split the primitives into two subtrees
-                    result.nodesCount = primitivesCount;
+                    result.nodesCount = 1;
                     *result.root = buildLeafNode(rangeBounds,
                                                  infoIndicesRange,
                                                  orderedPrims);
@@ -268,122 +229,24 @@ namespace idragnev::pbrt::accelerators::bvh {
         constexpr std::size_t N_PRIMITIVES_LOWER_BOUND = 5;
 
         const std::size_t splitAxis = rangeCentroidBounds.maximumExtent();
-        const std::size_t primitivesCount = infoIndicesRange.size();
 
-        if (primitivesCount < N_PRIMITIVES_LOWER_BOUND) {
+        if (infoIndicesRange.size() < N_PRIMITIVES_LOWER_BOUND) {
             const std::size_t splitPosition =
                 partitionPrimitivesInfoInEqualSubsets(splitAxis,
                                                       infoIndicesRange);
             return pbrt::make_optional(splitPosition);
         }
         else {
-            const auto buckets = splitToSAHBuckets(splitAxis,
-                                                   rangeCentroidBounds,
-                                                   infoIndicesRange);
-            const auto splitCosts = computeSplitCosts(rangeBounds, buckets);
-            const auto minCostPosition =
-                std::min_element(splitCosts.cbegin(), splitCosts.cend());
-            const Float minCost =
-                minCostPosition != splitCosts.cend() ? (*minCostPosition) : 0.f;
-            const std::size_t minCostSplitBucketIndex =
-                minCostPosition != splitCosts.cend()
-                    ? static_cast<std::size_t>(minCostPosition -
-                                               splitCosts.cbegin())
-                    : 0;
+            const auto rangeInfos = std::span<PrimitiveInfo>{
+                this->primitivesInfo.begin() + infoIndicesRange.first(),
+                infoIndicesRange.size()};
 
-            const Float leafCost = static_cast<Float>(primitivesCount);
-            if (primitivesCount > this->maxPrimitivesInNode ||
-                minCost < leafCost) {
-                const auto primsInfoBegin = this->primitivesInfo.begin();
-                const auto pmid = std::partition(
-                    primsInfoBegin + infoIndicesRange.first(),
-                    primsInfoBegin + infoIndicesRange.last(),
-                    [&rangeCentroidBounds,
-                     splitAxis,
-                     &buckets,
-                     minCostSplitBucketIndex](const PrimitiveInfo& info) {
-                        const std::size_t index =
-                            bucketIndex(info,
-                                        rangeCentroidBounds,
-                                        buckets,
-                                        splitAxis);
-
-                        return index <= minCostSplitBucketIndex;
-                    });
-
-                const auto splitPosition = pmid - primsInfoBegin;
-                return pbrt::make_optional(static_cast<std::size_t>(splitPosition));
-            }
+            return partitionBySAH(
+                splitAxis,
+                rangeInfos,
+                rangeBounds,
+                rangeCentroidBounds,
+                this->maxPrimitivesInNode);
         }
-
-        return pbrt::nullopt;
-    }
-
-    auto RecursiveBuilder::splitToSAHBuckets(
-        const std::size_t splitAxis,
-        const Bounds3f& rangeCentroidBounds,
-        const IndicesRange infoIndicesRange) const -> SAHBucketsArray {
-        SAHBucketsArray buckets{};
-
-        std::for_each(
-            this->primitivesInfo.begin() + infoIndicesRange.first(),
-            this->primitivesInfo.begin() + infoIndicesRange.last(),
-            [&rangeCentroidBounds, &buckets, splitAxis](
-                const PrimitiveInfo& info) {
-                const std::size_t index =
-                    bucketIndex(info, rangeCentroidBounds, buckets, splitAxis);
-
-                buckets[index].primitivesCount++;
-                buckets[index].bounds =
-                    unionOf(buckets[index].bounds, info.bounds);
-            });
-
-        return buckets;
-    }
-
-    RecursiveBuilder::SAHSplitCostsArray
-    RecursiveBuilder::computeSplitCosts(const Bounds3f& rangeBounds,
-                                        const SAHBucketsArray& buckets) const {
-        struct PrimitiveSet
-        {
-            Bounds3f bounds;
-            std::size_t size = 0;
-        };
-        const auto makeSetFromBuckets = [&buckets](const std::size_t from,
-                                                   const std::size_t to) {
-            PrimitiveSet set{};
-            for (auto i = from; i < to; ++i) {
-                set.bounds = unionOf(set.bounds, buckets[i].bounds);
-                set.size += buckets[i].primitivesCount;
-            }
-            return set;
-        };
-
-        SAHSplitCostsArray splitCosts{};
-        const Float rangeBoundsSurfaceArea = rangeBounds.surfaceArea();
-        for (std::size_t i = 0; i < splitCosts.size(); ++i) {
-            const PrimitiveSet set1 = makeSetFromBuckets(0u, i + 1);
-            const PrimitiveSet set2 = makeSetFromBuckets(i + 1, buckets.size());
-
-            splitCosts[i] = 1 + (set1.size * set1.bounds.surfaceArea() +
-                                 set2.size * set2.bounds.surfaceArea()) /
-                                    rangeBoundsSurfaceArea;
-        }
-
-        return splitCosts;
-    }
-
-    std::size_t
-    RecursiveBuilder::bucketIndex(const PrimitiveInfo& info,
-                                  const Bounds3f& rangeCentroidBounds,
-                                  const SAHBucketsArray& buckets,
-                                  const std::size_t splitAxis) {
-        const Vector3f centroidOffset =
-            rangeCentroidBounds.offset(info.centroid);
-        auto index = static_cast<std::size_t>(
-            centroidOffset[splitAxis] * static_cast<Float>(buckets.size()));
-        index = clamp(index, 0u, buckets.size() - 1u);
-
-        return index;
     }
 } // namespace idragnev::pbrt::accelerators::bvh
