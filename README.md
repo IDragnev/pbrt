@@ -1,4 +1,4 @@
-# pb-ray-tracer
+# pbrt
 A ray tracer based on [pbrt-v3](http://www.pbr-book.org/3ed-2018/contents.html).
 
 ## Build
@@ -18,7 +18,7 @@ CMake options:
 Example:  
  ```
  # build with 64-bit floats
- $ git clone https://github.com/IDragnev/pb-ray-tracer.git  
+ $ git clone https://github.com/IDragnev/pbrt.git  
  $ cd pb-ray-tracer  
  $ mkdir build && cd build  
  $ cmake -D PBRT_FLOAT_AS_DOUBLE=ON ..  
