@@ -2,21 +2,23 @@
 
 #include "pbrt/core/Primitive.hpp"
 #include "pbrt/core/Optional.hpp"
+#include "pbrt/memory/MemoryArena.hpp"
 
 #include <vector>
 #include <memory>
 
 namespace idragnev::pbrt::accelerators {
     namespace bvh {
+        struct BuildNode;
         struct BuildTree;
         enum class SplitMethod;
     } // namespace bvh
 
     class BVH : public Aggregate
     {
-        struct LinearBVHNode
-        {
-        };
+    private:
+        struct LinearBVHNode;
+        struct FlattenResult;
 
     public:
         BVH(std::vector<std::shared_ptr<const Primitive>> primitives,
@@ -31,7 +33,10 @@ namespace idragnev::pbrt::accelerators {
         bool intersectP(const Ray& ray) const override;
 
     private:
-        bvh::BuildTree buildBVHTree(const bvh::SplitMethod m);
+        bvh::BuildTree buildBVHTree(const bvh::SplitMethod m,
+                                    memory::MemoryArena& arena);
+        FlattenResult flattenBVHTree(const bvh::BuildNode& buildNode,
+                                     const std::size_t linearNodeIndex);
 
     private:
         std::uint32_t maxPrimitivesInNode = 1;
