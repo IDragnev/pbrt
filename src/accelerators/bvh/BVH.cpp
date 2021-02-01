@@ -5,6 +5,18 @@
 #include "pbrt/memory/Memory.hpp"
 
 namespace idragnev::pbrt::accelerators {
+    class NodeIndicesStack
+    {
+    public:
+        void push(const std::size_t index) { data[top++] = index; }
+        std::size_t pop() { return data[--top]; }
+
+        bool isEmpty() const noexcept { return top == 0; }
+
+    private:
+        std::size_t top = 0;
+        std::size_t data[64] = {};
+    };
 
     struct BVH::FlattenResult
     {
@@ -29,21 +41,23 @@ namespace idragnev::pbrt::accelerators {
             };
         }
 
-        static LinearBVHNode Interior(const std::size_t secondChildOffset,
+        static LinearBVHNode Interior(const std::size_t secondChildIndex,
                                       const std::uint8_t splitAxis,
                                       const Bounds3f& bounds) {
             return LinearBVHNode{
                 .bounds = bounds,
-                .secondChildOffset = secondChildOffset,
+                .secondChildIndex = secondChildIndex,
                 .splitAxis = splitAxis,
             };
         }
+
+        bool isLeaf() const noexcept { return primitivesCount > 0; }
 
         Bounds3f bounds;
         union
         {
             std::size_t firstPrimitiveIndex;
-            std::size_t secondChildOffset;
+            std::size_t secondChildIndex;
         };
         std::uint16_t primitivesCount = 0;
         std::uint8_t splitAxis = 0;
@@ -124,11 +138,123 @@ namespace idragnev::pbrt::accelerators {
 
     BVH::~BVH() { memory::freeAligned(nodes); }
 
-    Bounds3f BVH::worldBound() const { return Bounds3f{}; }
-
-    Optional<SurfaceInteraction> BVH::intersect(const Ray&) const {
-        return pbrt::nullopt;
+    Bounds3f BVH::worldBound() const {
+        return (this->nodes != nullptr) ? nodes[0].bounds : Bounds3f{};
     }
 
-    bool BVH::intersectP(const Ray&) const { return false; }
+    Optional<SurfaceInteraction> BVH::intersect(const Ray& ray) const {
+        Optional<SurfaceInteraction> result = pbrt::nullopt;
+        if (this->nodes == nullptr) {
+            return result;
+        }
+
+        const Vector3f invDir{1.f / ray.d.x, 1.f / ray.d.y, 1.f / ray.d.z};
+        const std::size_t dirIsNeg[3] = {invDir.x < 0.f ? 1u : 0u,
+                                         invDir.y < 0.f ? 1u : 0u,
+                                         invDir.z < 0.f ? 1u : 0u};
+
+        NodeIndicesStack nodesToVisitStack;
+        nodesToVisitStack.push(0);
+
+        while (nodesToVisitStack.isEmpty() == false) {
+            const std::size_t currentNodeIndex = nodesToVisitStack.pop();
+            const LinearBVHNode& node = this->nodes[currentNodeIndex];
+
+            if (node.bounds.intersectP(ray, invDir, dirIsNeg)) {
+                if (node.isLeaf()) {
+                    result = intersectLeafNode(node, ray);
+                }
+                else {
+                    const std::size_t leftChildIndex = currentNodeIndex + 1;
+
+                    if (dirIsNeg[node.splitAxis] == 1) {
+                        nodesToVisitStack.push(leftChildIndex);
+                        nodesToVisitStack.push(node.secondChildIndex);
+                    }
+                    else {
+                        nodesToVisitStack.push(node.secondChildIndex);
+                        nodesToVisitStack.push(leftChildIndex);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    Optional<SurfaceInteraction>
+    BVH::intersectLeafNode(const LinearBVHNode& node, const Ray& ray) const {
+        Optional<SurfaceInteraction> result = pbrt::nullopt;
+
+        if (node.isLeaf()) {
+            const auto primsRange =
+                std::span<const std::shared_ptr<const Primitive>>{
+                    this->primitives.cbegin() + node.firstPrimitiveIndex,
+                    node.primitivesCount};
+
+            for (const auto& primitive : primsRange) {
+                result = primitive->intersect(ray);
+            }
+        }
+
+        return result;
+    }
+
+    bool BVH::intersectP(const Ray& ray) const {
+        if (this->nodes == nullptr) {
+            return false;
+        }
+
+        const Vector3f invDir{1.f / ray.d.x, 1.f / ray.d.y, 1.f / ray.d.z};
+        const std::size_t dirIsNeg[3] = {invDir.x < 0.f ? 1u : 0u,
+                                         invDir.y < 0.f ? 1u : 0u,
+                                         invDir.z < 0.f ? 1u : 0u};
+
+        NodeIndicesStack nodesToVisitStack;
+        nodesToVisitStack.push(0);
+
+        while (nodesToVisitStack.isEmpty() == false) {
+            const std::size_t currentNodeIndex = nodesToVisitStack.pop();
+            const LinearBVHNode& node = this->nodes[currentNodeIndex];
+
+            if (node.bounds.intersectP(ray, invDir, dirIsNeg)) {
+                if (node.isLeaf()) {
+                    if (intersectPLeafNode(node, ray)) {
+                        return true;
+                    }
+                }
+                else {
+                    const std::size_t leftChildIndex = currentNodeIndex + 1;
+
+                    if (dirIsNeg[node.splitAxis] == 1) {
+                        nodesToVisitStack.push(leftChildIndex);
+                        nodesToVisitStack.push(node.secondChildIndex);
+                    }
+                    else {
+                        nodesToVisitStack.push(node.secondChildIndex);
+                        nodesToVisitStack.push(leftChildIndex);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool BVH::intersectPLeafNode(const LinearBVHNode& node,
+                                 const Ray& ray) const {
+        if (node.isLeaf() == false) {
+            return false;
+        }
+
+        const auto primsRange =
+            std::span<const std::shared_ptr<const Primitive>>{
+                this->primitives.cbegin() + node.firstPrimitiveIndex,
+                node.primitivesCount};
+
+        return std::any_of(
+            primsRange.begin(),
+            primsRange.end(),
+            [&ray](const auto& p) { return p->intersectP(ray); });
+    }
 } // namespace idragnev::pbrt::accelerators

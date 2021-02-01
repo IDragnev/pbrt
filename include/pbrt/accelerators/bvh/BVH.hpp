@@ -37,6 +37,9 @@ namespace idragnev::pbrt::accelerators {
                                     memory::MemoryArena& arena);
         FlattenResult flattenBVHTree(const bvh::BuildNode& buildNode,
                                      const std::size_t linearNodeIndex);
+        Optional<SurfaceInteraction>
+        intersectLeafNode(const LinearBVHNode& node, const Ray& ray) const;
+        bool intersectPLeafNode(const LinearBVHNode& node, const Ray& ray) const;
 
     private:
         std::uint32_t maxPrimitivesInNode = 1;
