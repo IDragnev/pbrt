@@ -77,7 +77,7 @@ namespace idragnev::pbrt::accelerators {
             const bvh::BuildTree tree = buildBVHTree(splitMethod, arena);
             this->nodes =
                 memory::allocCacheAligned<LinearBVHNode>(tree.nodesCount);
-            const auto result = flattenBVHTree(*tree.root, 0);
+            [[maybe_unused]] const auto result = flattenBVHTree(*tree.root, 0);
 
             assert(result.linearNodesWritten == tree.nodesCount);
         }
