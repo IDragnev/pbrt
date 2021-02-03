@@ -144,46 +144,80 @@ namespace idragnev::pbrt::accelerators {
 
     Optional<SurfaceInteraction> BVH::intersect(const Ray& ray) const {
         Optional<SurfaceInteraction> result = pbrt::nullopt;
-        if (this->nodes == nullptr) {
-            return result;
-        }
 
-        const Vector3f invDir{1.f / ray.d.x, 1.f / ray.d.y, 1.f / ray.d.z};
-        const std::size_t dirIsNeg[3] = {invDir.x < 0.f ? 1u : 0u,
-                                         invDir.y < 0.f ? 1u : 0u,
-                                         invDir.z < 0.f ? 1u : 0u};
-
-        NodeIndicesStack nodesToVisitStack;
-        nodesToVisitStack.push(0);
-
-        while (nodesToVisitStack.isEmpty() == false) {
-            const std::size_t currentNodeIndex = nodesToVisitStack.pop();
-            const LinearBVHNode& node = this->nodes[currentNodeIndex];
-
-            if (node.bounds.intersectP(ray, invDir, dirIsNeg)) {
-                if (node.isLeaf()) {
-                    result = intersectLeafNode(node, ray);
-                }
-                else {
-                    const std::size_t leftChildIndex = currentNodeIndex + 1;
-
-                    if (dirIsNeg[node.splitAxis] == 1) {
-                        nodesToVisitStack.push(leftChildIndex);
-                        nodesToVisitStack.push(node.secondChildIndex);
-                    }
-                    else {
-                        nodesToVisitStack.push(node.secondChildIndex);
-                        nodesToVisitStack.push(leftChildIndex);
-                    }
-                }
-            }
-        }
+        traverseIntersect(
+            [this, &result](const LinearBVHNode& leafNode, const Ray& ray) {
+                result = intersectLeafNodePrims(leafNode, ray);
+                return false;
+            },
+            ray);
 
         return result;
     }
 
+    bool BVH::intersectP(const Ray& ray) const {
+        bool result = false;
+
+        traverseIntersect(
+            [this, &result](const LinearBVHNode& leafNode, const Ray& ray) {
+                result = intersectPLeafNodePrims(leafNode, ray);
+                return result;
+            },
+            ray);
+
+        return result;
+    }
+
+    // Traverses the tree, ignoring subtrees which are not intersected by `ray`.
+    // For intersected internal nodes, visits the two child trees in
+    // a front-to-back order.
+    // Calls `intersectLeaf` with `ray` for each intersected leaf node.
+    // (!) Stops the traversal if `intersectLeaf` returns true -
+    // `intersectLeaf` indicates whether the traversal should stop. (!)
+    void BVH::traverseIntersect(
+        std::function<bool(const LinearBVHNode&, const Ray&)> intersectLeaf,
+        const Ray& ray) const {
+        if (this->nodes == nullptr) {
+            return;
+        }
+
+        const Vector3f invDir{1.f / ray.d.x, 1.f / ray.d.y, 1.f / ray.d.z};
+        const std::size_t dirIsNegative[3] = {invDir.x < 0.f ? 1u : 0u,
+                                              invDir.y < 0.f ? 1u : 0u,
+                                              invDir.z < 0.f ? 1u : 0u};
+
+        NodeIndicesStack nodesToVisit;
+        nodesToVisit.push(0);
+
+        while (nodesToVisit.isEmpty() == false) {
+            const std::size_t currentNodeIndex = nodesToVisit.pop();
+            const LinearBVHNode& node = this->nodes[currentNodeIndex];
+
+            if (node.bounds.intersectP(ray, invDir, dirIsNegative)) {
+                if (node.isLeaf()) {
+                    if (bool stop = intersectLeaf(node, ray); stop) {
+                        return;
+                    }
+                }
+                else {
+                    const std::size_t leftChildIndex = currentNodeIndex + 1;
+
+                    if (dirIsNegative[node.splitAxis] == 1) {
+                        nodesToVisit.push(leftChildIndex);
+                        nodesToVisit.push(node.secondChildIndex);
+                    }
+                    else {
+                        nodesToVisit.push(node.secondChildIndex);
+                        nodesToVisit.push(leftChildIndex);
+                    }
+                }
+            }
+        }
+    }
+
     Optional<SurfaceInteraction>
-    BVH::intersectLeafNode(const LinearBVHNode& node, const Ray& ray) const {
+    BVH::intersectLeafNodePrims(const LinearBVHNode& node,
+                                const Ray& ray) const {
         Optional<SurfaceInteraction> result = pbrt::nullopt;
 
         if (node.isLeaf()) {
@@ -200,48 +234,7 @@ namespace idragnev::pbrt::accelerators {
         return result;
     }
 
-    bool BVH::intersectP(const Ray& ray) const {
-        if (this->nodes == nullptr) {
-            return false;
-        }
-
-        const Vector3f invDir{1.f / ray.d.x, 1.f / ray.d.y, 1.f / ray.d.z};
-        const std::size_t dirIsNeg[3] = {invDir.x < 0.f ? 1u : 0u,
-                                         invDir.y < 0.f ? 1u : 0u,
-                                         invDir.z < 0.f ? 1u : 0u};
-
-        NodeIndicesStack nodesToVisitStack;
-        nodesToVisitStack.push(0);
-
-        while (nodesToVisitStack.isEmpty() == false) {
-            const std::size_t currentNodeIndex = nodesToVisitStack.pop();
-            const LinearBVHNode& node = this->nodes[currentNodeIndex];
-
-            if (node.bounds.intersectP(ray, invDir, dirIsNeg)) {
-                if (node.isLeaf()) {
-                    if (intersectPLeafNode(node, ray)) {
-                        return true;
-                    }
-                }
-                else {
-                    const std::size_t leftChildIndex = currentNodeIndex + 1;
-
-                    if (dirIsNeg[node.splitAxis] == 1) {
-                        nodesToVisitStack.push(leftChildIndex);
-                        nodesToVisitStack.push(node.secondChildIndex);
-                    }
-                    else {
-                        nodesToVisitStack.push(node.secondChildIndex);
-                        nodesToVisitStack.push(leftChildIndex);
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    bool BVH::intersectPLeafNode(const LinearBVHNode& node,
+    bool BVH::intersectPLeafNodePrims(const LinearBVHNode& node,
                                  const Ray& ray) const {
         if (node.isLeaf() == false) {
             return false;
