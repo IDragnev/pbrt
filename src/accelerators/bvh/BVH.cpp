@@ -147,7 +147,8 @@ namespace idragnev::pbrt::accelerators {
 
         traverseIntersect(
             [this, &result](const LinearBVHNode& leafNode, const Ray& ray) {
-                result = intersectLeafNodePrims(leafNode, ray);
+                result = intersectLeafNodePrims(leafNode, ray)
+                         .disjunction(std::move(result));
                 return false;
             },
             ray);
@@ -227,7 +228,7 @@ namespace idragnev::pbrt::accelerators {
                     node.primitivesCount};
 
             for (const auto& primitive : primsRange) {
-                result = primitive->intersect(ray);
+                result = primitive->intersect(ray).disjunction(std::move(result));
             }
         }
 
@@ -235,7 +236,7 @@ namespace idragnev::pbrt::accelerators {
     }
 
     bool BVH::intersectPLeafNodePrims(const LinearBVHNode& node,
-                                 const Ray& ray) const {
+                                      const Ray& ray) const {
         if (node.isLeaf() == false) {
             return false;
         }
