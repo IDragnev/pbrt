@@ -13,6 +13,7 @@ set(RAY_TRACER_CORE_SOURCE
   Primitive.cpp
   GeometricPrimitive.cpp
   TransformedPrimitive.cpp
+  SampledSpectrum.cpp
 )
 
 set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/core)
@@ -57,6 +58,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/TransformedPrimitive.hpp
   ${CORE_HEADERS_DIR}/Optional.hpp
   ${CORE_HEADERS_DIR}/CoefficientSpectrum.hpp
+  ${CORE_HEADERS_DIR}/SampledSpectrum.hpp
 )
 
 add_library(
@@ -69,7 +71,7 @@ target_link_libraries(corelib
   PUBLIC optional
 )
 target_include_directories(corelib PUBLIC ${PROJECT_SOURCE_DIR}/include)
-target_compile_features(corelib PUBLIC cxx_std_17)
+target_compile_features(corelib PUBLIC cxx_std_20)
 target_compile_options(corelib
  PRIVATE ${PBRT_TARGET_WARNING_FLAGS}
 )

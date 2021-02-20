@@ -16,8 +16,12 @@ namespace idragnev::pbrt {
         inline static constexpr auto NumberOfSamples = SamplesCount;
 
         CoefficientSpectrum() = default;
-        explicit CoefficientSpectrum(const Float v) : samples(v) {
+        explicit CoefficientSpectrum(
+            const std::array<Float, SamplesCount>& samples)
+            : samples(samples) {}
+        explicit CoefficientSpectrum(const Float v) {
             assert(isNaN(v) == false);
+            samples.fill(v);
         }
 
         template <typename BinOp>
@@ -42,14 +46,14 @@ namespace idragnev::pbrt {
         }
 
         CoefficientSpectrum& operator*=(const Float v) {
-            assert(isNan(v) == false);
+            assert(isNaN(v) == false);
             *this = this->map([v](const Float s) { return s * v; });
 
             return *this;
         }
 
         CoefficientSpectrum& operator/=(const Float v) {
-            assert(isNan(v) == false);
+            assert(isNaN(v) == false);
             assert(v != 0.f);
             *this = this->map([v](const Float s) { return s / v; });
 
