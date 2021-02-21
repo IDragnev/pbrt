@@ -155,7 +155,7 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline auto lerp(const Float t, const T& a, const T& b) noexcept {
+    inline constexpr auto lerp(const Float t, const T& a, const T& b) noexcept {
         return (1.f - t) * a + t * b;
     }
 

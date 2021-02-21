@@ -16,7 +16,7 @@ namespace idragnev::pbrt {
         inline static constexpr auto NumberOfSamples = SamplesCount;
 
         CoefficientSpectrum() = default;
-        explicit CoefficientSpectrum(
+        constexpr explicit CoefficientSpectrum(
             const std::array<Float, SamplesCount>& samples)
             : samples(samples) {}
         explicit CoefficientSpectrum(const Float v) {
