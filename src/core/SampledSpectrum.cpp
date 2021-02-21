@@ -137,9 +137,9 @@ namespace idragnev::pbrt {
 #ifdef _MSC_VER
     #pragma warning(push)
     #pragma warning(disable : 4305) // double constant assigned to float
-
+#endif
     static const Float CIE_Y_INTEGRAL = 106.856895;
-
+#ifdef _MSC_VER
     #pragma warning(pop)
 #endif
 
