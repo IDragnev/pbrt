@@ -96,11 +96,11 @@ namespace idragnev::pbrt {
                         values[i + 1]);
         };
 
-        // find the first lambdas segment {lambda i, lambda i + 1}
-        // that overlaps `region` (lambdas[i] <= region.lambdaStart <= lambdas[i + 1])
-        const auto lambdaIplus1Pos =
-            std::lower_bound(lambdas.begin(), lambdas.end(), region.lambdaStart);
-        assert(lambdaIplus1Pos != lambdas.begin());
+        // find the first lambdas segment {lambdas[i], lambdas[i + 1]} such that
+        // lambdas[i] <= region.lambdaStart <= lambdas[i + 1]
+        const auto lambdaIplus1Pos = std::lower_bound(lambdas.begin() + 1,
+                                                      lambdas.end(),
+                                                      region.lambdaStart);
         assert(lambdaIplus1Pos != lambdas.end());
 
         const auto lambdaIplus1Index = lambdaIplus1Pos - lambdas.begin();
