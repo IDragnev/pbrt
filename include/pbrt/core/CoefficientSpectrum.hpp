@@ -201,7 +201,7 @@ namespace idragnev::pbrt {
     template <std::size_t SamplesCount>
     inline CoefficientSpectrum<SamplesCount>
     pow(const CoefficientSpectrum<SamplesCount>& cs, const Float e) {
-        return cs.map([](const Float s) { return std::pow(s, e); });
+        return cs.map([e](const Float s) { return std::pow(s, e); });
     }
 
     template <std::size_t SamplesCount>
