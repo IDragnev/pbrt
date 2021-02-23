@@ -17,8 +17,8 @@ namespace idragnev::pbrt {
     public:
         using CoefficientSpectrum::CoefficientSpectrum;
 
-        static SampledSpectrum fromSamples(const SpectrumSamples& samples);
-        static constexpr SampledSpectrum fromSortedSamples(const SpectrumSamples& samples);
+        static SampledSpectrum fromSamples(SpectrumSamples samples);
+        static constexpr SampledSpectrum fromSortedSamples(SpectrumSamples samples);
 
         std::array<Float, 3> toXYZ() const;
         Float y() const;

@@ -22,30 +22,42 @@ namespace idragnev::pbrt {
     constexpr Float averageSpectrumSamples(const std::span<const Float> lambdas,
                                            const std::span<const Float> values,
                                            const WavelengthRegion& region);
+    inline constexpr SpectrumSamples
+    shrinkToSameSize(const SpectrumSamples& samples) noexcept {
+        const auto n = std::min(samples.lambdas.size(), samples.values.size());
+
+        return SpectrumSamples{
+            .lambdas = samples.lambdas.first(n),
+            .values = samples.values.first(n),
+        };
+    }
 
     SampledSpectrum
-    SampledSpectrum::fromSamples(const SpectrumSamples& spectrumSamples) {
-        const std::span<const Float> lambdas = spectrumSamples.lambdas;
-        const std::span<const Float> values = spectrumSamples.values;
-        assert(lambdas.size() == values.size());
+    SampledSpectrum::fromSamples(SpectrumSamples spectrumSamples) {
+        const auto [lambdas, values] = shrinkToSameSize(spectrumSamples);
 
         if (!std::is_sorted(lambdas.begin(), lambdas.end())) {
             std::vector<Float> sortedLambdas(lambdas.begin(), lambdas.end());
             std::vector<Float> sortedVals(values.begin(), values.end());
             sortSpectrumSamples(sortedLambdas, sortedVals);
 
-            return fromSortedSamples(SpectrumSamples{
+            return fromSortedSamples({
                 .lambdas = sortedLambdas,
                 .values = sortedVals,
             });
         }
         else {
-            return fromSortedSamples(spectrumSamples);
+            return fromSortedSamples({
+                .lambdas = lambdas,
+                .values = values,
+            });
         }
     }
 
     constexpr SampledSpectrum
-    SampledSpectrum::fromSortedSamples(const SpectrumSamples& spectrumSamples) {
+    SampledSpectrum::fromSortedSamples(SpectrumSamples spectrumSamples) {
+        spectrumSamples = shrinkToSameSize(spectrumSamples);
+
         std::array<Float, SampledSpectrum::NumberOfSamples> samples;
         const Float samplesCount = static_cast<Float>(samples.size());
 
@@ -101,7 +113,6 @@ namespace idragnev::pbrt {
         const auto lambdaIplus1Pos = std::lower_bound(lambdas.begin() + 1,
                                                       lambdas.end(),
                                                       region.lambdaStart);
-
         const auto lambdaIplus1Index = lambdaIplus1Pos - lambdas.begin();
         for (std::size_t i = static_cast<std::size_t>(lambdaIplus1Index) - 1;
              i + 1 < lambdas.size() && lambdas[i] <= region.lambdaEnd;
