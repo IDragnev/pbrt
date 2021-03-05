@@ -23,11 +23,39 @@ namespace idragnev::pbrt {
         std::span<const Float> values;
     };
 
+    class RGBSpectrum : public CoefficientSpectrum<3>
+    {
+    public:
+        using CoefficientSpectrum::CoefficientSpectrum;
+        RGBSpectrum(const CoefficientSpectrum<RGBSpectrum::NumberOfSamples>& cs)
+            : CoefficientSpectrum(cs) {}
+
+        static RGBSpectrum fromRGB(const std::array<Float, 3>& rgb) {
+            return RGBSpectrum(rgb);
+        }
+        static RGBSpectrum fromXYZ(const std::array<Float, 3>& xyz) {
+            return fromRGB(XYZToRGB(xyz));
+        }
+
+        Float y() const {
+            return 0.212671f * (*this)[0] +
+                   0.715160f * (*this)[1] +
+                   0.072169f * (*this)[2];
+        }
+        std::array<Float, 3> toXYZ() const { return RGBToXYZ(this->toRGB()); }
+        std::array<Float, 3> toRGB() const {
+            return {(*this)[0], (*this)[1], (*this)[2]};
+        }
+
+        RGBSpectrum toRGBSpectrum() const { return *this; }
+    };
+
     class SampledSpectrum : public CoefficientSpectrum<60>
     {
     public:
         using CoefficientSpectrum::CoefficientSpectrum;
-        SampledSpectrum(const CoefficientSpectrum<60>& cs)
+        SampledSpectrum(
+            const CoefficientSpectrum<SampledSpectrum::NumberOfSamples>& cs)
             : CoefficientSpectrum(cs) {}
 
         static SampledSpectrum fromSamples(SpectrumSamples samples);
@@ -52,6 +80,10 @@ namespace idragnev::pbrt {
         Float y() const;
         std::array<Float, 3> toXYZ() const;
         std::array<Float, 3> toRGB() const { return XYZToRGB(this->toXYZ()); }
+
+        RGBSpectrum toRGBSpectrum() const {
+            return RGBSpectrum::fromRGB(this->toRGB());
+        }
     };
 
     inline constexpr std::array<Float, 3>
