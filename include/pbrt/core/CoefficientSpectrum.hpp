@@ -30,6 +30,12 @@ namespace idragnev::pbrt {
         template <typename F>
         CoefficientSpectrum map(F f) const;
 
+        CoefficientSpectrum clamp(const Float low, const Float high) const {
+            return this->map([low, high](const Float s) {
+                return pbrt::clamp(s, low, high);
+            });
+        }
+
         CoefficientSpectrum& operator+=(const CoefficientSpectrum& rhs) {
             *this = this->zipWith(rhs, std::plus{});
             return *this;
@@ -190,7 +196,7 @@ namespace idragnev::pbrt {
                       "f must have the signature Float(Float)");
 
         auto result = *this;
-        for (Float& s : result->samples) {
+        for (Float& s : result.samples) {
             s = f(s);
         }
 
@@ -208,14 +214,6 @@ namespace idragnev::pbrt {
     inline CoefficientSpectrum<SamplesCount>
     exp(const CoefficientSpectrum<SamplesCount>& cs) {
         return cs.map([](const Float s) { return std::exp(s); });
-    }
-
-    template <std::size_t SamplesCount>
-    inline CoefficientSpectrum<SamplesCount>
-    clamp(const CoefficientSpectrum<SamplesCount>& cs,
-          const Float low,
-          const Float high) {
-        return cs.map([=](const Float s) { return pbrt::clamp(s, low, high); });
     }
 
     template <std::size_t SamplesCount>
