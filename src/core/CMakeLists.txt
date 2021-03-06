@@ -13,7 +13,7 @@ set(RAY_TRACER_CORE_SOURCE
   Primitive.cpp
   GeometricPrimitive.cpp
   TransformedPrimitive.cpp
-  SampledSpectrum.cpp
+  Spectrum.cpp
 )
 
 set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/core)
@@ -58,7 +58,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/TransformedPrimitive.hpp
   ${CORE_HEADERS_DIR}/Optional.hpp
   ${CORE_HEADERS_DIR}/CoefficientSpectrum.hpp
-  ${CORE_HEADERS_DIR}/SampledSpectrum.hpp
+  ${CORE_HEADERS_DIR}/Spectrum.hpp
 )
 
 add_library(

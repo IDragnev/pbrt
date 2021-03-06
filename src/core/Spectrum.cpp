@@ -1,4 +1,4 @@
-#include "pbrt/core/SampledSpectrum.hpp"
+#include "pbrt/core/Spectrum.hpp"
 
 #include <vector>
 #include <algorithm>
