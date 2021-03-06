@@ -1416,4 +1416,81 @@ namespace idragnev::pbrt {
 
         return result.clamp(Float{0.f}, constants::Infinity);
     }
+
+    RGBSpectrum
+    RGBSpectrum::fromSamples(SpectrumSamples spectrumSamples) {
+        const auto [lambdas, values] = shrinkToSameSize(spectrumSamples);
+
+        if (!std::is_sorted(lambdas.begin(), lambdas.end())) {
+            std::vector<Float> sortedLambdas(lambdas.begin(), lambdas.end());
+            std::vector<Float> sortedVals(values.begin(), values.end());
+            sortSpectrumSamples(sortedLambdas, sortedVals);
+
+            return fromSortedSamples({
+                .lambdas = sortedLambdas,
+                .values = sortedVals,
+            });
+        }
+        else {
+            return fromSortedSamples({
+                .lambdas = lambdas,
+                .values = values,
+            });
+        }
+    }
+
+    static Float
+    lerpValuesOfLambdaSegmentContaining(const SpectrumSamples& samples,
+                                        const Float lambda);
+
+    RGBSpectrum
+    RGBSpectrum::fromSortedSamples(SpectrumSamples spectrumSamples) {
+        spectrumSamples = shrinkToSameSize(spectrumSamples);
+
+        std::array<Float, 3> xyz = {0.f, 0.f, 0.f};
+        for (std::size_t i = 0; i < CIE_SAMPLES_COUNT; ++i) {
+            const Float v = lerpValuesOfLambdaSegmentContaining(spectrumSamples,
+                                                                CIE_LAMBDA[i]);
+            xyz[0] += v * CIE_X[i];
+            xyz[1] += v * CIE_Y[i];
+            xyz[2] += v * CIE_Z[i];
+        }
+
+        const Float scale =
+            static_cast<Float>(CIE_LAMBDA[CIE_SAMPLES_COUNT - 1] -
+                               CIE_LAMBDA[0]) /
+            static_cast<Float>(CIE_Y_INTEGRAL * CIE_SAMPLES_COUNT);
+
+        xyz[0] *= scale;
+        xyz[1] *= scale;
+        xyz[2] *= scale;
+
+        return fromXYZ(xyz);
+    }
+
+    Float lerpValuesOfLambdaSegmentContaining(const SpectrumSamples& samples,
+                                              const Float lambda) {
+        const auto lambdas = samples.lambdas;
+        const auto values = samples.values;
+
+        if (lambdas.empty()) {
+            return 0.f;
+        }
+        if (lambda <= lambdas.front()) {
+            return values.front();
+        }
+        if (lambda >= lambdas.back()) {
+            return values.back();
+        }
+
+        // find the first lambdas segment {lambdas[i], lambdas[i + 1]} such that
+        // lambdas[i] <= lambda <= lambdas[i + 1]
+        const auto lambdaIPlus1Pos =
+            std::lower_bound(lambdas.begin() + 1, lambdas.end(), lambda);
+        const auto i =
+            static_cast<std::size_t>(lambdaIPlus1Pos - lambdas.begin()) - 1;
+        const Float t = (lambda - lambdas[i]) / (lambdas[i + 1] - lambdas[i]);
+
+        return lerp(t, values[i], values[i + 1]);
+    }
 } // namespace idragnev::pbrt

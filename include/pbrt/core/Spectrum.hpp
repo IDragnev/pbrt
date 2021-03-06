@@ -30,6 +30,8 @@ namespace idragnev::pbrt {
         RGBSpectrum(const CoefficientSpectrum<RGBSpectrum::NumberOfSamples>& cs)
             : CoefficientSpectrum(cs) {}
 
+        static RGBSpectrum fromSamples(SpectrumSamples samples);
+        static RGBSpectrum fromSortedSamples(SpectrumSamples samples);
         static RGBSpectrum fromRGB(const std::array<Float, 3>& rgb) {
             return RGBSpectrum(rgb);
         }
