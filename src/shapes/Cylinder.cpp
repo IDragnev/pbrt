@@ -1,5 +1,5 @@
 #include "pbrt/shapes/Cylinder.hpp"
-#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/geometry/Bounds3.hpp"
 #include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/EFloat.hpp"
 

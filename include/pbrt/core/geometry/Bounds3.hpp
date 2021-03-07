@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core.hpp"
-#include "math/Point3.hpp"
+#include "pbrt/core/core.hpp"
+#include "pbrt/core/Optional.hpp"
+#include "pbrt/core/math/Point3.hpp"
 #include "BoundingSphere.hpp"
-#include "Optional.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>

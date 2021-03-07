@@ -1,7 +1,7 @@
 #pragma once
 
-#include "pbrt/core/core.hpp"
-#include "pbrt/core/Vector3.hpp"
+#include "pbrt/core/math/Math.hpp"
+#include "pbrt/core/math/Vector3.hpp"
 
 namespace idragnev::pbrt {
     inline Vector3f sphericalDirection(const Float sinTheta,
@@ -27,6 +27,6 @@ namespace idragnev::pbrt {
 
     inline Float sphericalPhi(const Vector3f& v) {
         const Float p = std::atan2(v.y, v.x);
-        return (p < 0.f) ? (p + 2.f * constants::Pi) : p;
+        return (p < 0.f) ? (p + 2.f * math::constants::Pi) : p;
     }
 } // namespace idragnev::pbrt

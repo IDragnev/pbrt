@@ -1,9 +1,9 @@
 #include "pbrt/core/transformations/AnimatedTransformation.hpp"
 #include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/transformations/TRS.hpp"
-#include "pbrt/core/Ray.hpp"
-#include "pbrt/core/RayDifferential.hpp"
-#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/geometry/Ray.hpp"
+#include "pbrt/core/geometry/RayDifferential.hpp"
+#include "pbrt/core/geometry/Bounds3.hpp"
 #include "pbrt/core/math/Interval.hpp"
 
 namespace idragnev::pbrt {

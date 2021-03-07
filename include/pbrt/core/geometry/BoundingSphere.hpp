@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core.hpp"
-#include "math/Fwd.hpp"
+#include "pbrt/core/core.hpp"
+#include "pbrt/core/math/Fwd.hpp"
 
 namespace idragnev::pbrt {
     namespace detail {

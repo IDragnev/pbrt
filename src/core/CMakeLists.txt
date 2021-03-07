@@ -9,7 +9,8 @@ set(RAY_TRACER_CORE_SOURCE
   transformations/Transformation.cpp
   transformations/AnimatedTransformation.cpp
 
-  RayDifferential.cpp
+  geometry/RayDifferential.cpp
+
   SurfaceInteraction.cpp
   Shape.cpp
   EFloat.cpp
@@ -38,16 +39,15 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/math/Matrix4x4.hpp
   ${CORE_HEADERS_DIR}/math/Interval.hpp
 
-  # geometry
-  ${CORE_HEADERS_DIR}/BoundingSphere.hpp
-  ${CORE_HEADERS_DIR}/Bounds2.hpp
-  ${CORE_HEADERS_DIR}/Bounds2Impl.hpp
-  ${CORE_HEADERS_DIR}/Bounds2Iterator.hpp
-  ${CORE_HEADERS_DIR}/Bounds3.hpp
-  ${CORE_HEADERS_DIR}/Bounds3Impl.hpp
-  ${CORE_HEADERS_DIR}/Geometry.hpp
-  ${CORE_HEADERS_DIR}/Ray.hpp
-  ${CORE_HEADERS_DIR}/RayDifferential.hpp
+  ${CORE_HEADERS_DIR}/geometry/BoundingSphere.hpp
+  ${CORE_HEADERS_DIR}/geometry/Bounds2.hpp
+  ${CORE_HEADERS_DIR}/geometry/Bounds2Impl.hpp
+  ${CORE_HEADERS_DIR}/geometry/Bounds2Iterator.hpp
+  ${CORE_HEADERS_DIR}/geometry/Bounds3.hpp
+  ${CORE_HEADERS_DIR}/geometry/Bounds3Impl.hpp
+  ${CORE_HEADERS_DIR}/geometry/Ray.hpp
+  ${CORE_HEADERS_DIR}/geometry/RayDifferential.hpp
+  ${CORE_HEADERS_DIR}/geometry/Utility.hpp
 
   ${CORE_HEADERS_DIR}/transformations/Quaternion.hpp
   ${CORE_HEADERS_DIR}/transformations/TRS.hpp

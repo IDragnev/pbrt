@@ -1,7 +1,8 @@
 #pragma once
 
-#include "math/Point2.hpp"
-#include "math/Vector2.hpp"
+#include "pbrt/core/math/Point2.hpp"
+#include "pbrt/core/math/Vector2.hpp"
+
 #include "BoundingSphere.hpp"
 #include "Bounds2Iterator.hpp"
 

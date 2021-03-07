@@ -1,7 +1,7 @@
 #include "doctest/doctest.h"
 
 #include "pbrt/core/transformations/Transformation.hpp"
-#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/geometry/Bounds3.hpp"
 
 namespace pbrt = idragnev::pbrt;
 

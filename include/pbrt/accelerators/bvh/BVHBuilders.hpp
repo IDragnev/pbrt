@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pbrt/core/Primitive.hpp"
-#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/geometry/Bounds3.hpp"
 #include "pbrt/core/math/Point3.hpp"
 
 #include <vector>

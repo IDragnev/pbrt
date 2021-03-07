@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pbrt/core/core.hpp"
-#include "pbrt/core/Ray.hpp"
+#include "pbrt/core/geometry/Ray.hpp"
 #include "pbrt/core/math/Fwd.hpp"
 #include "pbrt/core/math/Matrix4x4.hpp"
 

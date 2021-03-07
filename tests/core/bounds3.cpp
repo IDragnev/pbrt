@@ -1,7 +1,7 @@
 #include "doctest/doctest.h"
 
-#include "pbrt/core/Bounds3.hpp"
-#include "pbrt/core/Ray.hpp"
+#include "pbrt/core/geometry/Bounds3.hpp"
+#include "pbrt/core/geometry/Ray.hpp"
 #include "pbrt/core/math/Vector3.hpp"
 
 #include <vector>

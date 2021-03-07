@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/Vector3.hpp"
-#include "math/Interval.hpp"
+#include "pbrt/core/math/Vector3.hpp"
+#include "pbrt/core/math/Interval.hpp"
 #include "Ray.hpp"
 
 namespace idragnev::pbrt {

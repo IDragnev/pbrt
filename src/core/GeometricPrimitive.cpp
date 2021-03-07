@@ -1,6 +1,6 @@
 #include "pbrt/core/GeometricPrimitive.hpp"
 #include "pbrt/core/Shape.hpp"
-#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/geometry/Bounds3.hpp"
 #include "pbrt/core/SurfaceInteraction.hpp"
 #include "pbrt/core/Material.hpp"
 
