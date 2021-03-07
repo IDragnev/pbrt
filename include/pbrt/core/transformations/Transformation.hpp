@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core.hpp"
-#include "Ray.hpp"
-#include "math/Fwd.hpp"
-#include "math/Matrix4x4.hpp"
+#include "pbrt/core/core.hpp"
+#include "pbrt/core/Ray.hpp"
+#include "pbrt/core/math/Fwd.hpp"
+#include "pbrt/core/math/Matrix4x4.hpp"
 
 namespace idragnev::pbrt {
     struct RayWithErrorBound
@@ -108,4 +108,4 @@ namespace idragnev::pbrt {
                           const Vector3f& up) noexcept;
 } // namespace idragnev::pbrt
 
-#include "pbrt/core/TransformationImpl.hpp"
+#include "pbrt/core/transformations/TransformationImpl.hpp"

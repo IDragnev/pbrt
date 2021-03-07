@@ -1,6 +1,6 @@
-#include "pbrt/core/TRS.hpp"
+#include "pbrt/core/transformations/TRS.hpp"
+#include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/math/Matrix4x4.hpp"
-#include "pbrt/core/Transformation.hpp"
 
 #include <algorithm>
 

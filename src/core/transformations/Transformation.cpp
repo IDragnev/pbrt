@@ -1,4 +1,4 @@
-#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/math/Vector3.hpp"
 #include "pbrt/core/math/Point3.hpp"
 #include "pbrt/core/Bounds3.hpp"

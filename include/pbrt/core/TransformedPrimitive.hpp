@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Primitive.hpp"
-#include "AnimatedTransformation.hpp"
+#include "pbrt/core/transformations/AnimatedTransformation.hpp"
 
 #include <memory>
 

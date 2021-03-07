@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.hpp"
+#include "pbrt/core/core.hpp"
 #include "TRS.hpp"
 
 namespace idragnev::pbrt {

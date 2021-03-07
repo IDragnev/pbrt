@@ -1,5 +1,5 @@
 #include "pbrt/shapes/Triangle.hpp"
-#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/math/Vector3.hpp"
 #include "pbrt/core/math/Vector2.hpp"
 #include "pbrt/core/math/Point3.hpp"

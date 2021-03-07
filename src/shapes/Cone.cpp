@@ -1,6 +1,6 @@
 #include "pbrt/shapes/Cone.hpp"
 #include "pbrt/core/Bounds3.hpp"
-#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/EFloat.hpp"
 
 namespace idragnev::pbrt::shapes {

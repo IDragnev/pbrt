@@ -1,6 +1,6 @@
 #include "doctest/doctest.h"
 
-#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/Bounds3.hpp"
 
 namespace pbrt = idragnev::pbrt;

@@ -4,11 +4,12 @@ set(RAY_TRACER_CORE_SOURCE
   math/Math.cpp
   math/Matrix4x4.cpp
 
+  transformations/Quaternion.cpp
+  transformations/TRS.cpp
+  transformations/Transformation.cpp
+  transformations/AnimatedTransformation.cpp
+
   RayDifferential.cpp
-  Transformation.cpp
-  Quaternion.cpp
-  TRS.cpp
-  AnimatedTransformation.cpp
   SurfaceInteraction.cpp
   Shape.cpp
   EFloat.cpp
@@ -37,6 +38,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/math/Matrix4x4.hpp
   ${CORE_HEADERS_DIR}/math/Interval.hpp
 
+  # geometry
   ${CORE_HEADERS_DIR}/BoundingSphere.hpp
   ${CORE_HEADERS_DIR}/Bounds2.hpp
   ${CORE_HEADERS_DIR}/Bounds2Impl.hpp
@@ -46,11 +48,13 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/Geometry.hpp
   ${CORE_HEADERS_DIR}/Ray.hpp
   ${CORE_HEADERS_DIR}/RayDifferential.hpp
-  ${CORE_HEADERS_DIR}/Transformation.hpp
-  ${CORE_HEADERS_DIR}/TransformationImpl.hpp
-  ${CORE_HEADERS_DIR}/Quaternion.hpp
-  ${CORE_HEADERS_DIR}/TRS.hpp
-  ${CORE_HEADERS_DIR}/AnimatedTransformation.hpp
+
+  ${CORE_HEADERS_DIR}/transformations/Quaternion.hpp
+  ${CORE_HEADERS_DIR}/transformations/TRS.hpp
+  ${CORE_HEADERS_DIR}/transformations/Transformation.hpp
+  ${CORE_HEADERS_DIR}/transformations/TransformationImpl.hpp
+  ${CORE_HEADERS_DIR}/transformations/AnimatedTransformation.hpp
+
   ${CORE_HEADERS_DIR}/Interaction.hpp
   ${CORE_HEADERS_DIR}/SurfaceInteraction.hpp
   ${CORE_HEADERS_DIR}/Shape.hpp
@@ -59,10 +63,15 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/Texture.hpp
   ${CORE_HEADERS_DIR}/Material.hpp
   ${CORE_HEADERS_DIR}/Medium.hpp
+
+  # primitives
   ${CORE_HEADERS_DIR}/Primitive.hpp
   ${CORE_HEADERS_DIR}/GeometricPrimitive.hpp
   ${CORE_HEADERS_DIR}/TransformedPrimitive.hpp
+  
   ${CORE_HEADERS_DIR}/Optional.hpp
+
+  # color
   ${CORE_HEADERS_DIR}/CoefficientSpectrum.hpp
   ${CORE_HEADERS_DIR}/Spectrum.hpp
 )

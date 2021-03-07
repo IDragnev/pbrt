@@ -1,7 +1,7 @@
 #include "pbrt/shapes/Paraboloid.hpp"
 #include "pbrt/core/Bounds3.hpp"
 #include "pbrt/core/EFloat.hpp"
-#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/transformations/Transformation.hpp"
 
 namespace idragnev::pbrt::shapes {
     Paraboloid::Paraboloid(const Transformation& objectToWorld,

@@ -1,5 +1,5 @@
-#include "pbrt/core/Quaternion.hpp"
-#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/transformations/Quaternion.hpp"
+#include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/math/Matrix4x4.hpp"
 
 namespace idragnev::pbrt {

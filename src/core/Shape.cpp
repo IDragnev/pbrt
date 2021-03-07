@@ -1,5 +1,5 @@
 #include "pbrt/core/Shape.hpp"
-#include "pbrt/core/Transformation.hpp"
+#include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/Bounds3.hpp"
 
 namespace idragnev::pbrt {
