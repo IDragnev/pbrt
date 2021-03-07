@@ -2,6 +2,7 @@
 #include "pbrt/core/Transformation.hpp"
 #include "pbrt/core/EFloat.hpp"
 #include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/math/Math.hpp"
 
 namespace idragnev::pbrt::shapes {
     Disk::Disk(const Transformation& objectToWorld,
@@ -15,7 +16,7 @@ namespace idragnev::pbrt::shapes {
         , height{height}
         , radius{radius}
         , innerRadius{innerRadius}
-        , phiMax{toRadians(clamp(phiMax, 0.f, 360.f))} {}
+        , phiMax{math::toRadians(clamp(phiMax, 0.f, 360.f))} {}
 
     Bounds3f Disk::objectBound() const {
         return Bounds3f{Point3f{-radius, -radius, height},
@@ -74,7 +75,7 @@ namespace idragnev::pbrt::shapes {
 
     Float Disk::computePhi(const Point3f& hitPoint) {
         const Float phi = std::atan2(hitPoint.y, hitPoint.x);
-        return phi < 0.f ? (phi + 2 * constants::Pi) : phi;
+        return phi < 0.f ? (phi + 2 * math::constants::Pi) : phi;
     }
 
     HitRecord Disk::makeHitRecord(const Ray& ray,

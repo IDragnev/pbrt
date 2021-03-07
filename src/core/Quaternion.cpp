@@ -1,6 +1,6 @@
 #include "pbrt/core/Quaternion.hpp"
 #include "pbrt/core/Transformation.hpp"
-#include "pbrt/core/Matrix4x4.hpp"
+#include "pbrt/core/math/Matrix4x4.hpp"
 
 namespace idragnev::pbrt {
     Quaternion::Quaternion(const Transformation& t) {
@@ -63,7 +63,7 @@ namespace idragnev::pbrt {
         const auto wz = v.z * w;
 
         // clang-format off
-        const auto m = Matrix4x4{
+        const auto m = math::Matrix4x4{
             1.f - 2.f * (yy + zz),   2.f * (xy + wz),          2.f * (xz - wy),         0.f,
             2.f * (xy - wz),         1.f - 2.f * (xx + zz),    2.f * (yz + wx),         0.f,
             2.f * (xz + wy),         2.f * (yz - wx),          1.f - 2.f * (xx + yy),   0.f,

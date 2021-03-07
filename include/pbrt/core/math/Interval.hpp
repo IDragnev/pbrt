@@ -1,10 +1,8 @@
 #pragma once
 
-#include "core.hpp"
-
 #include <algorithm>
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     struct NoOrderCheck
     {
     };
@@ -74,7 +72,4 @@ namespace idragnev::pbrt {
                            lhs.high() - rhs.low(),
                            NoOrderCheck{}};
     }
-
-    Intervalf sin(const Intervalf& i);
-    Intervalf cos(const Intervalf& i);
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math

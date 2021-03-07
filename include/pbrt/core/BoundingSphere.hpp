@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.hpp"
+#include "math/Fwd.hpp"
 
 namespace idragnev::pbrt {
     namespace detail {
@@ -13,7 +14,7 @@ namespace idragnev::pbrt {
     } // namespace detail
 
     template <typename T>
-    using BoundingSphere2 = detail::BoundingSphere<Point2<T>>;
+    using BoundingSphere2 = detail::BoundingSphere<math::Point2<T>>;
     template <typename T>
-    using BoundingSphere3 = detail::BoundingSphere<Point3<T>>;
+    using BoundingSphere3 = detail::BoundingSphere<math::Point3<T>>;
 } // namespace idragnev::pbrt

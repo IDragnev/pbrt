@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core.hpp"
+#include "Math.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     template <typename T>
     class Vector2
     {
@@ -80,6 +80,6 @@ namespace idragnev::pbrt {
 
     template <typename T>
     bool operator!=(const Vector2<T>& u, const Vector2<T>& v) noexcept;
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math
 
 #include "Vector2Impl.hpp"

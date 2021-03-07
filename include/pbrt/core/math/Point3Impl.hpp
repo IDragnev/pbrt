@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     template <typename T>
     inline Point3<T>::Point3(T x, T y, T z) : x{x}
                                             , y{y}
@@ -235,4 +235,4 @@ namespace idragnev::pbrt {
     permute(const Point3<T>& p, std::size_t x, std::size_t y, std::size_t z) {
         return {p[x], p[y], p[z]};
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math

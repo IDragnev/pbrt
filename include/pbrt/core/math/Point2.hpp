@@ -3,9 +3,9 @@
 #include <type_traits>
 #include <assert.h>
 
-#include "core.hpp"
+#include "Math.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     template <typename T>
     class Point2
     {
@@ -119,6 +119,6 @@ namespace idragnev::pbrt {
 
     template <typename T>
     Point2<T> permute(const Point2<T>& p, std::size_t x, std::size_t y);
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math
 
 #include "Point2Impl.hpp"

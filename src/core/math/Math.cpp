@@ -1,9 +1,10 @@
-#include "pbrt/core/Interval.hpp"
+#include "pbrt/core/math/Math.hpp"
+#include "pbrt/core/math/Interval.hpp"
 
 #include <algorithm>
 #include <assert.h>
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     Intervalf sin(const Intervalf& i) {
         using constants::Pi;
         using constants::PiOver2;
@@ -48,4 +49,4 @@ namespace idragnev::pbrt {
 
         return Intervalf{cosLow, cosHigh};
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math

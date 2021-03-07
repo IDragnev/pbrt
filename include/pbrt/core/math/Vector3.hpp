@@ -2,9 +2,9 @@
 
 #include <assert.h>
 
-#include "core.hpp"
+#include "Math.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     template <typename T>
     struct Basis3
     {
@@ -129,6 +129,6 @@ namespace idragnev::pbrt {
 
     template <typename T>
     bool operator!=(const Vector3<T>& u, const Vector3<T>& v) noexcept;
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math
 
 #include "Vector3Impl.hpp"

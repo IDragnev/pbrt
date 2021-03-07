@@ -2,9 +2,9 @@
 
 #include <assert.h>
 
-#include "core.hpp"
+#include "Math.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     template <typename T>
     class Normal3
     {
@@ -96,6 +96,6 @@ namespace idragnev::pbrt {
 
     template <typename T, typename F>
     T faceforward(const T& u, const F& v);
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math
 
 #include "Normal3Impl.hpp"

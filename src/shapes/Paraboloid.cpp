@@ -15,7 +15,7 @@ namespace idragnev::pbrt::shapes {
         , radius(radius)
         , zMin(std::min(zMin, zMax))
         , zMax(std::max(zMin, zMax))
-        , phiMax{toRadians(clamp(phiMax, 0.f, 360.f))} {}
+        , phiMax{math::toRadians(clamp(phiMax, 0.f, 360.f))} {}
 
     Bounds3f Paraboloid::objectBound() const {
         return Bounds3f{Point3f{-radius, -radius, zMin},
@@ -103,7 +103,7 @@ namespace idragnev::pbrt::shapes {
 
     Float Paraboloid::computePhi(const Point3f& hitPoint) {
         const Float phi = std::atan2(hitPoint.y, hitPoint.x);
-        return phi < 0.f ? (phi + 2 * constants::Pi) : phi;
+        return phi < 0.f ? (phi + 2 * math::constants::Pi) : phi;
     }
 
     HitRecord

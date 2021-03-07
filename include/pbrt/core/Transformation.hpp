@@ -1,8 +1,9 @@
 #pragma once
 
 #include "core.hpp"
-#include "Matrix4x4.hpp"
 #include "Ray.hpp"
+#include "math/Fwd.hpp"
+#include "math/Matrix4x4.hpp"
 
 namespace idragnev::pbrt {
     struct RayWithErrorBound
@@ -21,30 +22,35 @@ namespace idragnev::pbrt {
             : m{mat}
             , mInverse{inverse(m)} {}
 
-        explicit Transformation(const Matrix4x4& m)
+        explicit Transformation(const math::Matrix4x4& m)
             : m{m}
             , mInverse{inverse(m)} {}
 
-        Transformation(const Matrix4x4& m, const Matrix4x4& mInv) noexcept
+        Transformation(const math::Matrix4x4& m,
+                       const math::Matrix4x4& mInv) noexcept
             : m{m}
             , mInverse{mInv} {}
 
-        bool isIdentity() const noexcept { return m == Matrix4x4::identity(); }
+        bool isIdentity() const noexcept {
+            return m == math::Matrix4x4::identity();
+        }
 
-        const Matrix4x4& matrix() const noexcept { return m; }
-        const Matrix4x4& inverseMatrix() const noexcept { return mInverse; }
+        const math::Matrix4x4& matrix() const noexcept { return m; }
+        const math::Matrix4x4& inverseMatrix() const noexcept {
+            return mInverse;
+        }
 
         bool hasScale() const noexcept;
         bool swapsHandedness() const noexcept;
 
         template <typename T>
-        Point3<T> operator()(const Point3<T>& p) const;
+        math::Point3<T> operator()(const math::Point3<T>& p) const;
 
         template <typename T>
-        Vector3<T> operator()(const Vector3<T>& v) const;
+        math::Vector3<T> operator()(const math::Vector3<T>& v) const;
 
         template <typename T>
-        Normal3<T> operator()(const Normal3<T>&) const;
+        math::Normal3<T> operator()(const math::Normal3<T>&) const;
 
         Ray operator()(const Ray& r) const;
 
@@ -60,8 +66,8 @@ namespace idragnev::pbrt {
                                                 const Vector3f& dErrorIn) const;
 
     private:
-        Matrix4x4 m;
-        Matrix4x4 mInverse;
+        math::Matrix4x4 m;
+        math::Matrix4x4 mInverse;
     };
 
     inline Transformation inverse(const Transformation& t) noexcept {

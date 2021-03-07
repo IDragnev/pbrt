@@ -1,6 +1,6 @@
 #include "pbrt/core/Transformation.hpp"
-#include "pbrt/core/Vector3.hpp"
-#include "pbrt/core/Point3.hpp"
+#include "pbrt/core/math/Vector3.hpp"
+#include "pbrt/core/math/Point3.hpp"
 #include "pbrt/core/Bounds3.hpp"
 #include "pbrt/core/SurfaceInteraction.hpp"
 
@@ -76,13 +76,13 @@ namespace idragnev::pbrt {
 
     Transformation translation(const Vector3f& delta) noexcept {
         // clang-format off
-        const Matrix4x4 m{ 
+        const math::Matrix4x4 m{ 
             1.f, 0.f, 0.f, delta.x,
             0.f, 1.f, 0.f, delta.y,
             0.f, 0.f, 1.f, delta.z,
             0.f, 0.f, 0.f, 1.f
         };
-        const Matrix4x4 mInverse{
+        const math::Matrix4x4 mInverse{
             1.f, 0.f, 0.f, -delta.x,
             0.f, 1.f, 0.f, -delta.y,
             0.f, 0.f, 1.f, -delta.z,
@@ -96,13 +96,13 @@ namespace idragnev::pbrt {
     Transformation
     scaling(const Float x, const Float y, const Float z) noexcept {
         // clang-format off
-        const Matrix4x4 m{
+        const math::Matrix4x4 m{
             x,   0.f, 0.f, 0.f,
             0.f, y,   0.f, 0.f,
             0.f, 0.f, z,   0.f,
             0.f, 0.f, 0.f, 1.f
         };
-        const Matrix4x4 mInverse{
+        const math::Matrix4x4 mInverse{
             1.f / x,  0.f,      0.f,      0.f,
             0.f,      1.f / y,  0.f,      0.f,
             0.f,      0.f,      1.f / z,  0.f,
@@ -114,11 +114,11 @@ namespace idragnev::pbrt {
     }
 
     Transformation xRotation(const Float theta) noexcept {
-        const auto sinTh = std::sin(toRadians(theta));
-        const auto cosTh = std::cos(toRadians(theta));
+        const auto sinTh = std::sin(math::toRadians(theta));
+        const auto cosTh = std::cos(math::toRadians(theta));
 
         // clang-format off
-        const Matrix4x4 m{
+        const math::Matrix4x4 m{
             1.f, 0.f,   0.f,    0.f, 
             0.f, cosTh, -sinTh, 0.f,
             0.f, sinTh, cosTh,  0.f,
@@ -130,11 +130,11 @@ namespace idragnev::pbrt {
     }
 
     Transformation yRotation(const Float theta) noexcept {
-        const auto sinTh = std::sin(toRadians(theta));
-        const auto cosTh = std::cos(toRadians(theta));
+        const auto sinTh = std::sin(math::toRadians(theta));
+        const auto cosTh = std::cos(math::toRadians(theta));
 
         // clang-format off
-        const Matrix4x4 m{
+        const math::Matrix4x4 m{
             cosTh,   0.f,  sinTh,   0.f,
             0.f,     1.f,  0.f,     0.f,
             -sinTh,  0.f,  cosTh,   0.f,
@@ -146,11 +146,11 @@ namespace idragnev::pbrt {
     }
 
     Transformation zRotation(const Float theta) noexcept {
-        const auto sinTh = std::sin(toRadians(theta));
-        const auto cosTh = std::cos(toRadians(theta));
+        const auto sinTh = std::sin(math::toRadians(theta));
+        const auto cosTh = std::cos(math::toRadians(theta));
 
         // clang-format off
-        const Matrix4x4 m{ 
+        const math::Matrix4x4 m{
             cosTh, -sinTh, 0.f, 0.f,
             sinTh, cosTh,  0.f, 0.f,
             0.f,     0.f,  1.f, 0.f,
@@ -164,10 +164,10 @@ namespace idragnev::pbrt {
     Transformation rotation(const Float theta,
                             const Vector3f& rotationAxis) noexcept {
         const auto axis = normalize(rotationAxis);
-        const Float sinTheta = std::sin(toRadians(theta));
-        const Float cosTheta = std::cos(toRadians(theta));
+        const Float sinTheta = std::sin(math::toRadians(theta));
+        const Float cosTheta = std::cos(math::toRadians(theta));
 
-        Matrix4x4 matrix;
+        math::Matrix4x4 matrix;
 
         // clang-format off
         matrix.m[0][0] = axis.x * axis.x + (1.f - axis.x * axis.x) * cosTheta;
@@ -207,7 +207,7 @@ namespace idragnev::pbrt {
         const auto newUp = cross(direction, right);
 
         // clang-format off
-        const auto cameraToWorld = Matrix4x4{
+        const auto cameraToWorld = math::Matrix4x4{
             right.x,  newUp.x,  direction.x,  origin.x,
             right.y,  newUp.y,  direction.y,  origin.y,
             right.z,  newUp.z,  direction.z,  origin.z,

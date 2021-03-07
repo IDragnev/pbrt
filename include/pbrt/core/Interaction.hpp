@@ -1,9 +1,9 @@
 #pragma once
 
 #include "core.hpp"
-#include "Point3.hpp"
-#include "Vector3.hpp"
-#include "Normal3.hpp"
+#include "math/Point3.hpp"
+#include "math/Vector3.hpp"
+#include "math/Normal3.hpp"
 #include "Medium.hpp"
 
 namespace idragnev::pbrt {

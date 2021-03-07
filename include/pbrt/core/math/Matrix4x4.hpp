@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core.hpp"
+#include "pbrt/core/core.hpp"
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     class Matrix4x4
     {
     public:
@@ -55,4 +55,4 @@ namespace idragnev::pbrt {
                            const Matrix4x4& rhs) noexcept {
         return !(lhs == rhs);
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math

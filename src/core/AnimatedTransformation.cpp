@@ -4,7 +4,7 @@
 #include "pbrt/core/Ray.hpp"
 #include "pbrt/core/RayDifferential.hpp"
 #include "pbrt/core/Bounds3.hpp"
-#include "pbrt/core/Interval.hpp"
+#include "pbrt/core/math/Interval.hpp"
 
 namespace idragnev::pbrt {
     AnimatedTransformation::AnimatedTransformation(
@@ -749,7 +749,7 @@ namespace idragnev::pbrt {
         const auto T = lerp(dt, startTRS.T, endTRS.T);
         const auto R = slerp(dt, startTRS.R, endTRS.R);
 
-        auto S = Matrix4x4{};
+        auto S = math::Matrix4x4{};
         for (auto i = 0; i < 3; ++i) {
             for (auto j = 0; j < 3; ++j) {
                 S.m[i][j] = lerp(dt, startTRS.S.m[i][j], endTRS.S.m[i][j]);

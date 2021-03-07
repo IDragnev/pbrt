@@ -1,6 +1,6 @@
 #pragma once
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     template <typename T>
     inline Vector2<T>::Vector2(T x, T y) : x{x}
                                          , y{y} {
@@ -144,4 +144,4 @@ namespace idragnev::pbrt {
     inline Vector2<T> Abs(const Vector2<T>& v) {
         return Vector2<T>(std::abs(v.x), std::abs(v.y));
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math

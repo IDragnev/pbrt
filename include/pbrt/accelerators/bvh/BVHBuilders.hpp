@@ -2,7 +2,7 @@
 
 #include "pbrt/core/Primitive.hpp"
 #include "pbrt/core/Bounds3.hpp"
-#include "pbrt/core/Point3.hpp"
+#include "pbrt/core/math/Point3.hpp"
 
 #include <vector>
 #include <memory>

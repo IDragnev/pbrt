@@ -2,7 +2,7 @@
 
 #include "pbrt/core/Bounds3.hpp"
 #include "pbrt/core/Ray.hpp"
-#include "pbrt/core/Vector3.hpp"
+#include "pbrt/core/math/Vector3.hpp"
 
 #include <vector>
 

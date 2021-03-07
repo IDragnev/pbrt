@@ -1,8 +1,8 @@
 #pragma once
 
 #include "core.hpp"
-#include "Point3.hpp"
-#include "Vector3.hpp"
+#include "math/Point3.hpp"
+#include "math/Vector3.hpp"
 
 namespace idragnev::pbrt {
     class Ray

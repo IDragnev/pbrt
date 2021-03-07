@@ -1,6 +1,6 @@
 #pragma once
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     template <typename T>
     inline Normal3<T>::Normal3(const Vector3<T>& v) : Normal3{v.x, v.y, v.z} {}
 
@@ -193,4 +193,4 @@ namespace idragnev::pbrt {
     inline T faceforward(const T& u, const F& v) {
         return (dot(u, v) < 0.f) ? -u : u;
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math

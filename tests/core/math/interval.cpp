@@ -1,9 +1,9 @@
 #include "doctest/doctest.h"
-#include "pbrt/core/Interval.hpp"
+#include "pbrt/core/math/Interval.hpp"
 
 namespace pbrt = idragnev::pbrt;
 
-using Interval = pbrt::Interval<int>;
+using Interval = pbrt::math::Interval<int>;
 
 TEST_CASE("construction from two values does not depend on"
           "arguments order") {

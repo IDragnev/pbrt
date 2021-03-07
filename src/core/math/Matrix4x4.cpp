@@ -1,11 +1,11 @@
-#include "pbrt/core/Matrix4x4.hpp"
-#include "pbrt/core/Vector3.hpp"
+#include "pbrt/core/math/Matrix4x4.hpp"
+#include "pbrt/core/math/Vector3.hpp"
 
 #include <assert.h>
 #include <utility>
 #include <cstring>
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     Matrix4x4::Matrix4x4(const Float mat[4][4]) {
         std::memcpy(m, mat, 16 * sizeof(Float));
     }
@@ -128,4 +128,4 @@ namespace idragnev::pbrt {
 
         return Matrix4x4{mInverse};
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math

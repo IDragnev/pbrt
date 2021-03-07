@@ -2,6 +2,7 @@
 #include "pbrt/core/Bounds3.hpp"
 #include "pbrt/core/Transformation.hpp"
 #include "pbrt/core/EFloat.hpp"
+#include "pbrt/core/math/Math.hpp"
 
 namespace idragnev::pbrt::shapes {
     Sphere::Sphere(const Transformation& objectToWorld,
@@ -17,7 +18,7 @@ namespace idragnev::pbrt::shapes {
         , zMax{clamp(std::max(zMin, zMax), -radius, radius)}
         , thetaMin{std::acos(clamp(std::min(zMin, zMax) / radius, -1.f, 1.f))}
         , thetaMax{std::acos(clamp(std::max(zMin, zMax) / radius, -1.f, 1.f))}
-        , phiMax{toRadians(clamp(phiMax, 0.f, 360.f))} {}
+        , phiMax{math::toRadians(clamp(phiMax, 0.f, 360.f))} {}
 
     Bounds3f Sphere::objectBound() const {
         return Bounds3f{Point3f{-radius, -radius, zMin},
@@ -111,7 +112,7 @@ namespace idragnev::pbrt::shapes {
 
     Float Sphere::computePhi(const Point3f& hitPoint) {
         const Float phi = std::atan2(hitPoint.y, hitPoint.x);
-        return phi < 0.f ? (phi + 2 * constants::Pi) : phi;
+        return phi < 0.f ? (phi + 2 * math::constants::Pi) : phi;
     }
 
     Point3f Sphere::computeHitPoint(const Ray& ray, const EFloat& t) const {

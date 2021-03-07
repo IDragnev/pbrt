@@ -10,7 +10,7 @@ namespace idragnev::pbrt {
             return err == 0.f ? ErrBounds{v}
                               : ErrBounds{nextFloatDown(v - err),
                                           nextFloatUp(v + err),
-                                          NoOrderCheck{}};
+                                          math::NoOrderCheck{}};
         }())
 #ifndef NDEBUG
         , vPrecise(v)
@@ -44,7 +44,7 @@ namespace idragnev::pbrt {
         const auto b = bounds + rhs.bounds;
         result.bounds = ErrBounds{nextFloatDown(b.low()),
                                   nextFloatUp(b.high()),
-                                  NoOrderCheck{}};
+                                  math::NoOrderCheck{}};
 
 #ifndef NDEBUG
         result.vPrecise = vPrecise + rhs.vPrecise;
@@ -66,7 +66,7 @@ namespace idragnev::pbrt {
         if (rhs.lowerBound() < 0.f && rhs.upperBound() > 0.f) {
             result.bounds = ErrBounds(-constants::Infinity,
                                       constants::Infinity,
-                                      NoOrderCheck{});
+                                      math::NoOrderCheck{});
         }
         else {
             const auto [min, max] =
@@ -74,8 +74,9 @@ namespace idragnev::pbrt {
                              lowerBound() / rhs.upperBound(),
                              upperBound() / rhs.lowerBound(),
                              upperBound() / rhs.upperBound()});
-            result.bounds =
-                ErrBounds{nextFloatDown(min), nextFloatUp(max), NoOrderCheck{}};
+            result.bounds = ErrBounds{nextFloatDown(min),
+                                      nextFloatUp(max),
+                                      math::NoOrderCheck{}};
         }
 
         return result;
@@ -89,7 +90,7 @@ namespace idragnev::pbrt {
         const auto b = bounds * rhs.bounds;
         result.bounds = ErrBounds{nextFloatDown(b.low()),
                                   nextFloatUp(b.high()),
-                                  NoOrderCheck{}};
+                                  math::NoOrderCheck{}};
 
 #ifndef NDEBUG
         result.vPrecise = vPrecise * rhs.vPrecise;
@@ -106,7 +107,7 @@ namespace idragnev::pbrt {
         const auto b = bounds - rhs.bounds;
         result.bounds = ErrBounds{nextFloatDown(b.low()),
                                   nextFloatUp(b.high()),
-                                  NoOrderCheck{}};
+                                  math::NoOrderCheck{}};
 
 #ifndef NDEBUG
         result.vPrecise = vPrecise - rhs.vPrecise;
@@ -131,7 +132,7 @@ namespace idragnev::pbrt {
         result.bounds =
             EFloat::ErrBounds{nextFloatDown(std::sqrt(ef.lowerBound())),
                               nextFloatUp(std::sqrt(ef.upperBound())),
-                              NoOrderCheck{}};
+                              math::NoOrderCheck{}};
 
         return result;
     }
@@ -150,7 +151,7 @@ namespace idragnev::pbrt {
             result.bounds =
                 EFloat::ErrBounds{0.f,
                                   std::max(-ef.lowerBound(), ef.upperBound()),
-                                  NoOrderCheck{}};
+                                  math::NoOrderCheck{}};
 
 #ifndef NDEBUG
             result.vPrecise = std::abs(ef.vPrecise);

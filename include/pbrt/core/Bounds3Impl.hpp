@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Vector3.hpp"
-#include "Interval.hpp"
+#include "math/Vector3.hpp"
+#include "math/Interval.hpp"
 #include "Ray.hpp"
 
 namespace idragnev::pbrt {
@@ -14,25 +14,24 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Bounds3<T>::Bounds3(const Point3<T>& p) : min(p)
-                                                   , max(p) {}
+    inline Bounds3<T>::Bounds3(const math::Point3<T>& p) : min(p)
+                                                         , max(p) {}
 
     template <typename T>
-    Bounds3<T>::Bounds3(const Point3<T>& p1, const Point3<T>& p2)
-        : min{pbrt::min(p1, p2)}
-        , max{pbrt::max(p1, p2)} {}
+    Bounds3<T>::Bounds3(const math::Point3<T>& p1, const math::Point3<T>& p2)
+        : min{math::min(p1, p2)}
+        , max{math::max(p1, p2)} {}
 
     template <typename T>
     template <typename U>
     inline Bounds3<T>::operator Bounds3<U>() const {
         static_assert(std::is_convertible_v<T, U>,
                       "Cannot convert the underlying type");
-        return Bounds3<U>{Point3<U>{min}, Point3<U>{max}};
+        return Bounds3<U>{math::Point3<U>{min}, math::Point3<U>{max}};
     }
 
     template <typename T>
-    Optional<Intervalf>
-    Bounds3<T>::intersectP(const Ray& ray) const noexcept {
+    Optional<Intervalf> Bounds3<T>::intersectP(const Ray& ray) const noexcept {
         Float t0 = 0.f;
         Float t1 = ray.tMax;
 
@@ -102,7 +101,7 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Vector3<T> Bounds3<T>::diagonal() const {
+    inline math::Vector3<T> Bounds3<T>::diagonal() const {
         return max - min;
     }
 
@@ -133,7 +132,7 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Vector3<T> Bounds3<T>::offset(const Point3<T>& p) const {
+    inline math::Vector3<T> Bounds3<T>::offset(const math::Point3<T>& p) const {
         auto o = p - min;
         if (max.x > min.x) {
             o.x /= max.x - min.x;
@@ -149,12 +148,13 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Point3<T>& Bounds3<T>::operator[](std::size_t i) {
-        return const_cast<Point3<T>&>(static_cast<const Bounds3&>(*this)[i]);
+    inline math::Point3<T>& Bounds3<T>::operator[](std::size_t i) {
+        return const_cast<math::Point3<T>&>(
+            static_cast<const Bounds3&>(*this)[i]);
     }
 
     template <typename T>
-    inline const Point3<T>& Bounds3<T>::operator[](std::size_t i) const {
+    inline const math::Point3<T>& Bounds3<T>::operator[](std::size_t i) const {
         assert(i < 2);
         return (i == 0) ? min : max;
     }
@@ -169,22 +169,22 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    Point3<T> Bounds3<T>::corner(std::size_t corner) const {
+    math::Point3<T> Bounds3<T>::corner(std::size_t corner) const {
         assert(corner < 8);
-        return Point3<T>{(*this)[(corner & 1)].x,
-                         (*this)[(corner & 2) ? 1 : 0].y,
-                         (*this)[(corner & 4) ? 1 : 0].z};
+        return math::Point3<T>{(*this)[(corner & 1)].x,
+                               (*this)[(corner & 2) ? 1 : 0].y,
+                               (*this)[(corner & 4) ? 1 : 0].z};
     }
 
     template <typename T>
-    Point3<T> lerp(const Bounds3<T>& bounds, const Point3f& t) {
+    math::Point3<T> lerp(const Bounds3<T>& bounds, const Point3f& t) {
         return {pbrt::lerp(t.x, bounds.min.x, bounds.max.x),
                 pbrt::lerp(t.y, bounds.min.y, bounds.max.y),
                 pbrt::lerp(t.z, bounds.min.z, bounds.max.z)};
     }
 
     template <typename T>
-    Bounds3<T> unionOf(const Bounds3<T>& b, const Point3<T>& p) {
+    Bounds3<T> unionOf(const Bounds3<T>& b, const math::Point3<T>& p) {
         Bounds3<T> result;
         result.min = min(b.min, p);
         result.max = max(b.max, p);
@@ -223,14 +223,14 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    bool inside(const Point3<T>& p, const Bounds3<T>& bounds) noexcept {
+    bool inside(const math::Point3<T>& p, const Bounds3<T>& bounds) noexcept {
         return p.x >= bounds.min.x && p.x <= bounds.max.x &&
                p.y >= bounds.min.y && p.y <= bounds.max.y &&
                p.z >= bounds.min.z && p.z <= bounds.max.z;
     }
 
     template <typename T>
-    bool insideExclusive(const Point3<T>& p,
+    bool insideExclusive(const math::Point3<T>& p,
                          const Bounds3<T>& bounds) noexcept {
         return p.x >= bounds.min.x && p.x < bounds.max.x &&
                p.y >= bounds.min.y && p.y < bounds.max.y &&
@@ -241,17 +241,17 @@ namespace idragnev::pbrt {
     Bounds3<T> expand(const Bounds3<T>& bounds, U delta) {
         static_assert(std::is_arithmetic_v<U>,
                       "Cannot expand with non-arithmetic type");
-        const auto v = Vector3<T>{delta, delta, delta};
+        const auto v = math::Vector3<T>{delta, delta, delta};
         return Bounds3<T>{bounds.min - v, bounds.max + v};
     }
 
     template <typename T, typename U>
-    inline Float distance(const Point3<T>& p, const Bounds3<U>& b) {
+    inline Float distance(const math::Point3<T>& p, const Bounds3<U>& b) {
         return std::sqrt(distanceSquared(p, b));
     }
 
     template <typename T, typename U>
-    Float distanceSquared(const Point3<T>& p, const Bounds3<U>& b) {
+    Float distanceSquared(const math::Point3<T>& p, const Bounds3<U>& b) {
         const auto dx = std::max({Float{0}, b.min.x - p.x, p.x - b.max.x});
         const auto dy = std::max({Float{0}, b.min.y - p.y, p.y - b.max.y});
         const auto dz = std::max({Float{0}, b.min.z - p.z, p.z - b.max.z});

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace idragnev::pbrt {
+namespace idragnev::pbrt::math {
     template <typename T>
     inline Vector3<T>::Vector3(T x, T y, T z) : x{x}
                                               , y{y}
@@ -239,4 +239,4 @@ namespace idragnev::pbrt {
     inline Vector3<T> cross(const Normal3<T>& n, const Vector3<T>& v) {
         return cross(Vector3<T>{n}, v);
     }
-} // namespace idragnev::pbrt
+} // namespace idragnev::pbrt::math

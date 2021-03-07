@@ -2,7 +2,7 @@
 
 #include <iterator>
 
-#include "Point2.hpp"
+#include "math/Point2.hpp"
 
 namespace idragnev::pbrt {
     template <typename T>
@@ -13,9 +13,9 @@ namespace idragnev::pbrt {
 
     public:
         using iterator_category = std::forward_iterator_tag;
-        using value_type = Point2<T>;
+        using value_type = math::Point2<T>;
 
-        Bounds2Iterator(const Bounds2<T>& b, const Point2<T>& p)
+        Bounds2Iterator(const Bounds2<T>& b, const math::Point2<T>& p)
             : currentPoint(p)
             , bounds(&b) {}
 
@@ -42,10 +42,10 @@ namespace idragnev::pbrt {
             return !(*this == rhs);
         }
 
-        Point2<T> operator*() const { return currentPoint; }
+        math::Point2<T> operator*() const { return currentPoint; }
 
     private:
-        Point2<T> currentPoint;
+        math::Point2<T> currentPoint;
         const Bounds2<T>* bounds;
     };
 } // namespace idragnev::pbrt

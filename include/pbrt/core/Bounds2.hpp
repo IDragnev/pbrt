@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Point2.hpp"
-#include "Vector2.hpp"
+#include "math/Point2.hpp"
+#include "math/Vector2.hpp"
 #include "BoundingSphere.hpp"
 #include "Bounds2Iterator.hpp"
 
@@ -13,31 +13,31 @@ namespace idragnev::pbrt {
                       "Cannot instantiate Bounds2 with non-arithmetic type");
 
     public:
-        using PointType = Point2<T>;
+        using PointType = math::Point2<T>;
 
         Bounds2();
-        explicit Bounds2(const Point2<T>& p);
-        Bounds2(const Point2<T>& p1, const Point2<T>& p2);
+        explicit Bounds2(const math::Point2<T>& p);
+        Bounds2(const math::Point2<T>& p1, const math::Point2<T>& p2);
 
         template <typename U>
         explicit operator Bounds2<U>() const;
 
-        Vector2<T> diagonal() const;
+        math::Vector2<T> diagonal() const;
 
         T area() const;
 
         std::size_t maximumExtent() const;
 
-        Point2<T>& operator[](std::size_t i);
-        const Point2<T>& operator[](std::size_t i) const;
+        math::Point2<T>& operator[](std::size_t i);
+        const math::Point2<T>& operator[](std::size_t i) const;
 
-        Vector2<T> offset(const Point2<T>& p) const;
+        math::Vector2<T> offset(const math::Point2<T>& p) const;
 
         BoundingSphere2<T> boundingSphere() const;
 
     public:
-        Point2<T> min;
-        Point2<T> max;
+        math::Point2<T> min;
+        math::Point2<T> max;
     };
 
     template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
@@ -47,7 +47,7 @@ namespace idragnev::pbrt {
     Bounds2Iterator<T> end(const Bounds2<T>& bounds);
 
     template <typename T>
-    Point2<T> lerp(const Bounds2<T>& bounds, const Point2f& t);
+    math::Point2<T> lerp(const Bounds2<T>& bounds, const Point2f& t);
 
     template <typename T>
     bool operator==(const Bounds2<T>& a, const Bounds2<T>& b);
@@ -56,7 +56,7 @@ namespace idragnev::pbrt {
     bool operator!=(const Bounds2<T>& a, const Bounds2<T>& b);
 
     template <typename T>
-    Bounds2<T> unionOf(const Bounds2<T>& b, const Point2<T>& p);
+    Bounds2<T> unionOf(const Bounds2<T>& b, const math::Point2<T>& p);
 
     template <typename T>
     Bounds2<T> unionOf(const Bounds2<T>& a, const Bounds2<T>& b);
@@ -68,10 +68,10 @@ namespace idragnev::pbrt {
     bool overlap(const Bounds2<T>& ba, const Bounds2<T>& bb) noexcept;
 
     template <typename T>
-    bool inside(const Point2<T>& p, const Bounds2<T>& bounds) noexcept;
+    bool inside(const math::Point2<T>& p, const Bounds2<T>& bounds) noexcept;
 
     template <typename T>
-    bool insideExclusive(const Point2<T>& p, const Bounds2<T>& bounds) noexcept;
+    bool insideExclusive(const math::Point2<T>& p, const Bounds2<T>& bounds) noexcept;
 
     template <typename T, typename U>
     Bounds2<T> expand(const Bounds2<T>& bounds, U delta);

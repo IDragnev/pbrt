@@ -10,24 +10,24 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Bounds2<T>::Bounds2(const Point2<T>& p) : min(p)
-                                                   , max(p) {}
+    inline Bounds2<T>::Bounds2(const math::Point2<T>& p) : min(p)
+                                                         , max(p) {}
 
     template <typename T>
-    Bounds2<T>::Bounds2(const Point2<T>& p1, const Point2<T>& p2)
-        : min{pbrt::min(p1, p2)}
-        , max{pbrt::max(p1, p2)} {}
+    Bounds2<T>::Bounds2(const math::Point2<T>& p1, const math::Point2<T>& p2)
+        : min{math::min(p1, p2)}
+        , max{math::max(p1, p2)} {}
 
     template <typename T>
     template <typename U>
     inline Bounds2<T>::operator Bounds2<U>() const {
         static_assert(std::is_convertible_v<T, U>,
                       "Cannot convert the underlying type");
-        return Bounds2<U>{Point2<U>{min}, Point2<U>{max}};
+        return Bounds2<U>{math::Point2<U>{min}, math::Point2<U>{max}};
     }
 
     template <typename T>
-    inline Vector2<T> Bounds2<T>::diagonal() const {
+    inline math::Vector2<T> Bounds2<T>::diagonal() const {
         return max - min;
     }
 
@@ -44,18 +44,19 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    inline Point2<T>& Bounds2<T>::operator[](std::size_t i) {
-        return const_cast<Point2<T>&>(static_cast<const Bounds2&>(*this)[i]);
+    inline math::Point2<T>& Bounds2<T>::operator[](std::size_t i) {
+        return const_cast<math::Point2<T>&>(
+            static_cast<const Bounds2&>(*this)[i]);
     }
 
     template <typename T>
-    inline const Point2<T>& Bounds2<T>::operator[](std::size_t i) const {
+    inline const math::Point2<T>& Bounds2<T>::operator[](std::size_t i) const {
         assert(i < 2);
         return (i == 0) ? min : max;
     }
 
     template <typename T>
-    Vector2<T> Bounds2<T>::offset(const Point2<T>& p) const {
+    math::Vector2<T> Bounds2<T>::offset(const math::Point2<T>& p) const {
         auto o = p - min;
         if (max.x > min.x) {
             o.x /= max.x - min.x;
@@ -76,13 +77,13 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    Point2<T> lerp(const Bounds2<T>& bounds, const Point2f& t) {
+    math::Point2<T> lerp(const Bounds2<T>& bounds, const Point2f& t) {
         return {pbrt::lerp(t.x, bounds.min.x, bounds.max.x),
                 pbrt::lerp(t.y, bounds.min.y, bounds.max.y)};
     }
 
     template <typename T>
-    Bounds2<T> unionOf(const Bounds2<T>& b, const Point2<T>& p) {
+    Bounds2<T> unionOf(const Bounds2<T>& b, const math::Point2<T>& p) {
         Bounds2<T> result;
         result.min = min(b.min, p);
         result.max = max(b.max, p);
@@ -119,13 +120,13 @@ namespace idragnev::pbrt {
     }
 
     template <typename T>
-    bool inside(const Point2<T>& p, const Bounds2<T>& bounds) noexcept {
+    bool inside(const math::Point2<T>& p, const Bounds2<T>& bounds) noexcept {
         return p.x >= bounds.min.x && p.x <= bounds.max.x &&
                p.y >= bounds.min.y && p.y <= bounds.max.y;
     }
 
     template <typename T>
-    bool insideExclusive(const Point2<T>& p,
+    bool insideExclusive(const math::Point2<T>& p,
                          const Bounds2<T>& bounds) noexcept {
         return p.x >= bounds.min.x && p.x < bounds.max.x &&
                p.y >= bounds.min.y && p.y < bounds.max.y;
@@ -135,7 +136,7 @@ namespace idragnev::pbrt {
     Bounds2<T> expand(const Bounds2<T>& bounds, U delta) {
         static_assert(std::is_arithmetic_v<U>,
                       "Cannot expand with non-arithmetic type");
-        const auto v = Vector2<T>{delta, delta};
+        const auto v = math::Vector2<T>{delta, delta};
         return Bounds2<T>{bounds.min - v, bounds.max + v};
     }
 
