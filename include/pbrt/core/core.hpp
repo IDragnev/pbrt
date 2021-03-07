@@ -57,6 +57,11 @@ namespace idragnev::pbrt {
     template <typename T>
     class Bounds3;
 
+    template <typename T>
+    struct Basis3;
+
+    using Basis3f = Basis3<Float>;
+
     using Vector2f = Vector2<Float>;
     using Vector2i = Vector2<int>;
     using Vector3f = Vector3<Float>;

@@ -36,6 +36,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/Bounds2Iterator.hpp
   ${CORE_HEADERS_DIR}/Bounds3.hpp
   ${CORE_HEADERS_DIR}/Bounds3Impl.hpp
+  ${CORE_HEADERS_DIR}/Geometry.hpp
   ${CORE_HEADERS_DIR}/Ray.hpp
   ${CORE_HEADERS_DIR}/RayDifferential.hpp
   ${CORE_HEADERS_DIR}/Matrix4x4.hpp
