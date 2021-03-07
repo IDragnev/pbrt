@@ -1,13 +1,13 @@
 #include "pbrt/shapes/Triangle.hpp"
-#include "pbrt/core/Transformation.hpp"
-#include "pbrt/core/Vector3.hpp"
-#include "pbrt/core/Vector2.hpp"
-#include "pbrt/core/Point3.hpp"
-#include "pbrt/core/Point2.hpp"
+#include "pbrt/core/transformations/Transformation.hpp"
+#include "pbrt/core/math/Vector3.hpp"
+#include "pbrt/core/math/Vector2.hpp"
+#include "pbrt/core/math/Point3.hpp"
+#include "pbrt/core/math/Point2.hpp"
+#include "pbrt/core/math/Normal3.hpp"
 #include "pbrt/core/Texture.hpp"
-#include "pbrt/core/Normal3.hpp"
 #include "pbrt/functional/Functional.hpp"
-#include "pbrt/core/Bounds3.hpp"
+#include "pbrt/core/geometry/Bounds3.hpp"
 
 namespace idragnev::pbrt::shapes {
     TriangleMesh::TriangleMesh(

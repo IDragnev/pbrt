@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core.hpp"
-#include "Interval.hpp"
+#include "math/Interval.hpp"
 #include "Optional.hpp"
 
 namespace idragnev::pbrt {
@@ -11,7 +11,7 @@ namespace idragnev::pbrt {
         friend EFloat abs(const EFloat& fe);
         friend EFloat sqrt(const EFloat& fe);
 
-        using ErrBounds = Interval<float>;
+        using ErrBounds = math::Interval<float>;
 
     public:
         EFloat() = default;
@@ -56,7 +56,7 @@ namespace idragnev::pbrt {
 
     private:
         float v = 0.f;
-        ErrBounds bounds = {0.f, 0.f, NoOrderCheck{}};
+        ErrBounds bounds = {0.f, 0.f, math::NoOrderCheck{}};
 
 #ifndef NDEBUG
         long double vPrecise = 0.;
