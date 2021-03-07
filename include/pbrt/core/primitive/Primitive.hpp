@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core.hpp"
-#include "Optional.hpp"
+#include "pbrt/core/core.hpp"
+#include "pbrt/core/Optional.hpp"
 
 #include "pbrt/memory/MemoryArena.hpp"
 

@@ -1,29 +1,31 @@
 set(RAY_TRACER_CORE_SOURCE
-  core.cpp
-
+  core.cpp  
+  EFloat.cpp
+  SurfaceInteraction.cpp
+  Shape.cpp
+  
   math/Math.cpp
   math/Matrix4x4.cpp
+
+  geometry/RayDifferential.cpp
 
   transformations/Quaternion.cpp
   transformations/TRS.cpp
   transformations/Transformation.cpp
   transformations/AnimatedTransformation.cpp
 
-  geometry/RayDifferential.cpp
+  primitive/Primitive.cpp
+  primitive/GeometricPrimitive.cpp
+  primitive/TransformedPrimitive.cpp
 
-  SurfaceInteraction.cpp
-  Shape.cpp
-  EFloat.cpp
-  Primitive.cpp
-  GeometricPrimitive.cpp
-  TransformedPrimitive.cpp
-  Spectrum.cpp
+  color/Spectrum.cpp
 )
 
 set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/core)
 
 set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/core.hpp
+  ${CORE_HEADERS_DIR}/Optional.hpp
 
   ${CORE_HEADERS_DIR}/math/Fwd.hpp
   ${CORE_HEADERS_DIR}/math/Vector2.hpp
@@ -64,16 +66,12 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/Material.hpp
   ${CORE_HEADERS_DIR}/Medium.hpp
 
-  # primitives
-  ${CORE_HEADERS_DIR}/Primitive.hpp
-  ${CORE_HEADERS_DIR}/GeometricPrimitive.hpp
-  ${CORE_HEADERS_DIR}/TransformedPrimitive.hpp
-  
-  ${CORE_HEADERS_DIR}/Optional.hpp
+  ${CORE_HEADERS_DIR}/primitive/Primitive.hpp
+  ${CORE_HEADERS_DIR}/primitive/GeometricPrimitive.hpp
+  ${CORE_HEADERS_DIR}/primitive/TransformedPrimitive.hpp
 
-  # color
-  ${CORE_HEADERS_DIR}/CoefficientSpectrum.hpp
-  ${CORE_HEADERS_DIR}/Spectrum.hpp
+  ${CORE_HEADERS_DIR}/color/CoefficientSpectrum.hpp
+  ${CORE_HEADERS_DIR}/color/Spectrum.hpp
 )
 
 add_library(

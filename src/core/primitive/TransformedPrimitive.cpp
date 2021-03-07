@@ -1,4 +1,4 @@
-#include "pbrt/core/TransformedPrimitive.hpp"
+#include "pbrt/core/primitive/TransformedPrimitive.hpp"
 #include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/SurfaceInteraction.hpp"
 #include "pbrt/core/geometry/Bounds3.hpp"

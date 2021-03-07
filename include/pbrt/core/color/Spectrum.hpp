@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pbrt/core/core.hpp"
-#include "pbrt/core/CoefficientSpectrum.hpp"
+#include "pbrt/core/color/CoefficientSpectrum.hpp"
 
 #include <span>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pbrt/core/Primitive.hpp"
+#include "pbrt/core/primitive/Primitive.hpp"
 #include "pbrt/core/Optional.hpp"
 #include "pbrt/memory/MemoryArena.hpp"
 

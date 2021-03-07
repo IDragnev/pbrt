@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core.hpp"
-#include "Primitive.hpp"
-#include "Medium.hpp"
+#include "pbrt/core/core.hpp"
+#include "pbrt/core/Medium.hpp"
+#include "pbrt/core/primitive/Primitive.hpp"
 
 #include <memory>
 
