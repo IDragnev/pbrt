@@ -16,21 +16,12 @@ namespace idragnev::pbrt {
 #endif
 
     namespace constants {
-#ifdef _MSC_VER
-    #pragma warning(push)
-    #pragma warning(disable : 4305) // double constant assigned to float
-    #pragma warning(disable : 4244) // double to float conversion
-#endif
-
+        // clang-format off
         inline constexpr Float MaxFloat = std::numeric_limits<Float>::max();
-        inline constexpr Float Infinity =
-            std::numeric_limits<Float>::infinity();
-        inline constexpr Float MachineEpsilon =
-            std::numeric_limits<Float>::epsilon() * 0.5;
+        inline constexpr Float Infinity = std::numeric_limits<Float>::infinity();
+        inline constexpr Float MachineEpsilon = std::numeric_limits<Float>::epsilon() * 0.5f;
         inline constexpr Float ShadowEpsilon = 0.0001f;
-#ifdef _MSC_VER
-    #pragma warning(pop)
-#endif
+        // clang-format on
     } // namespace constants
 
     using Basis3f = math::Basis3<Float>;
