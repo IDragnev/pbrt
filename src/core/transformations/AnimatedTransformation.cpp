@@ -902,4 +902,8 @@ namespace idragnev::pbrt {
                                                 const Vector3f& v) const {
         return transform(time, v);
     }
+
+    bool AnimatedTransformation::hasScale() const noexcept {
+        return startTransform->hasScale() || endTransform->hasScale();
+    }
 } // namespace idragnev::pbrt

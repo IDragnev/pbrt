@@ -3,7 +3,8 @@ set(RAY_TRACER_CORE_SOURCE
   EFloat.cpp
   SurfaceInteraction.cpp
   Shape.cpp
-  
+  Camera.cpp
+
   math/Math.cpp
   math/Matrix4x4.cpp
 
@@ -64,6 +65,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/Texture.hpp
   ${CORE_HEADERS_DIR}/Material.hpp
   ${CORE_HEADERS_DIR}/Medium.hpp
+  ${CORE_HEADERS_DIR}/Camera.hpp
 
   ${CORE_HEADERS_DIR}/primitive/Primitive.hpp
   ${CORE_HEADERS_DIR}/primitive/GeometricPrimitive.hpp

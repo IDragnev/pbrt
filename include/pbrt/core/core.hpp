@@ -86,6 +86,8 @@ namespace idragnev::pbrt {
     template <typename T>
     class Texture;
 
+    class Film;
+
     template <typename T,
               typename = std::enable_if_t<std::is_floating_point_v<T>>>
     inline bool isNaN(const T x) {

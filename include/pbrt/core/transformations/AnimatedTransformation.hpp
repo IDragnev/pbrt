@@ -41,6 +41,8 @@ namespace idragnev::pbrt {
         Point3f operator()(const Float time, const Point3f& p) const;
         Vector3f operator()(const Float time, const Vector3f& v) const;
 
+        bool hasScale() const noexcept;
+
     private:
         template <typename T>
         auto transform(const Float time, const T& x) const;
