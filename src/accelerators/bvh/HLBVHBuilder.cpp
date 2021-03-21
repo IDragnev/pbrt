@@ -109,11 +109,13 @@ namespace idragnev::pbrt::accelerators::bvh {
     }
 
     std::uint32_t encodeMorton3(const Vector3f& v) {
+        assert(static_cast<int>(v.x) >= 0);
+        assert(static_cast<int>(v.y) >= 0);
+        assert(static_cast<int>(v.z) >= 0);
+
         const auto x = static_cast<std::uint32_t>(v.x);
         const auto y = static_cast<std::uint32_t>(v.y);
         const auto z = static_cast<std::uint32_t>(v.z);
-
-        assert(x >= 0 && y >= 0 && z >= 0);
 
         return (leftShift3(z) << 2) |
                (leftShift3(y) << 1) |
@@ -158,7 +160,6 @@ namespace idragnev::pbrt::accelerators::bvh {
             constexpr std::size_t mask = (1 << BITS_PER_PASS) - 1;
             const auto result = (mortonCode >> lowBit) & mask;
 
-            assert(result >= 0);
             assert(result < BUCKETS_COUNT);
 
             return result;
@@ -273,7 +274,7 @@ namespace idragnev::pbrt::accelerators::bvh {
                 treelet.nodes = lbvh.root;
                 nodesCount += lbvh.nodesCount;
             },
-            treelets.size());
+            static_cast<std::int64_t>(treelets.size()));
 
         return LowerLevels{
             .roots =
