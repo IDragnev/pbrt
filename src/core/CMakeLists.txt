@@ -7,7 +7,7 @@ set(RAY_TRACER_CORE_SOURCE
   math/Math.cpp
   math/Matrix4x4.cpp
 
-  geometry/RayDifferential.cpp
+  geometry/Ray.cpp
 
   transformations/Quaternion.cpp
   transformations/TRS.cpp
@@ -48,7 +48,6 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/geometry/Bounds3.hpp
   ${CORE_HEADERS_DIR}/geometry/Bounds3Impl.hpp
   ${CORE_HEADERS_DIR}/geometry/Ray.hpp
-  ${CORE_HEADERS_DIR}/geometry/RayDifferential.hpp
   ${CORE_HEADERS_DIR}/geometry/Utility.hpp
 
   ${CORE_HEADERS_DIR}/transformations/Quaternion.hpp

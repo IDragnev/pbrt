@@ -1,4 +1,4 @@
-#include "pbrt/core/geometry/RayDifferential.hpp"
+#include "pbrt/core/geometry/Ray.hpp"
 
 namespace idragnev::pbrt {
     bool RayDifferential::hasNaNs() const {

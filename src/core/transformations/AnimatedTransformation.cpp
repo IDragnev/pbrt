@@ -2,7 +2,6 @@
 #include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/transformations/TRS.hpp"
 #include "pbrt/core/geometry/Ray.hpp"
-#include "pbrt/core/geometry/RayDifferential.hpp"
 #include "pbrt/core/geometry/Bounds3.hpp"
 #include "pbrt/core/math/Interval.hpp"
 
