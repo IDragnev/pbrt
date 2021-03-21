@@ -256,6 +256,6 @@ namespace idragnev::pbrt::parallel {
     int maxThreadIndex() noexcept { return numberOfSystemCores(); }
 
     int numberOfSystemCores() noexcept {
-        return std::max(1u, std::thread::hardware_concurrency());
+        return std::max(1, static_cast<int>(std::thread::hardware_concurrency()));
     }
 } // namespace idragnev::pbrt::parallel
