@@ -1,4 +1,5 @@
 #include "pbrt/core/Camera.hpp"
+#include "pbrt/core/geometry/Bounds2.hpp"
 
 namespace idragnev::pbrt {
     Camera::Camera(const AnimatedTransformation& cameraToWorld,
@@ -74,4 +75,35 @@ namespace idragnev::pbrt {
                 return pbrt::nullopt;
             });
     }
+
+    ProjectiveCamera::ProjectiveCamera(
+        const AnimatedTransformation& cameraToWorldTransform,
+        const Transformation& cameraToScreenTransform,
+        const Bounds2f& screenWindow,
+        const Float shutterOpenTime,
+        const Float shutterCloseTime,
+        const Float lensRadius,
+        const Float focalDistance,
+        std::unique_ptr<Film> film,
+        const Medium* medium)
+        : Camera(cameraToWorldTransform,
+                 shutterOpenTime,
+                 shutterCloseTime,
+                 std::move(film),
+                 medium)
+        , cameraToScreenTransform(cameraToScreenTransform)
+        , screenToRasterTransform(
+              scaling(static_cast<Float>(film->fullResolution().x),
+                      static_cast<Float>(film->fullResolution().y),
+                      1.f) *
+              scaling(1.f / (screenWindow.max.x - screenWindow.min.x),
+                      1.f / (screenWindow.min.y - screenWindow.max.y),
+                      1.f) *
+              translation(
+                  Vector3f(-screenWindow.min.x, -screenWindow.max.y, 0.f))
+          )
+        , rasterToScreenTransform(inverse(screenToRasterTransform))
+        , rasterToCameraTransform(inverse(cameraToScreenTransform) * rasterToScreenTransform)
+        , lensRadius(lensRadius)
+        , focalDistance(focalDistance) {}
 } // namespace idragnev::pbrt

@@ -4,6 +4,7 @@
 #include "pbrt/core/Optional.hpp"
 #include "pbrt/core/math/Point2.hpp"
 #include "pbrt/core/geometry/Ray.hpp"
+#include "pbrt/core/transformations/Transformation.hpp"
 #include "pbrt/core/transformations/AnimatedTransformation.hpp"
 
 #include <memory>
@@ -29,7 +30,10 @@ namespace idragnev::pbrt {
     };
 
     // DELETE ME WHEN THE FILM CLASS IS ADDED
-    class Film {};
+    class Film {
+    public:
+        const Point2i& fullResolution() const;
+    };
 
     class Camera
     {
@@ -46,11 +50,33 @@ namespace idragnev::pbrt {
         virtual Optional<CameraRayDifferential>
         generateRayDifferential(const CameraSample& sample) const;
 
-    private:
+    protected:
         AnimatedTransformation cameraToWorldTransform;
-        [[maybe_unused]] Float shutterOpenTime = 0.f;
-        [[maybe_unused]] Float shutterCloseTime = 0.f;
+        Float shutterOpenTime = 0.f;
+        Float shutterCloseTime = 0.f;
         std::unique_ptr<Film> film = nullptr;
-        [[maybe_unused]] const Medium* medium = nullptr;
+        const Medium* medium = nullptr;
+    };
+
+    class ProjectiveCamera : public Camera
+    {
+    public:
+        ProjectiveCamera(const AnimatedTransformation& cameraToWorldTransform,
+                         const Transformation& cameraToScreenTransform,
+                         const Bounds2f& screenWindow,
+                         const Float shutterOpenTime,
+                         const Float shutterCloseTime,
+                         const Float lensRadius,
+                         const Float focalDistance,
+                         std::unique_ptr<Film> film,
+                         const Medium* medium);
+
+    protected:
+        Transformation cameraToScreenTransform;
+        Transformation screenToRasterTransform;
+        Transformation rasterToScreenTransform;
+        Transformation rasterToCameraTransform;
+        Float lensRadius = 0.f;
+        Float focalDistance = 0.f;
     };
 } // namespace idragnev::pbrt
