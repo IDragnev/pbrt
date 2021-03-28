@@ -93,8 +93,8 @@ namespace idragnev::pbrt {
                  medium)
         , cameraToScreenTransform(cameraToScreenTransform)
         , screenToRasterTransform(
-              scaling(static_cast<Float>(film->fullResolution().x),
-                      static_cast<Float>(film->fullResolution().y),
+              scaling(static_cast<Float>(this->film->fullResolution().x),
+                      static_cast<Float>(this->film->fullResolution().y),
                       1.f) *
               scaling(1.f / (screenWindow.max.x - screenWindow.min.x),
                       1.f / (screenWindow.min.y - screenWindow.max.y),

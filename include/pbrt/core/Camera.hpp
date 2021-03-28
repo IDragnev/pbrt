@@ -14,6 +14,8 @@ namespace idragnev::pbrt {
     {
         Point2f pFilm;
         Point2f pLens;
+        // in [0, 1), the generated ray's time
+        // relative to the camera's shutter open/close time
         Float time = 0.f;
     };
 
