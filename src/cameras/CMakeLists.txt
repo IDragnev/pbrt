@@ -1,8 +1,10 @@
 set(CAMERAS_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/cameras)
 set(CAMERAS_HEADER_FILES
+  ${CAMERAS_HEADERS_DIR}/OrthographicCamera.hpp
 )
 
 set(CAMERAS_SOURCE_FILES
+  OrthographicCamera.cpp
 )
 
 add_library(cameraslib

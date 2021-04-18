@@ -106,6 +106,11 @@ namespace idragnev::pbrt {
     Transformation lookAt(const Point3f& origin,
                           const Point3f& look,
                           const Vector3f& up) noexcept;
+    inline Transformation orthographicTransform(const Float zNear,
+                                                const Float zFar) {
+        return scaling(1.f, 1.f, 1.f / (zFar - zNear)) *
+               translation(Vector3f(0.f, 0.f, -zNear));
+    }
 } // namespace idragnev::pbrt
 
 #include "pbrt/core/transformations/TransformationImpl.hpp"
