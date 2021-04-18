@@ -217,4 +217,20 @@ namespace idragnev::pbrt {
 
         return Transformation{inverse(cameraToWorld), cameraToWorld};
     }
+
+    Transformation
+    perspectiveTransform(const Float fov, const Float zNear, const Float zFar) {
+        // clang-format off
+        const math::Matrix4x4 m{
+            1.f, 0.f, 0.f,                   0.f,
+            0.f, 1.f, 0.f,                   0.f,
+            0.f, 0.f, zFar / (zFar - zNear), (-zFar * zNear) / (zFar - zNear),
+            0.f, 0.f, 1.f,                   0.f
+        };
+        // clang-format on
+
+        const Float invTanAng = 1.f / std::tan(math::toRadians(fov) / 2.f);
+
+        return scaling(invTanAng, invTanAng, 1.f) * Transformation{m};
+    }
 } // namespace idragnev::pbrt

@@ -106,6 +106,8 @@ namespace idragnev::pbrt {
     Transformation lookAt(const Point3f& origin,
                           const Point3f& look,
                           const Vector3f& up) noexcept;
+    Transformation
+    perspectiveTransform(const Float fov, const Float zNear, const Float zFar);
     inline Transformation orthographicTransform(const Float zNear,
                                                 const Float zFar) {
         return scaling(1.f, 1.f, 1.f / (zFar - zNear)) *
