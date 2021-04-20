@@ -20,12 +20,10 @@ namespace idragnev::pbrt::cameras {
                            focalDistance,
                            std::move(film),
                            medium) {
-        const Point3f cameraRaysOrigin =
-            this->rasterToCameraTransform(Point3f::zero());
         dxCamera = (this->rasterToCameraTransform(Point3f(1.f, 0.f, 0.f)) -
-                    cameraRaysOrigin);
+                    this->rasterToCameraTransform(Point3f::zero()));
         dyCamera = (this->rasterToCameraTransform(Point3f(0.f, 1.f, 0.f)) -
-                    cameraRaysOrigin);
+                    this->rasterToCameraTransform(Point3f::zero()));
 
         const Point2i res = this->film->fullResolution();
         Point3f pMin = this->rasterToCameraTransform(Point3f::zero());
@@ -39,17 +37,7 @@ namespace idragnev::pbrt::cameras {
 
     Optional<CameraRay>
     PerspectiveCamera::generateRay(const CameraSample& sample) const {
-        Ray ray = rasterPointToCameraSpaceRay(sample.pFilm);
-
-        //if (this->lensRadius > 0.f) {
-        //    const Point2f pLens = this->lensRadius * concentricSampleDisk(sample.pLens);
-        //    const Float ft = this->focalDistance / ray.d.z;
-        //    const Point3f pFocus = ray(ft);
-
-        //    ray.o = Point3f(pLens.x, pLens.y, 0.f);
-        //    ray.d = normalize(pFocus - ray.o);
-        //}
-
+        Ray ray = makeCameraSpaceRay(sample.pFilm, sample.pLens);
         ray.medium = this->medium;
         ray.time =
             lerp(sample.time, this->shutterOpenTime, this->shutterCloseTime);
@@ -62,39 +50,32 @@ namespace idragnev::pbrt::cameras {
 
     Optional<CameraRayDifferential> PerspectiveCamera::generateRayDifferential(
         const CameraSample& sample) const {
-        RayDifferential ray = rasterPointToCameraSpaceRay(sample.pFilm);
-
-        // if (this->lensRadius > 0.f) {
-        //    const Point2f pLens = this->lensRadius * concentricSampleDisk(sample.pLens);
-        //    const Float ft = this->focalDistance / ray.d.z;
-        //    const Point3f pFocus = ray(ft);
-
-        //    ray.o = Point3f(pLens.x, pLens.y, 0.f);
-        //    ray.d = normalize(pFocus - ray.o);
-        //}
+        RayDifferential ray = makeCameraSpaceRay(sample.pFilm, sample.pLens);
 
         if (const Point3f pCamera = this->rasterToCameraTransform(
                 Point3f(sample.pFilm.x, sample.pFilm.y, 0.f));
             this->lensRadius > 0.f)
         {
-        //    const Point2f pLens = this->lensRadius * concentricSampleDisk(sample.pLens);
-        //    const Vector3f dx = normalize(Vector3f(pCamera + dxCamera));
-        //    const Float ftx = this->focalDistance / dx.z;
-        //    const Point3f pFocusX = Point3f::zero() + (ftx * dx);
-        //    ray.rxOrigin = Point3f(pLens.x, pLens.y, 0);
-        //    ray.rxDirection = normalize(pFocusX - ray.rxOrigin);
+            const Point2f pLens = toCameraLensPoint(sample.pLens);
+            const Point3f differentialsOrigin = Point3f(pLens.x, pLens.y, 0.f);
 
-        //    const Vector3f dy = normalize(Vector3f(pCamera + dyCamera));
-        //    const Float fty = this->focalDistance / dy.z;
-        //    const Point3f pFocusY = Point3f::zero() + (fty * dy);
-        //    ray.ryOrigin = Point3f(pLens.x, pLens.y, 0.f);
-        //    ray.ryDirection = normalize(pFocusY - ray.ryOrigin);
+            const Vector3f dx = normalize(Vector3f(pCamera + this->dxCamera));
+            const Float ftx = this->focalDistance / dx.z;
+            const Point3f pFocusX = Point3f::zero() + (ftx * dx);
+            ray.rxOrigin = differentialsOrigin;
+            ray.rxDirection = normalize(pFocusX - ray.rxOrigin);
+
+            const Vector3f dy = normalize(Vector3f(pCamera + this->dyCamera));
+            const Float fty = this->focalDistance / dy.z;
+            const Point3f pFocusY = Point3f::zero() + (fty * dy);
+            ray.ryOrigin = differentialsOrigin;
+            ray.ryDirection = normalize(pFocusY - ray.ryOrigin);
         }
         else {
             ray.rxOrigin = ray.o;
             ray.ryOrigin = ray.o;
-            ray.rxDirection = normalize(Vector3f(pCamera) + dxCamera);
-            ray.ryDirection = normalize(Vector3f(pCamera) + dyCamera);
+            ray.rxDirection = normalize(Vector3f(pCamera) + this->dxCamera);
+            ray.ryDirection = normalize(Vector3f(pCamera) + this->dyCamera);
         }
 
         ray.time =
@@ -108,12 +89,24 @@ namespace idragnev::pbrt::cameras {
         });
     }
 
-    Ray PerspectiveCamera::rasterPointToCameraSpaceRay(const Point2f& p) const {
+    Ray PerspectiveCamera::makeCameraSpaceRay(const Point2f& rasterPoint,
+                                              const Point2f& lensPoint) const {
         const Point3f rayOrigin = Point3f::zero();
-        const Point3f pCamera =
-            this->rasterToCameraTransform(Point3f(p.x, p.y, 0.f));
+        const Point3f pCamera = this->rasterToCameraTransform(
+            Point3f(rasterPoint.x, rasterPoint.y, 0.f));
         const Vector3f rayDirection = normalize(Vector3f(pCamera));
 
-        return Ray(rayOrigin, rayDirection);
+        auto ray = Ray(rayOrigin, rayDirection);
+
+        if (this->lensRadius > 0.f) {
+            const Point2f pLens = toCameraLensPoint(lensPoint);
+            const Float ft = this->focalDistance / ray.d.z;
+            const Point3f pFocus = ray(ft);
+
+            ray.o = Point3f(pLens.x, pLens.y, 0.f);
+            ray.d = normalize(pFocus - ray.o);
+        }
+
+        return ray;
     }
 } // namespace idragnev::pbrt::cameras

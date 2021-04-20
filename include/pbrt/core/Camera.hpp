@@ -74,6 +74,9 @@ namespace idragnev::pbrt {
                          const Medium* medium);
 
     protected:
+        Point2f toCameraLensPoint(const Point2f& sampleLensPoint) const;
+
+    protected:
         Transformation cameraToScreenTransform;
         Transformation screenToRasterTransform;
         Transformation rasterToScreenTransform;

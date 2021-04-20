@@ -1,5 +1,6 @@
 #include "pbrt/core/Camera.hpp"
 #include "pbrt/core/geometry/Bounds2.hpp"
+#include "pbrt/core/Sampling.hpp"
 
 namespace idragnev::pbrt {
     Camera::Camera(const AnimatedTransformation& cameraToWorld,
@@ -106,4 +107,10 @@ namespace idragnev::pbrt {
         , rasterToCameraTransform(inverse(cameraToScreenTransform) * rasterToScreenTransform)
         , lensRadius(lensRadius)
         , focalDistance(focalDistance) {}
+
+    Point2f
+    ProjectiveCamera::toCameraLensPoint(const Point2f& sampleLensPoint) const {
+        return this->lensRadius *
+               sampling::concentricSampleDisk(sampleLensPoint);
+    }
 } // namespace idragnev::pbrt

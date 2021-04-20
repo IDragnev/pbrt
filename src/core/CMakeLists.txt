@@ -27,6 +27,7 @@ set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/core)
 set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/core.hpp
   ${CORE_HEADERS_DIR}/Optional.hpp
+  ${CORE_HEADERS_DIR}/Sampling.hpp
 
   ${CORE_HEADERS_DIR}/math/Fwd.hpp
   ${CORE_HEADERS_DIR}/math/Vector2.hpp

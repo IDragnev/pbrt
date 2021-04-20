@@ -22,7 +22,8 @@ namespace idragnev::pbrt::cameras {
         generateRayDifferential(const CameraSample& sample) const override;
 
     private:
-        Ray rasterPointToCameraSpaceRay(const Point2f& rasterPoint) const;
+        Ray makeCameraSpaceRay(const Point2f& rasterPoint,
+                               const Point2f& lensPoint) const;
 
     private:
         Vector3f dxCamera;

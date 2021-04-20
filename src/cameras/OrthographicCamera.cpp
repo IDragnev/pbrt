@@ -25,17 +25,7 @@ namespace idragnev::pbrt::cameras {
 
     Optional<CameraRay>
     OrthographicCamera::generateRay(const CameraSample& sample) const {
-        Ray ray = rasterPointToCameraSpaceRay(sample.pFilm);
-
-        //if (this->lensRadius > 0.f) {
-        //    const Point2f pLens = this->lensRadius * concentricSampleDisk(sample.pLens);
-        //    const Float ft = focalDistance / ray.d.z;
-        //    const Point3f pFocus = ray(ft);
-
-        //    ray.o = Point3f(pLens.x, pLens.y, 0.f);
-        //    ray.d = normalize(pFocus - ray.o);
-        //}
-
+        Ray ray = makeCameraSpaceRay(sample.pFilm, sample.pLens);
         ray.time = lerp(sample.time, this->shutterOpenTime, this->shutterCloseTime);
         ray.medium = this->medium;
 
@@ -47,35 +37,26 @@ namespace idragnev::pbrt::cameras {
 
     Optional<CameraRayDifferential>
     OrthographicCamera::generateRayDifferential(const CameraSample& sample) const {
-        RayDifferential ray = rasterPointToCameraSpaceRay(sample.pFilm);
+        RayDifferential ray = makeCameraSpaceRay(sample.pFilm, sample.pLens);
 
-        //if (this->lensRadius > 0.f) {
-        //    const Point2f pLens = this->lensRadius * concentricSampleDisk(sample.pLens);
-        //    const Float ft = this->focalDistance / ray.d.z;
-        //    const Point3f pFocus = ray(ft);
+        if (this->lensRadius > 0.f) {
+            const Point2f pLens = toCameraLensPoint(sample.pLens);
+            const Float ft = this->focalDistance / ray.d.z;
 
-        //    ray.o = Point3f(pLens.x, pLens.y, 0);
-        //    ray.d = normalize(pFocus - ray.o);
-        //}
+            const Point3f pFocusX = ray.o + dxCamera + (ft * Vector3f(0.f, 0.f, 1.f));
+            ray.rxOrigin = Point3f(pLens.x, pLens.y, 0.f);
+            ray.rxDirection = normalize(pFocusX - ray.rxOrigin);
 
-        //if (this->lensRadius > 0) {
-        //    const Point2f pLens = this->lensRadius * concentricSampleDisk(sample.pLens);
-        //    const Float ft = this->focalDistance / ray.d.z;
-
-        //    const Point3f pFocusX = ray.o + dxCamera + (ft * Vector3f(0.f, 0.f, 1.f));
-        //    ray.rxOrigin = Point3f(pLens.x, pLens.y, 0.f);
-        //    ray.rxDirection = normalize(pFocusX - ray.rxOrigin);
-
-        //    const Point3f pFocusY = ray.o + dyCamera + (ft * Vector3f(0.f, 0.f, 1.f));
-        //    ray.ryOrigin = Point3f(pLens.x, pLens.y, 0.f);
-        //    ray.ryDirection = normalize(pFocusY - ray.ryOrigin);
-        //}
-        //else {
+            const Point3f pFocusY = ray.o + dyCamera + (ft * Vector3f(0.f, 0.f, 1.f));
+            ray.ryOrigin = Point3f(pLens.x, pLens.y, 0.f);
+            ray.ryDirection = normalize(pFocusY - ray.ryOrigin);
+        }
+        else {
             ray.rxOrigin = ray.o + dxCamera;
             ray.ryOrigin = ray.o + dyCamera;
             ray.ryDirection = ray.d;
             ray.rxDirection = ray.d;
-        //}
+        }
 
         ray.time = lerp(sample.time, this->shutterOpenTime, this->shutterCloseTime);
         ray.hasDifferentials = true;
@@ -87,12 +68,23 @@ namespace idragnev::pbrt::cameras {
         });
     }
 
-    Ray
-    OrthographicCamera::rasterPointToCameraSpaceRay(const Point2f& p) const {
-        const Point3f rayOrigin =
-            this->rasterToCameraTransform(Point3f(p.x, p.y, 0.f));
+    Ray OrthographicCamera::makeCameraSpaceRay(const Point2f& rasterPoint,
+                                               const Point2f& lensPoint) const {
+        const Point3f rayOrigin = this->rasterToCameraTransform(
+            Point3f(rasterPoint.x, rasterPoint.y, 0.f));
         const auto rayDirection = Vector3f(0.f, 0.f, 1.f);
 
-        return Ray{rayOrigin, rayDirection};
+        auto ray = Ray{rayOrigin, rayDirection};
+
+        if (this->lensRadius > 0.f) {
+            const Point2f pLens = toCameraLensPoint(lensPoint);
+            const Float ft = this->focalDistance / ray.d.z;
+            const Point3f pFocus = ray(ft);
+
+            ray.o = Point3f(pLens.x, pLens.y, 0.f);
+            ray.d = normalize(pFocus - ray.o);
+        }
+
+        return ray;
     }
 } // namespace idragnev::pbrt::cameras
