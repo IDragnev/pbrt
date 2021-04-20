@@ -27,8 +27,8 @@ namespace idragnev::pbrt::cameras {
 
         const Point2i res = this->film->fullResolution();
         Point3f pMin = this->rasterToCameraTransform(Point3f::zero());
-        Point3f pMax =
-            this->rasterToCameraTransform(Point3f(res.x, res.y, 0.f));
+        Point3f pMax = this->rasterToCameraTransform(
+            Point3f(static_cast<Float>(res.x), static_cast<Float>(res.y), 0.f));
         pMin /= pMin.z;
         pMax /= pMax.z;
 
