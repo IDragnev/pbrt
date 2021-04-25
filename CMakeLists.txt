@@ -20,6 +20,7 @@ if(CMAKE_BUILD_TYPE MATCHES RELEASE)
 endif()
 
 option(PBRT_FLOAT_AS_DOUBLE "Use 64-bit floats" OFF)
+option(PBRT_TREAT_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
 
 if(PBRT_FLOAT_AS_DOUBLE)
   add_compile_definitions(PBRT_FLOAT_AS_DOUBLE)
@@ -27,12 +28,13 @@ endif()
 
 if(MSVC)
   set(PBRT_TARGET_WARNING_FLAGS
-    "/W4" "/WX"
+    "/W4"
+    $<$<BOOL:${PBRT_TREAT_WARNINGS_AS_ERRORS}>:/WX>
     "/w15038" "/w14800" "/w14242" "/w14254" "/w14263" "/w14264" "/w14265" "/w14266"
     "/w14287" "/w14296" "/w14388" "/w14471" "/w14619" "/w14800" "/w14946"
   )
 else()
-  set(PBRT_TARGET_WARNING_FLAGS "-Wall" "-Wextra" "-Werror" "-pedantic")
+  set(PBRT_TARGET_WARNING_FLAGS "-Wall" "-Wextra" $<$<BOOL:${PBRT_TREAT_WARNINGS_AS_ERRORS}>:-Werror> "-pedantic")
 endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)

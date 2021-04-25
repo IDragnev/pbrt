@@ -9,11 +9,13 @@ The project is regularly built with:
  - GCC 10.2
 
 **CMake 3.14 or higher**.  
-Note that **the warning level is set to Error for CMake builds**,  
+Note that **warnings are treated as errors by default**,  
 so builds may fail because of a warning with other compiler versions.  
+If this is the case, you can disable the corresponding option.
 
 CMake options:
  - PBRT_FLOAT_AS_DOUBLE - use 64-bit floats (off by default)
+ - PBRT_TREAT_WARNINGS_AS_ERRORS - treat compiler warnings as errors (on by default)
 
 Example:  
  ```
