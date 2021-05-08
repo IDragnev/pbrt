@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include "Math.hpp"
+#include "Vector2.hpp"
 
 namespace idragnev::pbrt::math {
     template <typename T>
