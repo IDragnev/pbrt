@@ -30,6 +30,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/Sampling.hpp
 
   ${CORE_HEADERS_DIR}/math/Fwd.hpp
+  ${CORE_HEADERS_DIR}/math/Math.hpp
   ${CORE_HEADERS_DIR}/math/Vector2.hpp
   ${CORE_HEADERS_DIR}/math/Vector2Impl.hpp
   ${CORE_HEADERS_DIR}/math/Vector3.hpp
