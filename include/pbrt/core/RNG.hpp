@@ -16,4 +16,13 @@ namespace idragnev::pbrt::rng {
         // clang-format on
     } // namespace constants
 
+    // TODO
+    class RNG
+    {
+    public:
+        Float uniformFloat() {
+            // TODO
+            return constants::OneMinusEpsilon;
+        }
+    };
 } // namespace idragnev::pbrt::rng
