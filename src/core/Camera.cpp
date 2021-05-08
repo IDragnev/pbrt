@@ -1,6 +1,6 @@
 #include "pbrt/core/Camera.hpp"
 #include "pbrt/core/geometry/Bounds2.hpp"
-#include "pbrt/core/Sampling.hpp"
+#include "pbrt/core/sampling/Sampling.hpp"
 
 namespace idragnev::pbrt {
     Camera::Camera(const AnimatedTransformation& cameraToWorld,
