@@ -3,7 +3,6 @@
 #include "pbrt/core/core.hpp"
 #include "pbrt/core/Optional.hpp"
 #include "pbrt/core/math/Point2.hpp"
-#include "pbrt/core/RNG.hpp"
 
 #include <vector>
 #include <memory>
@@ -63,26 +62,5 @@ namespace idragnev::pbrt {
     private:
         std::size_t _1DSamplesArrayOffset = 0;
         std::size_t _2DSamplesArrayOffset = 0;
-    };
-
-    class PixelSampler : public Sampler
-    {
-    public:
-        PixelSampler(const std::uint64_t samplesPerPixel,
-                     const std::size_t precomputedDimensionsCount);
-
-        Float generate1DSample() override;
-        Point2f generate2DSample() override;
-
-        bool startNextSample() override;
-        bool setSampleNumber(const std::uint64_t sampleNum) override;
-
-    protected:
-        std::vector<std::vector<Float>> precomputed1DSamplesArray;
-        std::vector<std::vector<Point2f>> precomputed2DSamplesArray;
-        std::size_t current1DDimension = 0;
-        std::size_t current2DDimension = 0;
-
-        rng::RNG rng;
     };
 } // namespace idragnev::pbrt

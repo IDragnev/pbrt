@@ -22,6 +22,7 @@ set(RAY_TRACER_CORE_SOURCE
   color/Spectrum.cpp
 
   sampling/Sampler.cpp
+  sampling/PixelSampler.cpp
 )
 
 set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/core)
@@ -33,6 +34,7 @@ set(RAY_TRACER_CORE_HEADERS
 
   ${CORE_HEADERS_DIR}/sampling/Sampling.hpp
   ${CORE_HEADERS_DIR}/sampling/Sampler.hpp
+  ${CORE_HEADERS_DIR}/sampling/PixelSampler.hpp
 
   ${CORE_HEADERS_DIR}/math/Fwd.hpp
   ${CORE_HEADERS_DIR}/math/Math.hpp
