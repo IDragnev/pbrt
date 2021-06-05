@@ -29,7 +29,7 @@ target_link_libraries(shapeslib
   PRIVATE corelib
   PRIVATE functional
 )
-target_compile_features(shapeslib PUBLIC cxx_std_17)
+target_compile_features(shapeslib PUBLIC cxx_std_20)
 target_compile_options(shapeslib
  PRIVATE ${PBRT_TARGET_WARNING_FLAGS}
 )
