@@ -21,6 +21,7 @@ set(RAY_TRACER_CORE_SOURCE
 
   color/Spectrum.cpp
 
+  sampling/Sampling.cpp
   sampling/Sampler.cpp
   sampling/PixelSampler.cpp
   sampling/GlobalSampler.cpp

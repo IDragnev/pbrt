@@ -24,5 +24,11 @@ namespace idragnev::pbrt::rng {
             // TODO
             return constants::OneMinusEpsilon;
         }
+
+        std::uint32_t uniformUInt32([[maybe_unused]] const std::uint32_t b) {
+            // TODO
+            return 0;
+        }
+
     };
 } // namespace idragnev::pbrt::rng
