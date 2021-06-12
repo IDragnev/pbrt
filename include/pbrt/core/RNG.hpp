@@ -30,5 +30,8 @@ namespace idragnev::pbrt::rng {
             return 0;
         }
 
+        void setSequence([[maybe_unused]] const std::uint64_t initSeq) {
+            // TODO
+        }
     };
 } // namespace idragnev::pbrt::rng
