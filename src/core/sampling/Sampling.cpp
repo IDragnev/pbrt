@@ -42,32 +42,34 @@ namespace idragnev::pbrt::sampling {
         }
     }
 
-    void generateLatinHypercubeSamples(const std::span<Float> samples,
-                                       const std::size_t dims,
+    void generateLatinHypercubeSamples(const std::span<Point2f> samples,
                                        rng::RNG& rng) {
         using rng::constants::OneMinusEpsilon;
 
-        const std::size_t blocksCount = samples.size() / dims;
+        if (samples.empty()) {
+            return;
+        }
+
+        const std::size_t samplesCount = samples.size();
 
         // generate samples along diagonal
-        const Float invBlocksCount = 1.f / blocksCount;
-        for (std::size_t block = 0; block < blocksCount; ++block) {
-            for (std::size_t d = 0; d < dims; ++d) {
-                const Float value = (block + rng.uniformFloat()) * invBlocksCount;
+        const Float invCount = 1.f / static_cast<Float>(samplesCount);
+        for (std::size_t i = 0; i < samplesCount; ++i) {
+            const Float x = (i + rng.uniformFloat()) * invCount;
+            const Float y = (i + rng.uniformFloat()) * invCount;
 
-                samples[block * dims + d] = std::min(value, OneMinusEpsilon);
-            }
+            samples[i].x = std::min(x, OneMinusEpsilon);
+            samples[i].y = std::min(y, OneMinusEpsilon);
         }
 
         // permute samples in each dimension
-        for (std::size_t d = 0; d < dims; ++d) {
-            for (std::size_t left = 0; left < blocksCount; ++left) {
-                const std::size_t right =
-                    left + rng.uniformUInt32(
-                               static_cast<std::uint32_t>(blocksCount - left));
-                assert(right < blocksCount);
+        for (std::size_t d = 0; d < 2; ++d) {
+            for (std::size_t left = 0; left < samplesCount; ++left) {
+                const auto b = static_cast<std::uint32_t>(samplesCount - left);
+                const std::size_t right = left + rng.uniformUInt32(b);
+                assert(right < samplesCount);
 
-                std::swap(samples[left * dims + d], samples[right * dims + d]);
+                std::swap(samples[left][d], samples[right][d]);
             }
         }
     }
