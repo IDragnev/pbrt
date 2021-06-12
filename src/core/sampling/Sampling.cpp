@@ -41,4 +41,34 @@ namespace idragnev::pbrt::sampling {
             }
         }
     }
+
+    void generateLatinHypercubeSamples(const std::span<Float> samples,
+                                       const std::size_t dims,
+                                       rng::RNG& rng) {
+        using rng::constants::OneMinusEpsilon;
+
+        const std::size_t blocksCount = samples.size() / dims;
+
+        // generate samples along diagonal
+        const Float invBlocksCount = 1.f / blocksCount;
+        for (std::size_t block = 0; block < blocksCount; ++block) {
+            for (std::size_t d = 0; d < dims; ++d) {
+                const Float value = (block + rng.uniformFloat()) * invBlocksCount;
+
+                samples[block * dims + d] = std::min(value, OneMinusEpsilon);
+            }
+        }
+
+        // permute samples in each dimension
+        for (std::size_t d = 0; d < dims; ++d) {
+            for (std::size_t left = 0; left < blocksCount; ++left) {
+                const std::size_t right =
+                    left + rng.uniformUInt32(
+                               static_cast<std::uint32_t>(blocksCount - left));
+                assert(right < blocksCount);
+
+                std::swap(samples[left * dims + d], samples[right * dims + d]);
+            }
+        }
+    }
 } // namespace idragnev::pbrt::sampling

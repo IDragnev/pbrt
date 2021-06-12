@@ -26,6 +26,12 @@ namespace idragnev::pbrt::sampling {
                                      const std::size_t ny,
                                      Optional<rng::RNG&> rng);
 
+    // Generates [0, 1)^dims sample values in `samples` using
+    // the Latin Hypercube approach. Jitters each sample value using `rng`.
+    void generateLatinHypercubeSamples(const std::span<Float> samples,
+                                       const std::size_t dims,
+                                       rng::RNG& rng);
+
     template <typename T>
     void shuffleSamples(const std::span<T> samples,
                         const std::size_t blockSize,
