@@ -3,6 +3,7 @@
 #include "pbrt/core/math/Fwd.hpp"
 #include "pbrt/core/math/Point2.hpp"
 #include "pbrt/core/RNG.hpp"
+#include "pbrt/core/Optional.hpp"
 
 #include <span>
 
@@ -12,14 +13,18 @@ namespace idragnev::pbrt::sampling {
         return Point2f{};
     }
 
+    // Generates stratified [0, 1) sample values in `samples`,
+    // optionally jittering the sample values if `rng` is provided.
     void generateStratified1DSamples(const std::span<Float> samples,
-                                     rng::RNG& rng,
-                                     const bool jitter = true);
+                                     Optional<rng::RNG&> rng);
+    // Generates stratified [0, 1)x[0, 1) sample values in `samples`,
+    // optionally jittering the sample values if `rng` is provided.
+    // `nx` and `ny` specify the rows and columns of the 2D sample grid.
+    // Nothing is done if nx + ny > samples.size.
     void generateStratified2DSamples(const std::span<Point2f> samples,
                                      const std::size_t nx,
                                      const std::size_t ny,
-                                     rng::RNG& rng,
-                                     const bool jitter = true);
+                                     Optional<rng::RNG&> rng);
 
     template <typename T>
     void shuffleSamples(const std::span<T> samples,
