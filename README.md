@@ -4,9 +4,9 @@ A ray tracer based on [pbrt-v3](http://www.pbr-book.org/3ed-2018/contents.html).
 ## Build
 A **C++20** compliant compiler is needed.  
 The project is regularly built with:  
- - MSVC 19.28
+ - MSVC 19.29
  - Clang 11.0
- - GCC 10.2
+ - GCC 10.3
 
 **CMake 3.14 or higher**.  
 Note that **warnings are treated as errors by default**,  
