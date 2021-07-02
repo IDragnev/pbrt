@@ -29,15 +29,17 @@ namespace idragnev::pbrt::sampling {
         const Float dx = 1.f / static_cast<Float>(nx);
         const Float dy = 1.f / static_cast<Float>(ny);
 
+        std::size_t i = 0;
         for (std::size_t y = 0; y < ny; ++y) {
             for (std::size_t x = 0; x < nx; ++x) {
-                const std::size_t i = x + y;
 
                 const Float jx = jitter ? rng->uniformFloat() : 0.5f;
                 const Float jy = jitter ? rng->uniformFloat() : 0.5f;
 
                 samples[i].x = std::min((x + jx) * dx, OneMinusEpsilon);
                 samples[i].y = std::min((y + jy) * dy, OneMinusEpsilon);
+
+                ++i;
             }
         }
     }
