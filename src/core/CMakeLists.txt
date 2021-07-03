@@ -4,6 +4,7 @@ set(RAY_TRACER_CORE_SOURCE
   SurfaceInteraction.cpp
   Shape.cpp
   Camera.cpp
+  RNG.cpp
 
   math/Math.cpp
   math/Matrix4x4.cpp

@@ -16,22 +16,21 @@ namespace idragnev::pbrt::rng {
         // clang-format on
     } // namespace constants
 
-    // TODO
     class RNG
     {
     public:
-        Float uniformFloat() {
-            // TODO
-            return constants::OneMinusEpsilon;
-        }
+        RNG();
+        RNG(const std::uint64_t sequenceIndex) { setSequence(sequenceIndex); }
 
-        std::uint32_t uniformUInt32([[maybe_unused]] const std::uint32_t b) {
-            // TODO
-            return 0;
-        }
+        void setSequence(const std::uint64_t sequenceIndex);
 
-        void setSequence([[maybe_unused]] const std::uint64_t initSeq) {
-            // TODO
-        }
+        std::uint32_t uniformUInt32();
+        std::uint32_t uniformUInt32(const std::uint32_t b);
+
+        Float uniformFloat();
+
+    private:
+        std::uint64_t state = 0;
+        std::uint64_t inc = 0;
     };
 } // namespace idragnev::pbrt::rng
