@@ -26,6 +26,7 @@ set(RAY_TRACER_CORE_SOURCE
   sampling/Sampler.cpp
   sampling/PixelSampler.cpp
   sampling/GlobalSampler.cpp
+  sampling/LowDiscrepancy.cpp
 )
 
 set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/core)
@@ -39,6 +40,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/sampling/Sampler.hpp
   ${CORE_HEADERS_DIR}/sampling/PixelSampler.hpp
   ${CORE_HEADERS_DIR}/sampling/GlobalSampler.hpp
+  ${CORE_HEADERS_DIR}/sampling/LowDiscrepancy.hpp
 
   ${CORE_HEADERS_DIR}/math/Fwd.hpp
   ${CORE_HEADERS_DIR}/math/Math.hpp

@@ -9,6 +9,8 @@ add_executable(core_test
   geometry/bounds3.cpp
 
   transformations/transformation.cpp
+
+  sampling/lowDiscrepancy.cpp
 )
 target_link_libraries(core_test corelib doctest)
 target_compile_options(core_test
