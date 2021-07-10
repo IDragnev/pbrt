@@ -80,48 +80,61 @@ TEST_CASE("scrambledRadicalInverse") {
         }();
 
         const auto indices = {0, 1, 2, 1151, 32351, 4363211, 681122};
-        // compare to the pbrt-v2 implementation
-        for (const std::uint32_t index : indices) {
-            pbrt::Float val = 0.f;
-            pbrt::Float invBase = 1.f / base;
-            pbrt::Float invBi = invBase;
-            std::uint32_t n = index;
 
-            while (n > 0) {
-                std::uint32_t d_i = perm[n % base];
-                val += d_i * invBi;
-                n = static_cast<std::uint32_t>(n * invBase);
-                invBi *= invBase;
+        SUBCASE("compared to the pbrt-v2 implementation") {
+            for (const std::uint32_t index : indices) {
+                pbrt::Float val = 0.f;
+                pbrt::Float invBase = 1.f / base;
+                pbrt::Float invBi = invBase;
+                std::uint32_t n = index;
+
+                while (n > 0) {
+                    std::uint32_t d_i = perm[n % base];
+                    val += d_i * invBi;
+                    n = static_cast<std::uint32_t>(n * invBase);
+                    invBi *= invBase;
+                }
+
+                // For the case where the permutation table permutes the digit 0
+                // to another digit, account for the infinite sequence of that
+                // digit trailing at the end of the radical inverse value.
+                val += perm[0] * base / (base - 1.0f) * invBi;
+
+                const pbrt::Float result =
+                    sampling::scrambledRadicalInverse(dim,
+                                                      index,
+                                                      std::span(perm));
+
+                WARN_MESSAGE(result == doctest::Approx(val).epsilon(1e-5),
+                             "index = ",
+                             index);
             }
-
-            // For the case where the permutation table permutes the digit 0
-            // to another digit, account for the infinite sequence of that
-            // digit trailing at the end of the radical inverse value.
-            val += perm[0] * base / (base - 1.0f) * invBi;
-
-            WARN(
-                doctest::Approx(val).epsilon(1e-5) ==
-                sampling::scrambledRadicalInverse(dim, index, std::span(perm)));
         }
 
-        // check against a totally naive "loop over all the
-        // bits in the index" approach, regardless of hitting zero
-        for (const std::uint32_t index : indices) {
-            pbrt::Float val = 0.f;
-            pbrt::Float invBase = 1.f / base;
-            pbrt::Float invBi = invBase;
+        SUBCASE("compared to a naive \"loop over all the bits in the index\" "
+                "approach") {
+            for (const std::uint32_t index : indices) {
+                pbrt::Float val = 0.f;
+                pbrt::Float invBase = 1.f / base;
+                pbrt::Float invBi = invBase;
 
-            std::uint32_t a = index;
-            for (int i = 0; i < 32; ++i) {
-                std::uint32_t d_i = perm[a % base];
-                a /= base;
-                val += d_i * invBi;
-                invBi *= invBase;
+                std::uint32_t a = index;
+                for (int i = 0; i < 32; ++i) {
+                    std::uint32_t d_i = perm[a % base];
+                    a /= base;
+                    val += d_i * invBi;
+                    invBi *= invBase;
+                }
+
+                const pbrt::Float result =
+                    sampling::scrambledRadicalInverse(dim,
+                                                      index,
+                                                      std::span(perm));
+
+                WARN_MESSAGE(doctest::Approx(val).epsilon(1e-5) == result,
+                             " index = ",
+                             index);
             }
-
-            WARN(
-                doctest::Approx(val).epsilon(1e-5) ==
-                sampling::scrambledRadicalInverse(dim, index, std::span(perm)));
         }
     }
 }
