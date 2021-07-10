@@ -1,8 +1,15 @@
 #pragma once
 
 #include "pbrt/core/core.hpp"
+#include "pbrt/core/RNG.hpp"
+
+#include <span>
+#include <vector>
 
 namespace idragnev::pbrt::sampling {
+    static inline constexpr std::size_t PRIMES_TABLE_SIZE = 1000u;
+    extern const std::uint32_t PRIMES[PRIMES_TABLE_SIZE];
+
     inline constexpr std::uint32_t reverseBits32(std::uint32_t n) noexcept {
         n = (n << 16) | (n >> 16);
         n = ((n & 0x00ff00ff) << 8) | ((n & 0xff00ff00) >> 8);
@@ -45,4 +52,10 @@ namespace idragnev::pbrt::sampling {
 
         return index;
     }
+
+    std::vector<std::uint16_t> generateRadicalInversePermutations(rng::RNG& rng);
+
+    Float scrambledRadicalInverse(const std::size_t baseIndex,
+                                  const std::uint64_t a,
+                                  const std::span<const uint16_t> perm);
 } // namespace idragnev::pbrt::sampling

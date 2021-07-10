@@ -30,7 +30,7 @@ namespace idragnev::pbrt::samplers {
                 jitterSamples ? pbrt::make_optional<rng::RNG&>(rng)
                               : pbrt::nullopt);
 
-            sampling::shuffleSamples(span, 1, rng);
+            sampling::shuffle(span, 1, rng);
         }
 
         for (std::vector<Point2f>& samples : precomputed2DSamplesArray) {
@@ -43,7 +43,7 @@ namespace idragnev::pbrt::samplers {
                 jitterSamples ? pbrt::make_optional<rng::RNG&>(rng)
                               : pbrt::nullopt);
 
-            sampling::shuffleSamples(span, 1, rng);
+            sampling::shuffle(span, 1, rng);
         }
     }
 
@@ -64,7 +64,7 @@ namespace idragnev::pbrt::samplers {
                     jitterSamples ? pbrt::make_optional<rng::RNG&>(rng)
                                   : pbrt::nullopt);
 
-                sampling::shuffleSamples(chunk, 1, rng);
+                sampling::shuffle(chunk, 1, rng);
             }
         }
 

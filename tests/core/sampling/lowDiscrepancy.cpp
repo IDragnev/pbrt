@@ -1,7 +1,13 @@
 #include "doctest/doctest.h"
 #include "pbrt/core/sampling/LowDiscrepancy.hpp"
+#include "pbrt/core/sampling/Sampling.hpp"
 
+#include <algorithm>
+#include <unordered_set>
+
+namespace pbrt = idragnev::pbrt;
 namespace sampling = idragnev::pbrt::sampling;
+namespace rng = idragnev::pbrt::rng;
 
 TEST_CASE("reverseBits32") {
     CHECK(sampling::reverseBits32(0) == 0);
@@ -38,4 +44,84 @@ TEST_CASE("radicalInverse with base 3") {
     CHECK(sampling::radicalInverse(baseIndex, 3)  == doctest::Approx(0.1111111f));
     CHECK(sampling::radicalInverse(baseIndex, 10) == doctest::Approx(0.3703703f));
     // clang-format on
+}
+
+TEST_CASE("radical inverse permuatations generation") {
+    rng::RNG rng;
+    const auto permutations = sampling::generateRadicalInversePermutations(rng);
+
+    for (auto permStart = permutations.begin();
+         const auto prime : sampling::PRIMES) {
+        const auto permElements =
+            std::unordered_set<std::uint16_t>{permStart, permStart + prime};
+
+        REQUIRE(permElements.size() == prime);
+        CHECK(std::all_of(permElements.begin(),
+                          permElements.end(),
+                          [prime](auto pi) { return pi < prime; }));
+
+        permStart += prime;
+    }
+}
+
+TEST_CASE("scrambledRadicalInverse") {
+    for (std::size_t dim = 0; dim < 128; ++dim) {
+        const auto base = sampling::PRIMES[dim];
+        const auto perm = [base, dim] {
+            std::vector<std::uint16_t> perm(base, 0u);
+            for (std::uint32_t i = 0; i < base; ++i) {
+                perm[i] = static_cast<std::uint16_t>(base - 1 - i);
+            }
+
+            rng::RNG rng(dim);
+            sampling::shuffle(std::span(perm), 1, rng);
+
+            return perm;
+        }();
+
+        const auto indices = {0, 1, 2, 1151, 32351, 4363211, 681122};
+        // compare to the pbrt-v2 implementation
+        for (const std::uint32_t index : indices) {
+            pbrt::Float val = 0.f;
+            pbrt::Float invBase = 1.f / base;
+            pbrt::Float invBi = invBase;
+            std::uint32_t n = index;
+
+            while (n > 0) {
+                std::uint32_t d_i = perm[n % base];
+                val += d_i * invBi;
+                n = static_cast<std::uint32_t>(n * invBase);
+                invBi *= invBase;
+            }
+
+            // For the case where the permutation table permutes the digit 0
+            // to another digit, account for the infinite sequence of that
+            // digit trailing at the end of the radical inverse value.
+            val += perm[0] * base / (base - 1.0f) * invBi;
+
+            WARN(
+                doctest::Approx(val).epsilon(1e-5) ==
+                sampling::scrambledRadicalInverse(dim, index, std::span(perm)));
+        }
+
+        // check against a totally naive "loop over all the
+        // bits in the index" approach, regardless of hitting zero
+        for (const std::uint32_t index : indices) {
+            pbrt::Float val = 0.f;
+            pbrt::Float invBase = 1.f / base;
+            pbrt::Float invBi = invBase;
+
+            std::uint32_t a = index;
+            for (int i = 0; i < 32; ++i) {
+                std::uint32_t d_i = perm[a % base];
+                a /= base;
+                val += d_i * invBi;
+                invBi *= invBase;
+            }
+
+            WARN(
+                doctest::Approx(val).epsilon(1e-5) ==
+                sampling::scrambledRadicalInverse(dim, index, std::span(perm)));
+        }
+    }
 }

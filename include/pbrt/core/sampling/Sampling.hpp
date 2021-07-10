@@ -32,10 +32,10 @@ namespace idragnev::pbrt::sampling {
                                        rng::RNG& rng);
 
     template <typename T>
-    void shuffleSamples(const std::span<T> samples,
-                        const std::size_t blockSize,
-                        rng::RNG& rng) {
-        const std::size_t blocksCount = samples.size() / blockSize;
+    void shuffle(const std::span<T> span,
+                 const std::size_t blockSize,
+                 rng::RNG& rng) {
+        const std::size_t blocksCount = span.size() / blockSize;
 
         for (std::size_t left = 0; left < blocksCount; ++left) {
             const auto b = static_cast<std::uint32_t>(blocksCount - left);
@@ -43,8 +43,8 @@ namespace idragnev::pbrt::sampling {
             assert(right < blocksCount);
 
             for (std::size_t i = 0; i < blockSize; ++i) {
-                std::swap(samples[blockSize * left + i],
-                          samples[blockSize * right + i]);
+                std::swap(span[blockSize * left + i],
+                          span[blockSize * right + i]);
             }
         }
     }
