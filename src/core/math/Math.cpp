@@ -49,4 +49,35 @@ namespace idragnev::pbrt::math {
 
         return Intervalf{cosLow, cosHigh};
     }
+
+    void extendedGCD(std::uint64_t a,
+                     std::uint64_t b,
+                     std::int64_t& x,
+                     std::int64_t& y) {
+        if (b == 0) {
+            x = 1;
+            y = 0;
+
+            return;
+        }
+
+        const std::int64_t d = a / b;
+        std::int64_t xp = 0;
+        std::int64_t yp = 0;
+
+        extendedGCD(b, a % b, xp, yp);
+        x = yp;
+        y = xp - (d * yp);
+    }
+
+    std::uint64_t multInverseCoprimes(const std::int64_t a,
+                                      const std::int64_t n) {
+        std::int64_t x = 0;
+        std::int64_t y = 0;
+
+        // ax + ny = gcd(a, n) 
+        extendedGCD(a, n, x, y);
+
+        return mod(x, n);
+    }
 } // namespace idragnev::pbrt::math

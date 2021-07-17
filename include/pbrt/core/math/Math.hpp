@@ -3,6 +3,8 @@
 #include "Fwd.hpp"
 #include "pbrt/core/core.hpp"
 
+#include <concepts>
+
 namespace idragnev::pbrt::math {
     namespace constants {
         // clang-format off
@@ -25,6 +27,26 @@ namespace idragnev::pbrt::math {
         using constants::Pi;
         return (180.f / Pi) * rad;
     }
+
+    template <std::integral T>
+    inline T mod(T a, T m) {
+        const T result = a - (a / m) * m;
+        return static_cast<T>((result < 0) ? result + m : result);
+    }
+
+    template <std::floating_point T>
+    inline T mod(T a, T m) {
+        return std::fmod(a, m);
+    }
+
+    void extendedGCD(std::uint64_t a,
+                     std::uint64_t b,
+                     std::int64_t& x,
+                     std::int64_t& y);
+    // The multiplicative inverse of `a` mod `m`, where
+    // `a` and `m` are coprime.
+    std::uint64_t multInverseCoprimes(const std::int64_t a,
+                                      const std::int64_t m);
 
     Intervalf sin(const Intervalf& i);
     Intervalf cos(const Intervalf& i);

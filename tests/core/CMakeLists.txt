@@ -4,6 +4,7 @@ add_executable(core_test
 
   math/matrix4x4.cpp
   math/interval.cpp
+  math/math.cpp
 
   geometry/bounds2.cpp
   geometry/bounds3.cpp
