@@ -9,6 +9,7 @@
 namespace idragnev::pbrt::sampling {
     static inline constexpr std::size_t PRIMES_TABLE_SIZE = 1000u;
     extern const std::uint32_t PRIMES[PRIMES_TABLE_SIZE];
+    extern const std::uint32_t PRECEDING_PRIMES_SUMS[PRIMES_TABLE_SIZE];
 
     inline constexpr std::uint32_t reverseBits32(std::uint32_t n) noexcept {
         n = (n << 16) | (n >> 16);

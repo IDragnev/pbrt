@@ -1,10 +1,12 @@
 set(SAMPLERS_SOURCE_FILES
   StratifiedSampler.cpp
+  HaltonSampler.cpp
 )
 
 set(SAMPLERS_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/samplers)
 set(SAMPLERS_HEADER_FILES
   ${SAMPLERS_HEADERS_DIR}/StratifiedSampler.hpp
+  ${SAMPLERS_HEADERS_DIR}/HaltonSampler.hpp
 )
 
 add_library(

@@ -4,7 +4,6 @@
 #include "pbrt/core/RNG.hpp"
 
 namespace idragnev::pbrt {
-
     class PixelSampler : public Sampler
     {
     public:
