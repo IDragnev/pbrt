@@ -41,6 +41,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/sampling/PixelSampler.hpp
   ${CORE_HEADERS_DIR}/sampling/GlobalSampler.hpp
   ${CORE_HEADERS_DIR}/sampling/LowDiscrepancy.hpp
+  ${CORE_HEADERS_DIR}/sampling/Filter.hpp
 
   ${CORE_HEADERS_DIR}/math/Fwd.hpp
   ${CORE_HEADERS_DIR}/math/Math.hpp
