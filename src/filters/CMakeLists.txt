@@ -1,10 +1,14 @@
 set(FILTERS_SOURCE_FILES
   Box.cpp
+  Triangle.cpp
+  Gaussian.cpp
 )
 
 set(FILTERS_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/filters)
 set(FILTERS_HEADER_FILES
   ${FILTERS_HEADERS_DIR}/Box.hpp
+  ${FILTERS_HEADERS_DIR}/Triangle.hpp
+  ${FILTERS_HEADERS_DIR}/Gaussian.hpp
 )
 
 add_library(
