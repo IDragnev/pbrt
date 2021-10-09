@@ -1,7 +1,9 @@
+#pragma once
+
 #include "pbrt/core/core.hpp"
 #include "pbrt/core/math/Vector2.hpp"
 
-namespace idragnev::pbrt::sampling {
+namespace idragnev::pbrt {
     class Filter
     {
     public:
@@ -15,4 +17,4 @@ namespace idragnev::pbrt::sampling {
         const Vector2f radius;
         const Vector2f invRadius;
     };
-} // namespace idragnev::pbrt::sampling
+} // namespace idragnev::pbrt
