@@ -2,6 +2,7 @@
 
 #include "pbrt/core/core.hpp"
 #include "pbrt/core/math/Vector2.hpp"
+#include "pbrt/core/math/Point2.hpp"
 
 namespace idragnev::pbrt {
     class Filter
