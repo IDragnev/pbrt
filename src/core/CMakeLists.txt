@@ -4,6 +4,7 @@ set(RAY_TRACER_CORE_SOURCE
   SurfaceInteraction.cpp
   Shape.cpp
   Camera.cpp
+  Film.cpp
   RNG.cpp
 
   math/Math.cpp
@@ -82,6 +83,7 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/Material.hpp
   ${CORE_HEADERS_DIR}/Medium.hpp
   ${CORE_HEADERS_DIR}/Camera.hpp
+  ${CORE_HEADERS_DIR}/Film.hpp
 
   ${CORE_HEADERS_DIR}/primitive/Primitive.hpp
   ${CORE_HEADERS_DIR}/primitive/GeometricPrimitive.hpp
