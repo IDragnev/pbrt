@@ -107,3 +107,6 @@ target_compile_features(corelib PUBLIC cxx_std_20)
 target_compile_options(corelib
  PRIVATE ${PBRT_TARGET_WARNING_FLAGS}
 )
+if(PBRT_SAMPLED_SPECTRUM)
+  target_compile_definitions(corelib PRIVATE PBRT_SAMPLED_SPECTRUM)
+endif()

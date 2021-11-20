@@ -6,6 +6,15 @@
 #include <span>
 
 namespace idragnev::pbrt {
+    class RGBSpectrum;
+    class SampledSpectrum;
+
+#ifdef PBRT_SAMPLED_SPECTRUM
+    using Spectrum = SampledSpectrum;
+#else
+    using Spectrum = RGBSpectrum;
+#endif
+
     constexpr std::array<Float, 3>
     XYZToRGB(const std::array<Float, 3>& xyz) noexcept;
     constexpr std::array<Float, 3>

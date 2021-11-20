@@ -21,6 +21,7 @@ endif()
 
 option(PBRT_FLOAT_AS_DOUBLE "Use 64-bit floats" OFF)
 option(PBRT_TREAT_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
+option(PBRT_SAMPLED_SPECTRUM "Use SampledSpectrum rather than RGBSpectrum" OFF)
 
 if(PBRT_FLOAT_AS_DOUBLE)
   add_compile_definitions(PBRT_FLOAT_AS_DOUBLE)
