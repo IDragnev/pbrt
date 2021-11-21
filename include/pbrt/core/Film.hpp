@@ -65,7 +65,7 @@ namespace idragnev::pbrt {
         std::mutex mutex;
 
         [[maybe_unused]] const Float scale;
-        [[maybe_unused]] const Float maxSampleLuminance;
+        const Float maxSampleLuminance;
     };
 
     struct FilmTilePixel

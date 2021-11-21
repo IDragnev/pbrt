@@ -115,7 +115,8 @@ namespace idragnev::pbrt {
         if (const int filmPixels = croppedPixelBounds.area();
             filmPixels == static_cast<int>(imagePixels.size()))
         {
-            for (std::size_t i = 0; i < filmPixels; ++i) {
+            const std::size_t nPixels = imagePixels.size();
+            for (std::size_t i = 0; i < nPixels; ++i) {
                 const std::array xyz = imagePixels[i].toXYZ();
 
                 Pixel& filmPixel = this->pixels[i];
