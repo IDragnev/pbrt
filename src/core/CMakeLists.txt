@@ -101,6 +101,7 @@ add_library(
 )
 target_link_libraries(corelib
   PUBLIC optional
+  PRIVATE memory
 )
 target_include_directories(corelib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_compile_features(corelib PUBLIC cxx_std_20)

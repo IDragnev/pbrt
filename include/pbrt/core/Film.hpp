@@ -6,12 +6,17 @@
 #include "pbrt/core/AtomicFloat.hpp"
 #include "pbrt/core/math/Point2.hpp"
 #include "pbrt/core/geometry/Bounds2.hpp"
+#include "pbrt/core/color/Spectrum.hpp"
 
 #include <memory>
 #include <string>
 #include <mutex>
+#include <span>
+#include <vector>
 
 namespace idragnev::pbrt {
+    class FilmTile;
+
     class Film
     {
     public:
@@ -29,7 +34,7 @@ namespace idragnev::pbrt {
         Bounds2i getSampleBounds() const;
         Bounds2f getPhysicalExtent() const;
 
-        // std::unique_ptr<FilmTile> getFilmTile(const Bounds2i& sampleBounds);
+        std::unique_ptr<FilmTile> getFilmTile(const Bounds2i& sampleBounds);
         // void mergeFilmTile(std::unique_ptr<FilmTile> tile);
         // void setImage(const Spectrum* img) const;
         // void addSplat(const Point2f& p, Spectrum v);
@@ -61,5 +66,46 @@ namespace idragnev::pbrt {
 
         [[maybe_unused]] const Float scale;
         [[maybe_unused]] const Float maxSampleLuminance;
+    };
+
+    struct FilmTilePixel
+    {
+        Spectrum contribSum;
+        Float filterWeightSum = 0.f;
+    };
+
+    class FilmTile
+    {
+        friend class Film;
+
+    public:
+        FilmTile(const Bounds2i& pixelBounds,
+                 const Vector2f& filterRadius,
+                 const std::span<const Float> filterTable,
+                 const std::size_t filterTableExtent,
+                 const Float maxSampleLuminance)
+            : pixelBounds(pixelBounds)
+            , filterRadius(filterRadius)
+            , invFilterRadius(1.f / filterRadius.x, 1.f / filterRadius.y)
+            , maxSampleLuminance(maxSampleLuminance)
+            , filterTable(filterTable)
+            , filterTableExtent(filterTableExtent)
+            , pixels(std::vector(std::max(0, pixelBounds.area()),
+                                 FilmTilePixel{})) {}
+
+        void
+        addSample(Point2f pFilm, Spectrum L, const Float sampleWeight = 1.f);
+
+        FilmTilePixel& getPixel(const Point2i& p);
+        const FilmTilePixel& getPixel(const Point2i& p) const;
+
+    private:
+        Bounds2i pixelBounds;
+        Vector2f filterRadius;
+        Vector2f invFilterRadius;
+        Float maxSampleLuminance = 0.f;
+        std::span<const Float> filterTable;
+        std::size_t filterTableExtent = 0;
+        std::vector<FilmTilePixel> pixels;
     };
 } // namespace idragnev::pbrt
