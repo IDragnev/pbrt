@@ -168,7 +168,7 @@ namespace idragnev::pbrt {
         p1 = math::min(p1, pixelBounds.max);
 
         std::size_t* const filterXOffsets =
-            memory::pbrtAlloca<std::size_t>(std::max(p1.x - p0.x, 1));
+            PBRT_ALLOCA(std::size_t, std::max(p1.x - p0.x, 1));
         for (int x = p0.x; x < p1.x; ++x) {
             const Float fx = std::abs((x - pFilm.x) * invFilterRadius.x *
                                       static_cast<Float>(filterTableExtent));
@@ -179,7 +179,7 @@ namespace idragnev::pbrt {
         }
 
         std::size_t* const filterYOffsets =
-            memory::pbrtAlloca<std::size_t>(std::max(p1.y - p0.y, 1));
+            PBRT_ALLOCA(std::size_t, std::max(p1.y - p0.y, 1));
         for (int y = p0.y; y < p1.y; ++y) {
             const Float fy = std::abs((y - pFilm.y) * invFilterRadius.y *
                                       static_cast<Float>(filterTableExtent));

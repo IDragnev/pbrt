@@ -11,6 +11,8 @@
     #include <malloc.h>
 #endif
 
+#define PBRT_ALLOCA(TYPE, COUNT) static_cast<TYPE*>(alloca((COUNT) * sizeof(TYPE)))
+
 namespace idragnev::pbrt::memory {
     namespace constants {
 #ifndef PBRT_L1_CACHE_LINE_SIZE
@@ -20,11 +22,6 @@ namespace idragnev::pbrt::memory {
             PBRT_L1_CACHE_LINE_SIZE;
 #endif
     } // namespace constants
-
-    template <typename T>
-    [[nodiscard]] inline auto pbrtAlloca(const std::size_t count) {
-        return static_cast<T*>(alloca(count * sizeof(T)));
-    }
 
     // Allocates memory aligned to L1 Cache line boundary
     [[nodiscard]] void* allocCacheAligned(const std::size_t size);
