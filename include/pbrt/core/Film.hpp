@@ -35,11 +35,11 @@ namespace idragnev::pbrt {
         Bounds2f getPhysicalExtent() const;
 
         std::unique_ptr<FilmTile> getFilmTile(const Bounds2i& sampleBounds);
-        // void mergeFilmTile(std::unique_ptr<FilmTile> tile);
-        // void setImage(const Spectrum* img) const;
+        void mergeFilmTile(std::unique_ptr<FilmTile> tile);
+        void setImage(const std::span<Spectrum> imagePixels) const;
         // void addSplat(const Point2f& p, Spectrum v);
         // void writeImage(Float splatScale = 1.f);
-        // void clear();
+        void clear();
 
         const Point2i fullResolution;
         const Float diagonal;
@@ -98,6 +98,8 @@ namespace idragnev::pbrt {
 
         FilmTilePixel& getPixel(const Point2i& p);
         const FilmTilePixel& getPixel(const Point2i& p) const;
+
+        Bounds2i getPixelBounds() const { return pixelBounds; }
 
     private:
         Bounds2i pixelBounds;

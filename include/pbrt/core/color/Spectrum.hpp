@@ -53,12 +53,14 @@ namespace idragnev::pbrt {
                    0.715160f * (*this)[1] +
                    0.072169f * (*this)[2];
         }
-        std::array<Float, 3> toXYZ() const { return RGBToXYZ(this->toRGB()); }
-        std::array<Float, 3> toRGB() const {
+        [[nodiscard]] std::array<Float, 3> toXYZ() const {
+            return RGBToXYZ(this->toRGB());
+        }
+        [[nodiscard]] std::array<Float, 3> toRGB() const {
             return {(*this)[0], (*this)[1], (*this)[2]};
         }
 
-        RGBSpectrum toRGBSpectrum() const { return *this; }
+        [[nodiscard]] RGBSpectrum toRGBSpectrum() const { return *this; }
     };
 
     class SampledSpectrum : public CoefficientSpectrum<60>
@@ -89,10 +91,12 @@ namespace idragnev::pbrt {
         fromRGBIlluminant(const std::array<Float, 3>& rgb);
 
         Float y() const;
-        std::array<Float, 3> toXYZ() const;
-        std::array<Float, 3> toRGB() const { return XYZToRGB(this->toXYZ()); }
+        [[nodiscard]] std::array<Float, 3> toXYZ() const;
+        [[nodiscard]] std::array<Float, 3> toRGB() const {
+            return XYZToRGB(this->toXYZ());
+        }
 
-        RGBSpectrum toRGBSpectrum() const {
+        [[nodiscard]] RGBSpectrum toRGBSpectrum() const {
             return RGBSpectrum::fromRGB(this->toRGB());
         }
     };

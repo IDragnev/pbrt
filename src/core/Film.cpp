@@ -94,6 +94,65 @@ namespace idragnev::pbrt {
             maxSampleLuminance));
     }
 
+    void Film::mergeFilmTile(std::unique_ptr<FilmTile> tile) {
+        // TODO: Log tile->pixelBounds ...
+
+        std::lock_guard<std::mutex> lock(mutex);
+
+        for (const Point2i pixel : tile->getPixelBounds()) {
+            const FilmTilePixel& tilePixel = tile->getPixel(pixel);
+            const std::array<Float, 3> xyz = tilePixel.contribSum.toXYZ();
+
+            Pixel& filmPixel = this->getPixel(pixel);
+            for (std::size_t i = 0; i < 3; ++i) {
+                filmPixel.xyz[i] += xyz[i];
+            }
+            filmPixel.filterWeightSum += tilePixel.filterWeightSum;
+        }
+    }
+
+    void Film::setImage(const std::span<Spectrum> imagePixels) const {
+        if (const int filmPixels = croppedPixelBounds.area();
+            filmPixels == static_cast<int>(imagePixels.size()))
+        {
+            for (std::size_t i = 0; i < filmPixels; ++i) {
+                const std::array xyz = imagePixels[i].toXYZ();
+
+                Pixel& filmPixel = this->pixels[i];
+
+                filmPixel.xyz[0] = xyz[0];
+                filmPixel.xyz[1] = xyz[1];
+                filmPixel.xyz[2] = xyz[2];
+
+                filmPixel.filterWeightSum = 1.f;
+
+                filmPixel.splatXYZ[0] = 0.f;
+                filmPixel.splatXYZ[1] = 0.f;
+                filmPixel.splatXYZ[2] = 0.f;
+            }
+        }
+        else {
+            // TODO : Log ...
+            assert(false);
+        }
+    }
+
+    void Film::clear() {
+        for (const Point2i p : croppedPixelBounds) {
+            Pixel& filmPixel = getPixel(p);
+
+            filmPixel.xyz[0] = 0.f;
+            filmPixel.xyz[1] = 0.f;
+            filmPixel.xyz[2] = 0.f;
+
+            filmPixel.filterWeightSum = 0.f;
+
+            filmPixel.splatXYZ[0] = 0.f;
+            filmPixel.splatXYZ[1] = 0.f;
+            filmPixel.splatXYZ[2] = 0.f;
+        }
+    }
+
     void
     FilmTile::addSample(Point2f pFilm, Spectrum L, const Float sampleWeight) {
         if (L.y() > maxSampleLuminance) {
