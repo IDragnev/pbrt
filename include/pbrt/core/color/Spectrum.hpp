@@ -16,9 +16,9 @@ namespace idragnev::pbrt {
 #endif
 
     constexpr std::array<Float, 3>
-    XYZToRGB(const std::array<Float, 3>& xyz) noexcept;
+    XYZToRGB(const std::span<const Float, 3>& xyz) noexcept;
     constexpr std::array<Float, 3>
-    RGBToXYZ(const std::array<Float, 3>& rgb) noexcept;
+    RGBToXYZ(const std::span<const Float, 3>& rgb) noexcept;
 
     enum class SpectrumType
     {
@@ -102,7 +102,7 @@ namespace idragnev::pbrt {
     };
 
     inline constexpr std::array<Float, 3>
-    XYZToRGB(const std::array<Float, 3>& xyz) noexcept {
+    XYZToRGB(const std::span<const Float, 3>& xyz) noexcept {
         std::array<Float, 3> rgb;
         // clang-fomat off
         rgb[0] =  3.240479f * xyz[0] - 1.537150f * xyz[1] - 0.498535f * xyz[2];
@@ -114,7 +114,7 @@ namespace idragnev::pbrt {
     }
 
     inline constexpr std::array<Float, 3>
-    RGBToXYZ(const std::array<Float, 3>& rgb) noexcept {
+    RGBToXYZ(const std::span<const Float, 3>& rgb) noexcept {
         std::array<Float, 3> xyz;
         xyz[0] = 0.412453f * rgb[0] + 0.357580f * rgb[1] + 0.180423f * rgb[2];
         xyz[1] = 0.212671f * rgb[0] + 0.715160f * rgb[1] + 0.072169f * rgb[2];

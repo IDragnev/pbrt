@@ -38,7 +38,7 @@ namespace idragnev::pbrt {
         void mergeFilmTile(std::unique_ptr<FilmTile> tile);
         void setImage(const std::span<Spectrum> imagePixels) const;
         void addSplat(const Point2f& p, Spectrum v);
-        // void writeImage(Float splatScale = 1.f);
+        void writeImage(const Float splatScale = 1.f);
         void clear();
 
         const Point2i fullResolution;
@@ -64,7 +64,7 @@ namespace idragnev::pbrt {
         Float filterTable[FILTER_TABLE_EXTENT * FILTER_TABLE_EXTENT];
         std::mutex mutex;
 
-        [[maybe_unused]] const Float scale;
+        const Float scale;
         const Float maxSampleLuminance;
     };
 

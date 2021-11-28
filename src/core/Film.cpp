@@ -231,6 +231,53 @@ namespace idragnev::pbrt {
         }
     }
 
+    void Film::writeImage(const Float splatScale) {
+        // TODO: Log info: "Converting image to RGB and computing final weighted pixel values..."
+
+        const int nPixels = croppedPixelBounds.area();
+        std::unique_ptr<Float[]> imageRGB(new Float[3 * nPixels]);
+
+        for (std::size_t pixelIndex = 0; const Point2i p : croppedPixelBounds) {
+            const std::span<Float, 3> pixelRGB{&(imageRGB[3 * pixelIndex]), 3};
+
+            Pixel& pixel = getPixel(p);
+
+            const std::array arrRGB =
+                XYZToRGB(std::span<const Float, 3>{pixel.xyz});
+            pixelRGB[0] = arrRGB[0];
+            pixelRGB[1] = arrRGB[1];
+            pixelRGB[2] = arrRGB[2];
+
+            // normalize pixel with weight sum
+            if (pixel.filterWeightSum != 0.f) {
+                const Float invWt = Float(1) / pixel.filterWeightSum;
+
+                pixelRGB[0] = std::max(Float(0), pixelRGB[0] * invWt);
+                pixelRGB[1] = std::max(Float(0), pixelRGB[1] * invWt);
+                pixelRGB[2] = std::max(Float(0), pixelRGB[2] * invWt);
+            }
+
+            const Float splatXYZ[3] = {pixel.splatXYZ[0],
+                                       pixel.splatXYZ[1],
+                                       pixel.splatXYZ[2]};
+            const std::array splatRGB = XYZToRGB(splatXYZ);
+
+            pixelRGB[0] += splatScale * splatRGB[0];
+            pixelRGB[1] += splatScale * splatRGB[1];
+            pixelRGB[2] += splatScale * splatRGB[2];
+
+            pixelRGB[0] *= scale;
+            pixelRGB[1] *= scale;
+            pixelRGB[2] *= scale;
+
+            ++pixelIndex;
+        }
+
+        // TODO: log_info("Writing image to {}. bounds = {}, scale = {}, splatScale = {}",
+        //                filename, croppedPixelBounds, scale, splatScale)
+        // pbrt::writeImage(filename, &imageRGB[0], croppedPixelBounds, fullResolution);
+    }
+
     FilmTilePixel& FilmTile::getPixel(const Point2i& p) {
         assert(insideExclusive(p, pixelBounds));
 
