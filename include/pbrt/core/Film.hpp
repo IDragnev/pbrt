@@ -37,7 +37,7 @@ namespace idragnev::pbrt {
         std::unique_ptr<FilmTile> getFilmTile(const Bounds2i& sampleBounds);
         void mergeFilmTile(std::unique_ptr<FilmTile> tile);
         void setImage(const std::span<Spectrum> imagePixels) const;
-        // void addSplat(const Point2f& p, Spectrum v);
+        void addSplat(const Point2f& p, Spectrum v);
         // void writeImage(Float splatScale = 1.f);
         void clear();
 

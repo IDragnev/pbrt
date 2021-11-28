@@ -202,6 +202,35 @@ namespace idragnev::pbrt {
         }
     }
 
+    void Film::addSplat(const Point2f& p, Spectrum v) {
+        if (v.hasNaNs()) {
+            // TODO: log nans
+            return;
+        }
+        else if (v.y() < Float(0)) {
+            // log negative luminace
+            return;
+        }
+        else if (std::isinf(v.y())) {
+            // log inf luminace
+            return;
+        }
+
+        const Point2i pi(math::floor(p));
+        if (insideExclusive(pi, croppedPixelBounds)) {
+            if (v.y() > maxSampleLuminance) {
+                v *= maxSampleLuminance / v.y();
+            }
+
+            const std::array xyz = v.toXYZ();
+
+            Pixel& pixel = getPixel(pi);
+            pixel.splatXYZ[0].add(xyz[0]);
+            pixel.splatXYZ[1].add(xyz[1]);
+            pixel.splatXYZ[2].add(xyz[2]);
+        }
+    }
+
     FilmTilePixel& FilmTile::getPixel(const Point2i& p) {
         assert(insideExclusive(p, pixelBounds));
 
