@@ -1,0 +1,46 @@
+#pragma once
+
+#include "pbrt/core/core.hpp"
+#include "pbrt/core/math/Vector3.hpp"
+
+namespace idragnev::pbrt::reflection {
+    inline Float cosTheta(const Vector3f& w) { return w.z; }
+    inline Float cos2Theta(const Vector3f& w) { return w.z * w.z; }
+    inline Float absCosTheta(const Vector3f& w) { return std::abs(w.z); }
+
+    inline Float sin2Theta(const Vector3f& w) {
+        return std::max(Float(0), Float(1) - cos2Theta(w));
+    }
+    inline Float sinTheta(const Vector3f& w) { return std::sqrt(sin2Theta(w)); }
+
+    inline Float tanTheta(const Vector3f& w) {
+        return sinTheta(w) / cosTheta(w);
+    }
+    inline Float tan2Theta(const Vector3f& w) {
+        return sin2Theta(w) / cos2Theta(w);
+    }
+
+    inline Float cosPhi(const Vector3f& w) {
+        const Float sinTht = sinTheta(w);
+        return (sinTht == 0) ? 1 : clamp(w.x / sinTht, -1, 1);
+    }
+    inline Float sinPhi(const Vector3f& w) {
+        const Float sinTht = sinTheta(w);
+        return (sinTht == 0) ? 0 : clamp(w.y / sinTht, -1, 1);
+    }
+
+    inline Float cos2Phi(const Vector3f& w) { return cosPhi(w) * cosPhi(w); }
+    inline Float sin2Phi(const Vector3f& w) { return sinPhi(w) * sinPhi(w); }
+
+    inline Float cosDPhi(const Vector3f& wa, const Vector3f& wb) {
+        const Float waxy = wa.x * wa.x + wa.y * wa.y;
+        const Float wbxy = wb.x * wb.x + wb.y * wb.y;
+        if (waxy == 0 || wbxy == 0) {
+            return 1;
+        }
+
+        return clamp((wa.x * wb.x + wa.y * wb.y) / std::sqrt(waxy * wbxy),
+                     -1,
+                     1);
+    }
+} // namespace idragnev::pbrt::reflection
