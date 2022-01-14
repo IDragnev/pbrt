@@ -84,7 +84,9 @@ set(RAY_TRACER_CORE_HEADERS
   ${CORE_HEADERS_DIR}/Medium.hpp
   ${CORE_HEADERS_DIR}/Camera.hpp
   ${CORE_HEADERS_DIR}/Film.hpp
-  ${CORE_HEADERS_DIR}/Reflection.hpp
+
+  ${CORE_HEADERS_DIR}/reflection/Utility.hpp
+  ${CORE_HEADERS_DIR}/reflection/BxDF.hpp
 
   ${CORE_HEADERS_DIR}/primitive/Primitive.hpp
   ${CORE_HEADERS_DIR}/primitive/GeometricPrimitive.hpp
