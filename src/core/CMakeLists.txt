@@ -28,6 +28,8 @@ set(RAY_TRACER_CORE_SOURCE
   sampling/PixelSampler.cpp
   sampling/GlobalSampler.cpp
   sampling/LowDiscrepancy.cpp
+
+  reflection/Utility.cpp
 )
 
 set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/core)

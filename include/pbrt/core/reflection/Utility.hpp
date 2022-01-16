@@ -32,15 +32,7 @@ namespace idragnev::pbrt::reflection {
     inline Float cos2Phi(const Vector3f& w) { return cosPhi(w) * cosPhi(w); }
     inline Float sin2Phi(const Vector3f& w) { return sinPhi(w) * sinPhi(w); }
 
-    inline Float cosDPhi(const Vector3f& wa, const Vector3f& wb) {
-        const Float waxy = wa.x * wa.x + wa.y * wa.y;
-        const Float wbxy = wb.x * wb.x + wb.y * wb.y;
-        if (waxy == 0 || wbxy == 0) {
-            return 1;
-        }
+    Float cosDPhi(const Vector3f& wa, const Vector3f& wb);
 
-        return clamp((wa.x * wb.x + wa.y * wb.y) / std::sqrt(waxy * wbxy),
-                     -1,
-                     1);
-    }
+    Float FresnelReflDielectric(Float cosThetaI, Float etaI, Float etaT);
 } // namespace idragnev::pbrt::reflection
