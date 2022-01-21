@@ -84,4 +84,49 @@ namespace idragnev::pbrt::reflection {
         const BxDF* bxdf;
         Spectrum scale;
     };
+
+    class Fresnel
+    {
+    public:
+        virtual ~Fresnel() = default;
+
+        virtual Spectrum eval(Float cosI) const = 0;
+        //virtual std::string toString() const = 0;
+    };
+
+    class FresnelConductor : public Fresnel
+    {
+    public:
+        FresnelConductor(const Spectrum& etaI,
+                         const Spectrum& etaT,
+                         const Spectrum& k)
+            : etaI(etaI)
+            , etaT(etaT)
+            , k(k) {}
+
+        Spectrum eval(Float cosThetaI) const override;
+
+    private:
+        Spectrum etaI;
+        Spectrum etaT;
+        Spectrum k;
+    };
+
+    class FresnelDielectric : public Fresnel
+    {
+    public:
+        FresnelDielectric(Float etaI, Float etaT) : etaI(etaI), etaT(etaT) {}
+
+        Spectrum eval(Float cosThetaI) const override;
+
+    private:
+        Float etaI = 0.f;
+        Float etaT = 0.f;
+    };
+
+    class FresnelNoOp : public Fresnel
+    {
+    public:
+        Spectrum eval(Float cosThetaI) const override;
+    };
 } // namespace idragnev::pbrt::reflection

@@ -30,6 +30,7 @@ set(RAY_TRACER_CORE_SOURCE
   sampling/LowDiscrepancy.cpp
 
   reflection/Utility.cpp
+  reflection/BxDF.cpp
 )
 
 set(CORE_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/core)
