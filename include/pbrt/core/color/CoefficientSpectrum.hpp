@@ -123,10 +123,9 @@ namespace idragnev::pbrt {
     CoefficientSpectrum<SamplesCount>
     operator/(const CoefficientSpectrum<SamplesCount>& lhs,
               const CoefficientSpectrum<SamplesCount>& rhs) {
-        auto result = lhs;
-        result /= rhs;
-
-        return result;
+        return lhs.zipWith(rhs, [](const Float a, const Float b) {
+            return (b != 0.f) ? (a / b) : 0.f;
+        });
     }
 
     template <std::size_t SamplesCount>
