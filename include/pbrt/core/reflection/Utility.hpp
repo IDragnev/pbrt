@@ -23,11 +23,11 @@ namespace idragnev::pbrt::reflection {
 
     inline Float cosPhi(const Vector3f& w) {
         const Float sinTht = sinTheta(w);
-        return (sinTht == 0) ? 1 : clamp(w.x / sinTht, -1, 1);
+        return (sinTht == 0.f) ? 1 : clamp(w.x / sinTht, Float(-1), Float(1));
     }
     inline Float sinPhi(const Vector3f& w) {
         const Float sinTht = sinTheta(w);
-        return (sinTht == 0) ? 0 : clamp(w.y / sinTht, -1, 1);
+        return (sinTht == 0.f) ? 0.f : clamp(w.y / sinTht, Float(-1), Float(1));
     }
 
     inline Float cos2Phi(const Vector3f& w) { return cosPhi(w) * cosPhi(w); }
