@@ -13,7 +13,7 @@ namespace idragnev::pbrt::reflection {
                      Float(1));
     }
 
-    Float FresnelReflDielectric(Float cosThetaI, Float etaI, Float etaT) {
+    Float fresnelReflDielectric(Float cosThetaI, Float etaI, Float etaT) {
         cosThetaI = clamp(cosThetaI, Float(-1), Float(1));
 
         if (const bool entering = cosThetaI > 0.f; entering == false) {
@@ -39,5 +39,35 @@ namespace idragnev::pbrt::reflection {
                             ((etaI * cosThetaI) + (etaT * cosThetaT));
 
         return (Rparl * Rparl + Rperp * Rperp) / 2;
+    }
+
+    // https://seblagarde.wordpress.com/2013/04/29/memo-on-fresnel-equations/
+    Spectrum fresnelReflConductor(Float cosThetaI,
+                                  const Spectrum& etaI,
+                                  const Spectrum& etaT,
+                                  const Spectrum& k) {
+        cosThetaI = clamp(cosThetaI, Float(-1), Float(1));
+
+        const Spectrum eta = etaT / etaI;
+        const Spectrum etak = k / etaI;
+
+        const Float cosThetaI2 = cosThetaI * cosThetaI;
+        const Float sinThetaI2 = Float(1) - cosThetaI2;
+        const Spectrum eta2 = eta * eta;
+        const Spectrum etak2 = etak * etak;
+
+        const Spectrum t0 = eta2 - etak2 - Spectrum(sinThetaI2);
+        const Spectrum a2plusb2 = sqrt(t0 * t0 + (Float(4) * eta2 * etak2));
+        const Spectrum t1 = a2plusb2 + Spectrum(cosThetaI2);
+        const Spectrum a = sqrt(0.5f * (a2plusb2 + t0));
+        const Spectrum t2 = Float(2) * cosThetaI * a;
+        const Spectrum Rs = (t1 - t2) / (t1 + t2);
+
+        const Spectrum t3 =
+            cosThetaI2 * a2plusb2 + Spectrum(sinThetaI2) * sinThetaI2;
+        const Spectrum t4 = t2 * sinThetaI2;
+        const Spectrum Rp = Rs * (t3 - t4) / (t3 + t4);
+
+        return 0.5 * (Rp + Rs);
     }
 } // namespace idragnev::pbrt::reflection

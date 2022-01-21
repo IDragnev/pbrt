@@ -2,6 +2,7 @@
 
 #include "pbrt/core/core.hpp"
 #include "pbrt/core/math/Vector3.hpp"
+#include "pbrt/core/color/Spectrum.hpp"
 
 namespace idragnev::pbrt::reflection {
     inline Float cosTheta(const Vector3f& w) { return w.z; }
@@ -34,5 +35,9 @@ namespace idragnev::pbrt::reflection {
 
     Float cosDPhi(const Vector3f& wa, const Vector3f& wb);
 
-    Float FresnelReflDielectric(Float cosThetaI, Float etaI, Float etaT);
+    Float fresnelReflDielectric(Float cosThetaI, Float etaI, Float etaT);
+    Spectrum fresnelReflConductor(Float cosThetaI,
+                                  const Spectrum& etaI,
+                                  const Spectrum& etaT,
+                                  const Spectrum& k);
 } // namespace idragnev::pbrt::reflection
