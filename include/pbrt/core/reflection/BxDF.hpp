@@ -3,6 +3,7 @@
 #include "pbrt/core/core.hpp"
 #include "pbrt/core/math/Vector3.hpp"
 #include "pbrt/core/color/Spectrum.hpp"
+#include "pbrt/core/Optional.hpp"
 
 #include <span>
 #include <string>
@@ -19,6 +20,18 @@ namespace idragnev::pbrt::reflection {
         ALL          = REFLECTION | TRANSMISSION | DIFFUSE | GLOSSY | SPECULAR,
         // clang-format on
     };
+
+    inline constexpr BxDFType operator|(const BxDFType a,
+                                        const BxDFType b) noexcept {
+        using T = std::underlying_type_t<BxDFType>;
+        return BxDFType(static_cast<T>(a) | static_cast<T>(b));
+    }
+
+    inline constexpr std::underlying_type_t<BxDFType>
+    operator&(const BxDFType a, const BxDFType b) noexcept {
+        using T = std::underlying_type_t<BxDFType>;
+        return static_cast<T>(a) & static_cast<T>(b);
+    }
 
     class BxDF
     {
@@ -38,7 +51,7 @@ namespace idragnev::pbrt::reflection {
                                   Vector3f& wi,
                                   const Point2f& sample,
                                   Float& pdf,
-                                  BxDFType* sampledType = nullptr) const;
+                                  Optional<BxDFType> sampledType = pbrt::nullopt) const;
 
         virtual Spectrum
         rho(const Vector3f& wo, const std::span<const Point2f> samples) const;
@@ -66,7 +79,7 @@ namespace idragnev::pbrt::reflection {
                           Vector3f& wi,
                           const Point2f& sample,
                           Float& pdf,
-                          BxDFType* sampledType) const override {
+                          Optional<BxDFType> sampledType) const override {
             Spectrum f = bxdf->sample_f(wo, wi, sample, pdf, sampledType);
             return scale * f;
         }

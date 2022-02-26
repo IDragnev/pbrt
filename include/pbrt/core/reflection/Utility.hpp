@@ -40,4 +40,8 @@ namespace idragnev::pbrt::reflection {
                                   const Spectrum& etaI,
                                   const Spectrum& etaT,
                                   const Spectrum& k);
+
+    inline Vector3f reflect(const Vector3f& wo, const Vector3f& n) {
+        return -wo + 2 * dot(wo, n) * n;
+    }
 } // namespace idragnev::pbrt::reflection
