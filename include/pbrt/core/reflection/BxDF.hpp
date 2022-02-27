@@ -2,6 +2,7 @@
 
 #include "pbrt/core/core.hpp"
 #include "pbrt/core/math/Vector3.hpp"
+#include "pbrt/core/math/Point2.hpp"
 #include "pbrt/core/color/Spectrum.hpp"
 #include "pbrt/core/Optional.hpp"
 
