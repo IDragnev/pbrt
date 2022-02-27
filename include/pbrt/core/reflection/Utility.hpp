@@ -2,7 +2,9 @@
 
 #include "pbrt/core/core.hpp"
 #include "pbrt/core/math/Vector3.hpp"
+#include "pbrt/core/math/Normal3.hpp"
 #include "pbrt/core/color/Spectrum.hpp"
+#include "pbrt/core/Optional.hpp"
 
 namespace idragnev::pbrt::reflection {
     inline Float cosTheta(const Vector3f& w) { return w.z; }
@@ -44,4 +46,7 @@ namespace idragnev::pbrt::reflection {
     inline Vector3f reflect(const Vector3f& wo, const Vector3f& n) {
         return -wo + 2 * dot(wo, n) * n;
     }
+
+    Optional<Vector3f>
+    refract(const Vector3f& wi, const Normal3f& n, const Float etaRatio);
 } // namespace idragnev::pbrt::reflection

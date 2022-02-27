@@ -70,4 +70,22 @@ namespace idragnev::pbrt::reflection {
 
         return 0.5 * (Rp + Rs);
     }
+
+    Optional<Vector3f>
+    refract(const Vector3f& wi, const Normal3f& n, const Float eta) {
+        const Float cosThetaI = dot(Vector3f(n), wi);
+        const Float sin2ThetaI =
+            std::max(Float(0), Float(1.f - cosThetaI * cosThetaI));
+        const Float sin2ThetaT = eta * eta * sin2ThetaI;
+
+        if (sin2ThetaT >= 1.f) {
+            // total internal reflection for transmission
+            return pbrt::nullopt;
+        }
+
+        const Float cosThetaT = std::sqrt(1.f - sin2ThetaT);
+        Vector3f wt = eta * -wi + (eta * cosThetaI - cosThetaT) * Vector3f(n);
+
+        return pbrt::make_optional(wt);
+    }
 } // namespace idragnev::pbrt::reflection

@@ -6,8 +6,8 @@
 namespace idragnev::pbrt {
     enum class TransportMode
     {
-        radiance,
-        importance,
+        RADIANCE,
+        IMPORTANCE,
     };
 
     class Material

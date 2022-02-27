@@ -1,10 +1,12 @@
 set(REFLECTION_MODELS_SOURCE_FILES
   SpecularReflection.cpp
+  SpecularTransmission.cpp
 )
 
 set(REFLECTION_MODELS_HEADERS_DIR ${PROJECT_SOURCE_DIR}/include/pbrt/reflection_models)
 set(REFLECTION_MODELS_HEADER_FILES
   ${REFLECTION_MODELS_HEADERS_DIR}/SpecularReflection.hpp
+  ${REFLECTION_MODELS_HEADERS_DIR}/SpecularTransmission.hpp
 )
 
 add_library(
